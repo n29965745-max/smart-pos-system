@@ -8,7 +8,7 @@ async function handler(req: SecureRequest, res: NextApiResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { tenantId } = req.auth;
+  const { tenantId } = req;
 
   try {
     const { page = '1', limit = '100', search = '' } = req.query;

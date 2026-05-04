@@ -11,7 +11,7 @@ export default secureRoute(async (req: SecureRequest, res: NextApiResponse) => {
 
   const db = getAdminDb();
   const { data, error } = await db
-    .from('users').update(updates).eq('id', req.userId).eq('tenant_id', req.tenantId)
+    .from('users').update(updates).eq('id', req.user.userId).eq('tenant_id', req.tenantId)
     .select('id, full_name, email, phone').single();
 
   if (error) return res.status(500).json({ error: error.message });

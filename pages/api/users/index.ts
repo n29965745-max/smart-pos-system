@@ -57,7 +57,7 @@ export default secureRoute(async (req: SecureRequest, res: NextApiResponse) => {
   if (req.method === 'DELETE') {
     const { id } = req.query;
     if (!id) return res.status(400).json({ error: 'User ID required' });
-    if (id === req.userId) return res.status(400).json({ error: 'Cannot delete yourself' });
+    if (id === req.user.userId) return res.status(400).json({ error: 'Cannot delete yourself' });
 
     const { error } = await db.from('users').delete().eq('id', id).eq('tenant_id', tenantId);
     if (error) return res.status(500).json({ error: error.message });

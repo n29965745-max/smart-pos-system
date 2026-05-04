@@ -11,7 +11,7 @@ export default secureRoute(async (req: SecureRequest, res: NextApiResponse) => {
   const { data, error } = await db
     .from('users')
     .update({ full_name: full_name.trim(), updated_at: new Date().toISOString() })
-    .eq('id', req.userId)
+    .eq('id', req.user.userId)
     .eq('tenant_id', req.tenantId)
     .select('id, full_name, email')
     .single();

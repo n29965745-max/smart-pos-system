@@ -4,7 +4,7 @@ import { secureRoute, SecureRequest, getAdminDb } from '../../../lib/secure-rout
 
 async function handler(req: SecureRequest, res: NextApiResponse) {
   const db = getAdminDb();
-  const { tenantId } = req.auth;
+  const { tenantId } = req;
 
   if (req.method === 'GET') {
     try {

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { supabase } from '../../../../lib/supabase';
 
-import { secureRoute, SecureRequest, getAdminDb } from '../../../lib/secure-route';
+import { secureRoute, SecureRequest, getAdminDb } from '../../../../lib/secure-route';
 
 export default secureRoute(async function handler(req: SecureRequest, res: NextApiResponse) {
   const { tenantId } = req;

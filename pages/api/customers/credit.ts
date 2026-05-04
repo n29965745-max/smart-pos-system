@@ -6,7 +6,7 @@ const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 );
 
-import { secureRoute, SecureRequest, getAdminDb } from '../../lib/secure-route';
+import { secureRoute, SecureRequest, getAdminDb } from '../../../lib/secure-route';
 
 export default secureRoute(async function handler(req: SecureRequest, res: NextApiResponse) {
   const { tenantId } = req;

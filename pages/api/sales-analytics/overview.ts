@@ -9,7 +9,7 @@ async function handler(req: SecureRequest, res: NextApiResponse) {
     return res.status(405).json({ error: `Method ${req.method} Not Allowed` });
   }
 
-  const { tenantId } = req.auth;
+  const { tenantId } = req;
 
   try {
     const { startDate, endDate } = req.query;

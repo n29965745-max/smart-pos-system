@@ -3,7 +3,8 @@ import { secureRoute, SecureRequest, getAdminDb } from '../../../lib/secure-rout
 
 export default secureRoute(async (req: SecureRequest, res: NextApiResponse) => {
   const db = getAdminDb();
-  const { userId, tenantId } = req;
+  const { user, tenantId } = req;
+  const userId = user.userId;
 
   if (req.method === 'GET') {
     const { data, error } = await db

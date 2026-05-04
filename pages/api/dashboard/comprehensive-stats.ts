@@ -261,7 +261,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
       const todayTransactionIds = todayTransactionsData.map(t => t.id);
       
       // Fetch today's transaction items
-      const { data: todayItems } = await supabase
+      const { data: todayItems } = await db
         .from('transaction_items')
         .select('unit_price, quantity')
         .in('transaction_id', todayTransactionIds);
@@ -286,7 +286,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
     let rangeExpenses = 0;
     let todayExpensesOnly = 0;
     try {
-      let expensesQuery = supabase
+      let expensesQuery = db
         .from('expenses')
         .select('amount, expense_date, status')
         .eq('status', 'Approved'); // Only count approved expenses
@@ -306,7 +306,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
       
       // ALWAYS fetch today's expenses for the breakdown
       const todayDateStr = todayLocal.toISOString().split('T')[0];
-      const { data: todayExpensesData } = await supabase
+      const { data: todayExpensesData } = await db
         .from('expenses')
         .select('amount, expense_date, status')
         .eq('status', 'Approved')
@@ -322,7 +322,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
     // Fetch returns for the selected date range
     let rangeReturns = 0;
     try {
-      let returnsQuery = supabase
+      let returnsQuery = db
         .from('returns')
         .select('amount, return_date, status')
         .in('status', ['Completed', 'Approved']); // Only count completed/approved returns
@@ -361,7 +361,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
     // Fetch outstanding debt (Outstanding + Partial statuses)
     let outstandingDebt = 0;
     try {
-      const { data: debts } = await supabase
+      const { data: debts } = await db
         .from('debts')
         .select('amount_remaining, status')
         .in('status', ['Outstanding', 'Partial']);
@@ -438,7 +438,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
 
     const trendEndDate = endDate || new Date();
 
-    const { data: trendTransactions, error: trendError } = await supabase
+    const { data: trendTransactions, error: trendError } = await db
       .from('transactions')
       .select('created_at, total_amount')
       .gte('created_at', trendStartDate.toISOString())
@@ -452,7 +452,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
 
     if (trendTransactions && trendTransactions.length > 0) {
       // Fetch transactions with IDs for chart - use transaction_id (TEXT) not id (UUID)
-      const { data: trendTransactionsWithIds } = await supabase
+      const { data: trendTransactionsWithIds } = await db
         .from('transactions')
         .select('id, transaction_id, created_at, total_amount')
         .gte('created_at', trendStartDate.toISOString())
@@ -463,7 +463,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
 
       if (transactionIdsForChart.length > 0) {
         // Fetch transaction items
-        const { data: trendItems } = await supabase
+        const { data: trendItems } = await db
           .from('transaction_items')
           .select('transaction_id, product_id, quantity, unit_price')
           .in('transaction_id', transactionIdsForChart);
@@ -496,7 +496,7 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
         // Fetch expenses for the trend period
         let trendExpenses: any[] = [];
         try {
-          const { data: expensesData } = await supabase
+          const { data: expensesData } = await db
             .from('expenses')
             .select('amount, expense_date, status')
             .eq('status', 'Approved') // Only approved expenses
