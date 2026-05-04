@@ -1,69 +1,42 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { createClient } from '@supabase/supabase-js';
+import type { NextApiResponse } from 'next';
+import { supabaseAdmin } from '../../../lib/supabase-client';
+import { withAuth, AuthenticatedRequest } from '../../../lib/auth-middleware';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
-
-// Date range helper function
 function getDateRange(range: string): { startDate: Date | null; endDate: Date | null } {
   const now = new Date();
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-  
   switch (range) {
-    case 'today':
-      return { startDate: today, endDate: now };
-    
-    case 'yesterday':
-      const yesterday = new Date(today);
-      yesterday.setDate(yesterday.getDate() - 1);
-      return { startDate: yesterday, endDate: today };
-    
-    case 'last7days':
-      const last7 = new Date(today);
-      last7.setDate(last7.getDate() - 7);
-      return { startDate: last7, endDate: now };
-    
-    case 'last30days':
-      const last30 = new Date(today);
-      last30.setDate(last30.getDate() - 30);
-      return { startDate: last30, endDate: now };
-    
-    case 'thisMonth':
-      const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-      return { startDate: monthStart, endDate: now };
-    
-    case 'lastMonth':
-      const lastMonthStart = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-      const lastMonthEnd = new Date(now.getFullYear(), now.getMonth(), 0);
-      return { startDate: lastMonthStart, endDate: lastMonthEnd };
-    
-    case 'thisYear':
-      const yearStart = new Date(now.getFullYear(), 0, 1);
-      return { startDate: yearStart, endDate: now };
-    
-    case 'all':
-    default:
-      return { startDate: null, endDate: null };
+    case 'today': return { startDate: today, endDate: now };
+    case 'yesterday': {
+      const y = new Date(today); y.setDate(y.getDate() - 1);
+      return { startDate: y, endDate: today };
+    }
+    case 'last7days': {
+      const d = new Date(today); d.setDate(d.getDate() - 7);
+      return { startDate: d, endDate: now };
+    }
+    case 'last30days': {
+      const d = new Date(today); d.setDate(d.getDate() - 30);
+      return { startDate: d, endDate: now };
+    }
+    case 'thisMonth': return { startDate: new Date(now.getFullYear(), now.getMonth(), 1), endDate: now };
+    case 'lastMonth': return {
+      startDate: new Date(now.getFullYear(), now.getMonth() - 1, 1),
+      endDate: new Date(now.getFullYear(), now.getMonth(), 0)
+    };
+    case 'thisYear': return { startDate: new Date(now.getFullYear(), 0, 1), endDate: now };
+    default: return { startDate: null, endDate: null };
   }
 }
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  // Aggressive cache prevention
-  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0');
-  res.setHeader('Pragma', 'no-cache');
-  res.setHeader('Expires', '0');
-  res.setHeader('Surrogate-Control', 'no-store');
-  res.setHeader('CDN-Cache-Control', 'no-store');
-  res.setHeader('Vercel-CDN-Cache-Control', 'no-store');
+export default withAuth(async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate');
 
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  try {
-    const range = (req.query.range as string) || 'all';
+  const { tenantId } = req.auth;
     const priceType = (req.query.priceType as string) || 'all'; // all, retail, wholesale
     const clientDate = req.query.clientDate as string;
     
@@ -101,10 +74,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     console.log('Today (UTC for query):', todayUTC);
     console.log('Tomorrow (UTC for query):', tomorrowUTC);
 
-    // Fetch all products for inventory calculations
-    const { data: products, error: productsError } = await supabase
+    // Fetch all products for inventory calculations — scoped to tenant
+    const { data: products, error: productsError } = await supabaseAdmin
       .from('products')
-      .select('*');
+      .select('*')
+      .eq('tenant_id', tenantId);
 
     if (productsError) throw productsError;
 
@@ -136,7 +110,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const potentialProfit = inventoryValueSelling - inventoryValueCost;
 
     // Fetch all transactions for all-time profit (or filtered by date range)
-    let allTransactionsQuery = supabase.from('transactions').select('*');
+    let allTransactionsQuery = supabaseAdmin.from('transactions').select('*').eq('tenant_id', tenantId);
     
     if (startDate && endDate) {
       allTransactionsQuery = allTransactionsQuery
@@ -162,9 +136,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const transactionIds = allTransactions.map(t => t.transaction_id);
       
       // Fetch all transaction items for these transactions
-      const { data: transactionItems, error: itemsError } = await supabase
+      const { data: transactionItems, error: itemsError } = await supabaseAdmin
         .from('transaction_items')
         .select('product_id, quantity, unit_price, transaction_id')
+        .eq('tenant_id', tenantId)
         .in('transaction_id', transactionIds);
 
       if (transactionItems && transactionItems.length > 0) {
@@ -244,7 +219,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Fetch transactions for the selected date range (not just today)
     // This will be used for "Today's Net Revenue" or "Yesterday's Net Revenue" etc.
     let rangeTransactions;
-    let rangeTransactionsQuery = supabase.from('transactions').select('*');
+    let rangeTransactionsQuery = supabaseAdmin.from('transactions').select('*').eq('tenant_id', tenantId);
     
     if (startDate && endDate) {
       // Use the selected date range
@@ -268,9 +243,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }, 0) || 0;
     
     // ALWAYS fetch today's transactions for the Net Revenue breakdown
-    const { data: todayTransactionsData, error: todayTxnError } = await supabase
+    const { data: todayTransactionsData, error: todayTxnError } = await supabaseAdmin
       .from('transactions')
       .select('*')
+      .eq('tenant_id', tenantId)
       .gte('created_at', todayUTC)
       .lt('created_at', tomorrowUTC);
 

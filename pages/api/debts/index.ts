@@ -1,59 +1,39 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { supabase } from '../../../lib/supabase';
-import { getTenantIdSync } from '../../../lib/tenant-context';
+import type { NextApiResponse } from 'next';
+import { supabaseAdmin } from '../../../lib/supabase-client';
+import { withAuth, AuthenticatedRequest } from '../../../lib/auth-middleware';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+async function handler(req: AuthenticatedRequest, res: NextApiResponse) {
+  const { tenantId } = req.auth;
+
   if (req.method === 'GET') {
     try {
-      const { 
-        startDate, 
-        endDate,
-        page = '1',
-        limit = '20'
-      } = req.query;
-
+      const { startDate, endDate, page = '1', limit = '20' } = req.query;
       const pageNum = parseInt(page as string);
       const limitNum = parseInt(limit as string);
       const offset = (pageNum - 1) * limitNum;
 
-      let query = supabase
+      let query = supabaseAdmin
         .from('debts')
         .select('*', { count: 'exact' })
-        .eq('tenant_id', getTenantIdSync(req));
+        .eq('tenant_id', tenantId);
 
-      // Apply date filtering only if both dates are provided
       if (startDate && endDate) {
-        query = query
-          .gte('created_at', startDate as string)
-          .lte('created_at', endDate as string);
+        query = query.gte('created_at', startDate as string).lte('created_at', endDate as string);
       }
 
-      // Sorting and pagination
-      query = query
-        .order('created_at', { ascending: false })
-        .range(offset, offset + limitNum - 1);
+      query = query.order('created_at', { ascending: false }).range(offset, offset + limitNum - 1);
 
       const { data: debts, error, count } = await query;
-
       if (error) throw error;
 
-      // Get all customer IDs from debts and fetch their names
       const customerIds = [...new Set(debts?.map(d => d.customer_id) || [])];
       let customerMap: any = {};
-      
       if (customerIds.length > 0) {
-        const { data: customers } = await supabase
-          .from('customers')
-          .select('id, name')
-          .in('id', customerIds);
-        
-        customerMap = customers?.reduce((acc: any, c: any) => {
-          acc[c.id] = c.name;
-          return acc;
-        }, {}) || {};
+        const { data: customers } = await supabaseAdmin
+          .from('customers').select('id, name').eq('tenant_id', tenantId).in('id', customerIds);
+        customerMap = customers?.reduce((acc: any, c: any) => { acc[c.id] = c.name; return acc; }, {}) || {};
       }
 
-      // Transform data to match frontend expectations
       const transformedDebts = debts?.map((debt: any) => ({
         id: debt.id,
         customer_name: debt.customer_name || customerMap[debt.customer_id] || 'Unknown',
@@ -69,12 +49,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       return res.status(200).json({
         debts: transformedDebts,
-        pagination: {
-          page: pageNum,
-          limit: limitNum,
-          total: count || 0,
-          totalPages: Math.ceil((count || 0) / limitNum)
-        }
+        pagination: { page: pageNum, limit: limitNum, total: count || 0, totalPages: Math.ceil((count || 0) / limitNum) }
       });
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
@@ -85,27 +60,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const { customer_id, customer_name, sale_id, total_amount, due_date, notes } = req.body;
 
-      const { data: debt, error } = await supabase
+      const { data: debt, error } = await supabaseAdmin
         .from('debts')
-        .insert([
-          {
-            customer_id,
-            customer_name,
-            sale_id,
-            total_amount,
-            amount_paid: 0,
-            amount_remaining: total_amount,
-            status: 'Outstanding',
-            due_date,
-            notes,
-            tenant_id: getTenantIdSync(req),
-          },
-        ])
-        .select()
-        .single();
+        .insert([{ customer_id, customer_name, sale_id, total_amount, amount_paid: 0,
+          amount_remaining: total_amount, status: 'Outstanding', due_date, notes, tenant_id: tenantId }])
+        .select().single();
 
       if (error) throw error;
-
       return res.status(201).json(debt);
     } catch (error: any) {
       return res.status(500).json({ error: error.message });
@@ -114,3 +75,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   return res.status(405).json({ error: 'Method not allowed' });
 }
+
+export default withAuth(handler);

@@ -16,19 +16,17 @@ const queryClient = new QueryClient({
   },
 });
 
-// Patch global fetch to inject X-Tenant-ID on all /api/ calls
+// Inject Authorization header on all /api/ calls — tenant_id is derived server-side from token
 if (typeof window !== 'undefined') {
   const originalFetch = window.fetch;
   window.fetch = function(input, init) {
     const url = typeof input === 'string' ? input : (input as Request).url;
     if (url.startsWith('/api/')) {
-      const tenantId = localStorage.getItem('tenant_id') || 'a0000000-0000-0000-0000-000000000001';
-      const userId = (() => { try { return JSON.parse(localStorage.getItem('user') || '{}').id || ''; } catch { return ''; } })();
+      const token = localStorage.getItem('token') || '';
       init = init || {};
       init.headers = {
         ...init.headers,
-        'X-Tenant-ID': tenantId,
-        ...(userId ? { 'X-User-ID': userId } : {})
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
       };
     }
     return originalFetch.call(this, input, init);
