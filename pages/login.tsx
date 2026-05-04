@@ -9,11 +9,15 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     document.documentElement.setAttribute('data-theme', savedTheme);
-  }, []);
+    if (router.query.registered) {
+      setSuccess('Shop created! Sign in with your new credentials.');
+    }
+  }, [router.query]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -202,6 +206,12 @@ export default function Login() {
                 />
               </div>
 
+              {success && (
+                <div className="p-4 rounded-xl text-sm mb-2" style={{ background: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', color: '#6ee7b7' }}>
+                  {success}
+                </div>
+              )}
+
               {error && (
                 <div className="p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm">
                   {error}
@@ -221,13 +231,19 @@ export default function Login() {
               </button>
             </form>
 
-            <div className="mt-6 text-center">
+            <div className="mt-6 text-center space-y-3">
               <a 
                 href="#" 
-                className="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200"
+                className="text-sm text-blue-400 hover:text-blue-300 transition-colors duration-200 block"
               >
                 Forgot your password?
               </a>
+              <p className="text-sm" style={{ color: '#64748b' }}>
+                New shop?{' '}
+                <a href="/signup" className="font-medium" style={{ color: '#10b981' }}>
+                  Create your account →
+                </a>
+              </p>
             </div>
           </div>
 
