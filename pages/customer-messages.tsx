@@ -27,6 +27,12 @@ export default function CustomerMessages() {
   // Templates State
   const [templates, setTemplates] = useState<any[]>([]);
   const [loadingTemplates, setLoadingTemplates] = useState(false);
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [editingTemplate, setEditingTemplate] = useState<any>(null);
+  const [templateForm, setTemplateForm] = useState({
+    name: '', category: 'general', message_text: '', language: 'en'
+  });
+  const [savingTemplate, setSavingTemplate] = useState(false);
 
   useEffect(() => {
     fetchStats();
@@ -130,6 +136,60 @@ export default function CustomerMessages() {
     } finally {
       setSending(false);
     }
+  };
+
+  const openNewTemplate = () => {
+    setEditingTemplate(null);
+    setTemplateForm({ name: '', category: 'general', message_text: '', language: 'en' });
+    setShowTemplateModal(true);
+  };
+
+  const openEditTemplate = (template: any) => {
+    setEditingTemplate(template);
+    setTemplateForm({
+      name: template.name,
+      category: template.category,
+      message_text: template.message_text,
+      language: template.language || 'en'
+    });
+    setShowTemplateModal(true);
+  };
+
+  const saveTemplate = async () => {
+    if (!templateForm.name.trim() || !templateForm.message_text.trim()) {
+      alert('Name and message text are required');
+      return;
+    }
+    setSavingTemplate(true);
+    try {
+      const method = editingTemplate ? 'PUT' : 'POST';
+      const body = editingTemplate
+        ? { id: editingTemplate.id, ...templateForm }
+        : templateForm;
+
+      const res = await fetch('/api/sms/templates', {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (res.ok) {
+        setShowTemplateModal(false);
+        fetchTemplates();
+      } else {
+        const d = await res.json();
+        alert(d.error || 'Failed to save template');
+      }
+    } catch (e: any) {
+      alert(e.message);
+    } finally {
+      setSavingTemplate(false);
+    }
+  };
+
+  const deleteTemplate = async (id: string) => {
+    if (!confirm('Delete this template?')) return;
+    await fetch(`/api/sms/templates?id=${id}`, { method: 'DELETE' });
+    fetchTemplates();
   };
 
   const toggleCustomerSelection = (customerId: string) => {
@@ -317,10 +377,32 @@ export default function CustomerMessages() {
 
         {activeTab === 'templates' && (
           <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-semibold text-[var(--text-primary)]">Message Templates</h2>
+              <button
+                onClick={openNewTemplate}
+                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold"
+              >
+                + New Template
+              </button>
+            </div>
+
             {loadingTemplates ? (
               <p className="text-center text-[var(--text-secondary)] py-8">Loading templates...</p>
             ) : templates.length === 0 ? (
-              <p className="text-center text-[var(--text-secondary)] py-8">No templates found</p>
+              <div className="text-center py-12">
+                <p className="text-4xl mb-3">📝</p>
+                <p className="text-[var(--text-primary)] font-semibold">No templates yet</p>
+                <p className="text-[var(--text-secondary)] text-sm mt-1 mb-4">
+                  Create templates to quickly send messages to your customers
+                </p>
+                <button
+                  onClick={openNewTemplate}
+                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold"
+                >
+                  Create your first template
+                </button>
+              </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {templates.map((template) => (
@@ -336,24 +418,31 @@ export default function CustomerMessages() {
                         </span>
                       </div>
                       <span className={`text-xs px-2 py-1 rounded ${
-                        template.is_active 
-                          ? 'bg-green-500/20 text-green-400' 
+                        template.is_active
+                          ? 'bg-green-500/20 text-green-400'
                           : 'bg-gray-500/20 text-gray-400'
                       }`}>
                         {template.is_active ? 'Active' : 'Inactive'}
                       </span>
                     </div>
-                    
+
                     <p className="text-sm text-[var(--text-secondary)] mt-3 whitespace-pre-wrap">
                       {template.message_text}
                     </p>
-                    
-                    <div className="flex items-center gap-4 mt-3 text-xs text-[var(--text-secondary)]">
-                      <span>Language: {template.language?.toUpperCase() || 'EN'}</span>
-                      <span>AI: {template.ai_personalization ? 'Yes' : 'No'}</span>
-                      {template.total_sent > 0 && (
-                        <span>Sent: {template.total_sent}</span>
-                      )}
+
+                    <div className="flex items-center gap-3 mt-4">
+                      <button
+                        onClick={() => openEditTemplate(template)}
+                        className="text-xs px-3 py-1 bg-blue-500/20 text-blue-400 hover:bg-blue-500/30 rounded"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => deleteTemplate(template.id)}
+                        className="text-xs px-3 py-1 bg-red-500/20 text-red-400 hover:bg-red-500/30 rounded"
+                      >
+                        Delete
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -506,6 +595,83 @@ export default function CustomerMessages() {
                 }}
                 disabled={sending}
                 className="px-6 bg-[var(--bg-primary)] hover:bg-[var(--bg-secondary)] border border-[var(--border-color)] text-[var(--text-primary)] py-3 rounded-lg font-semibold transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {/* Template Create/Edit Modal */}
+      {showTemplateModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+          <div className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-6 max-w-lg w-full">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-bold text-[var(--text-primary)]">
+                {editingTemplate ? 'Edit Template' : 'New Template'}
+              </h2>
+              <button onClick={() => setShowTemplateModal(false)} className="text-[var(--text-secondary)] hover:text-[var(--text-primary)]">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-[var(--text-primary)] mb-1">Template Name</label>
+                <input
+                  type="text"
+                  value={templateForm.name}
+                  onChange={e => setTemplateForm(f => ({ ...f, name: e.target.value }))}
+                  placeholder="e.g. Thank You Message"
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[var(--text-primary)] mb-1">Category</label>
+                <select
+                  value={templateForm.category}
+                  onChange={e => setTemplateForm(f => ({ ...f, category: e.target.value }))}
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                >
+                  <option value="general">General</option>
+                  <option value="after_purchase">After Purchase</option>
+                  <option value="debt_reminder">Debt Reminder</option>
+                  <option value="debt_overdue">Debt Overdue</option>
+                  <option value="welcome">Welcome</option>
+                  <option value="win_back">Win Back</option>
+                  <option value="promotion">Promotion</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-[var(--text-primary)] mb-1">Message Text</label>
+                <textarea
+                  value={templateForm.message_text}
+                  onChange={e => setTemplateForm(f => ({ ...f, message_text: e.target.value }))}
+                  placeholder="Hi {customer_name}, thank you for shopping at {shop_name}!"
+                  rows={5}
+                  className="w-full bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-[var(--text-primary)] focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+                <p className="text-xs text-[var(--text-secondary)] mt-1">
+                  Variables: {'{customer_name}'} {'{shop_name}'} {'{shop_phone}'} {'{amount}'} {'{due_date}'}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-3 mt-6">
+              <button
+                onClick={saveTemplate}
+                disabled={savingTemplate}
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-600 text-white py-2 rounded-lg font-semibold"
+              >
+                {savingTemplate ? 'Saving...' : editingTemplate ? 'Save Changes' : 'Create Template'}
+              </button>
+              <button
+                onClick={() => setShowTemplateModal(false)}
+                className="px-5 bg-[var(--bg-primary)] border border-[var(--border-color)] text-[var(--text-primary)] py-2 rounded-lg font-semibold"
               >
                 Cancel
               </button>
