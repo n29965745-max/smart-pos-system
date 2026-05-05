@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Slug Cache</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #3a3a3a;
+        }
+        h1 {
+            color: #10b981;
+            margin-top: 0;
+        }
+        button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #059669;
+        }
+        .success {
+            background: #10b981;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+        }
+        .info {
+            background: #3b82f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 Clear Slug Cache</h1>
+        
+        <div class="info">
+            <strong>Issue:</strong> Shop Settings showing wrong URL (Nyla Wigs instead of Prime Tech)
+            <br><br>
+            <strong>Solution:</strong> Clear localStorage cache to force reload of correct slug
+        </div>
+
+        <div style="margin-top: 30px;">
+            <button onclick="clearSlugCache()">Clear Slug Cache</button>
+            <button onclick="clearAllCache()">Clear All Cache</button>
+            <button onclick="window.location.href='/shop-settings'">Go to Shop Settings</button>
+        </div>
+
+        <div class="success" id="success">
+            ✅ Cache cleared! Redirecting to Shop Settings...
+        </div>
+
+        <div style="margin-top: 30px; font-size: 14px; color: #888;">
+            <strong>What this does:</strong>
+            <ul>
+                <li>Removes cached tenant slug from localStorage</li>
+                <li>Removes cached shop settings from localStorage</li>
+                <li>Forces the page to fetch fresh data from the API</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function clearSlugCache() {
+            // Get user data to find tenant ID
+            const userData = localStorage.getItem('user');
+            if (userData) {
+                try {
+                    const user = JSON.parse(userData);
+                    if (user.tenantId) {
+                        // Remove tenant-specific cached data
+                        localStorage.removeItem(`tenantSlug_${user.tenantId}`);
+                        localStorage.removeItem(`shopSettings_${user.tenantId}`);
+                        console.log('Cleared tenant-specific cache for:', user.tenantId);
+                    }
+                } catch (e) {
+                    console.error('Error parsing user data:', e);
+                }
+            }
+
+            // Also remove any old slug cache keys
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith('tenantSlug_') || key.startsWith('shopSettings_')) {
+                    localStorage.removeItem(key);
+                    console.log('Removed:', key);
+                }
+            });
+
+            showSuccess();
+        }
+
+        function clearAllCache() {
+            // Clear everything except user and token
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            localStorage.clear();
+            
+            if (user) localStorage.setItem('user', user);
+            if (token) localStorage.setItem('token', token);
+
+            showSuccess();
+        }
+
+        function showSuccess() {
+            document.getElementById('success').style.display = 'block';
+            setTimeout(() => {
+                window.location.href = '/shop-settings';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

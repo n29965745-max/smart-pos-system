@@ -570,3 +570,43 @@ body {
     display: block !important;
   }
 }
+
+/* ============================================
+   HIDE BROWSER DEFAULT DRAG-DROP TEXT
+   ============================================ */
+
+/* Hide "Hold Shift to drop image" browser default text */
+input[type="text"]::-webkit-drag-drop-indicator,
+input[type="url"]::-webkit-drag-drop-indicator,
+input::-webkit-drag-drop-indicator,
+textarea::-webkit-drag-drop-indicator {
+  display: none !important;
+}
+
+/* Prevent drag-drop on input fields */
+input[type="text"],
+input[type="url"],
+input[type="email"],
+textarea {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+/* Hide all browser drag indicators */
+*::-webkit-drag-drop-indicator {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Additional rules to hide drag-drop placeholder text */
+input::placeholder,
+textarea::placeholder {
+  -webkit-user-drag: none;
+}
+
+/* Prevent any drag-related visual feedback */
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  -webkit-user-drag: none;
+}

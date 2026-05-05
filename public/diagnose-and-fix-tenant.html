@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diagnose & Fix Tenant Issue</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid #3a3a3a;
+        }
+        h1 {
+            color: #10b981;
+            margin-top: 0;
+        }
+        button {
+            background: #10b981;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #059669;
+        }
+        .info {
+            background: #3b82f6;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .error {
+            background: #ef4444;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        .success {
+            background: #10b981;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+        pre {
+            background: #1a1a1a;
+            padding: 15px;
+            border-radius: 6px;
+            overflow-x: auto;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Diagnose & Fix Tenant Issue</h1>
+        
+        <div class="info">
+            <strong>Problem:</strong> Shop Settings showing wrong tenant slug (Nyla Wigs instead of Prime Tech)
+        </div>
+
+        <div style="margin-top: 30px;">
+            <button onclick="diagnose()">1. Diagnose Issue</button>
+            <button onclick="clearAndReload()">2. Clear Cache & Reload</button>
+            <button onclick="forceLogin()">3. Force Re-login</button>
+        </div>
+
+        <div id="results" style="margin-top: 30px;"></div>
+    </div>
+
+    <script>
+        async function diagnose() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<div class="info">Diagnosing...</div>';
+
+            let report = '<h3>Diagnostic Report</h3>';
+
+            // Check localStorage
+            report += '<h4>1. LocalStorage Data:</h4><pre>';
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            if (user) {
+                try {
+                    const userData = JSON.parse(user);
+                    report += 'User: ' + JSON.stringify(userData, null, 2) + '\n';
+                } catch (e) {
+                    report += 'User data corrupted: ' + user + '\n';
+                }
+            } else {
+                report += 'No user data found\n';
+            }
+            
+            report += 'Token exists: ' + (token ? 'Yes' : 'No') + '\n';
+            
+            // Check for cached slugs
+            const cachedKeys = Object.keys(localStorage).filter(k => 
+                k.startsWith('tenantSlug_') || k.startsWith('shopSettings_')
+            );
+            report += '\nCached tenant data keys: ' + JSON.stringify(cachedKeys, null, 2) + '\n';
+            report += '</pre>';
+
+            // Check API response
+            report += '<h4>2. API Response:</h4><pre>';
+            try {
+                const token = localStorage.getItem('token');
+                const headers = token ? { Authorization: `Bearer ${token}` } : {};
+                
+                const response = await fetch('/api/tenant', { headers });
+                const data = await response.json();
+                
+                report += 'Status: ' + response.status + '\n';
+                report += 'Response: ' + JSON.stringify(data, null, 2) + '\n';
+                
+                if (data.tenant) {
+                    report += '\n⚠️ CURRENT TENANT: ' + data.tenant.business_name + '\n';
+                    report += '⚠️ CURRENT SLUG: ' + data.tenant.slug + '\n';
+                }
+            } catch (error) {
+                report += 'Error: ' + error.message + '\n';
+            }
+            report += '</pre>';
+
+            // Recommendations
+            report += '<h4>3. Recommendations:</h4>';
+            if (cachedKeys.length > 0) {
+                report += '<div class="error">Found cached tenant data that may be causing issues. Click "Clear Cache & Reload".</div>';
+            }
+            if (!token) {
+                report += '<div class="error">No authentication token found. Click "Force Re-login".</div>';
+            }
+
+            results.innerHTML = report;
+        }
+
+        function clearAndReload() {
+            // Keep user and token
+            const user = localStorage.getItem('user');
+            const token = localStorage.getItem('token');
+            
+            // Clear everything
+            localStorage.clear();
+            
+            // Restore user and token
+            if (user) localStorage.setItem('user', user);
+            if (token) localStorage.setItem('token', token);
+            
+            document.getElementById('results').innerHTML = 
+                '<div class="success">✅ Cache cleared! Reloading...</div>';
+            
+            setTimeout(() => {
+                window.location.href = '/shop-settings';
+            }, 1500);
+        }
+
+        function forceLogin() {
+            localStorage.clear();
+            document.getElementById('results').innerHTML = 
+                '<div class="success">✅ Logged out! Redirecting to login...</div>';
+            
+            setTimeout(() => {
+                window.location.href = '/login';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

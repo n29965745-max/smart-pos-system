@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear Prime Tech Cache - Smart POS</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+      max-width: 700px;
+      width: 100%;
+      padding: 50px;
+      text-align: center;
+    }
+    h1 {
+      color: #1a202c;
+      font-size: 32px;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+    .subtitle {
+      color: #6b7280;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    .status {
+      font-size: 18px;
+      margin: 30px 0;
+      padding: 25px;
+      border-radius: 12px;
+      font-weight: 600;
+    }
+    .status.loading {
+      background: #fef3c7;
+      color: #92400e;
+      border: 2px solid #fbbf24;
+    }
+    .status.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 2px solid #10b981;
+    }
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 2px solid #ef4444;
+    }
+    .info {
+      background: #f9fafb;
+      padding: 25px;
+      border-radius: 12px;
+      margin: 25px 0;
+      text-align: left;
+      border: 1px solid #e5e7eb;
+    }
+    .info h3 {
+      color: #374151;
+      margin-bottom: 15px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    .info p {
+      color: #6b7280;
+      line-height: 1.8;
+      margin-bottom: 10px;
+      font-size: 15px;
+    }
+    .info code {
+      background: #e5e7eb;
+      padding: 3px 8px;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #1f2937;
+    }
+    .url-box {
+      background: #f3f4f6;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+      word-break: break-all;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      color: #059669;
+      font-weight: 600;
+    }
+    .btn {
+      display: inline-block;
+      background: #10b981;
+      color: white;
+      padding: 16px 40px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      margin-top: 25px;
+      transition: all 0.3s;
+      font-size: 16px;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+    .btn:hover {
+      background: #059669;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+    .spinner {
+      border: 4px solid #f3f4f6;
+      border-top: 4px solid #10b981;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin: 25px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .check {
+      font-size: 60px;
+      margin-bottom: 20px;
+      animation: scaleIn 0.5s ease-out;
+    }
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
+    }
+    .step {
+      display: flex;
+      align-items: flex-start;
+      margin: 12px 0;
+      padding: 10px;
+      background: white;
+      border-radius: 8px;
+    }
+    .step-icon {
+      font-size: 20px;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .step-text {
+      color: #4b5563;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 Clear Prime Tech Cache</h1>
+    <p class="subtitle">Removing old Nyla Wigs data and loading fresh Prime Tech information</p>
+    
+    <div id="status" class="status loading">
+      <div class="spinner"></div>
+      <p>Clearing cached data...</p>
+    </div>
+
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function clearAndFix() {
+      const statusEl = document.getElementById('status');
+      const resultEl = document.getElementById('result');
+      
+      try {
+        // Step 1: Clear ALL localStorage items related to tenants and shop settings
+        statusEl.innerHTML = `
+          <div class="spinner"></div>
+          <p>Step 1/4: Clearing old cached data...</p>
+        `;
+        
+        const allKeys = Object.keys(localStorage);
+        const removedKeys = [];
+        
+        allKeys.forEach(key => {
+          if (key.includes('tenant') || 
+              key.includes('shop') || 
+              key.includes('slug') || 
+              key.includes('Slug') || 
+              key.includes('Settings') ||
+              key.includes('settings')) {
+            localStorage.removeItem(key);
+            removedKeys.push(key);
+          }
+        });
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Step 2: Verify user is logged in
+        statusEl.innerHTML = `
+          <div class="spinner"></div>
+          <p>Step 2/4: Verifying login status...</p>
+        `;
+
+        const token = localStorage.getItem('token');
+        const userStr = localStorage.getItem('user');
+        
+        if (!token || !userStr) {
+          throw new Error('Not logged in. Please login to Prime Tech first.');
+        }
+
+        const user = JSON.parse(userStr);
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Step 3: Fetch fresh tenant data from server
+        statusEl.innerHTML = `
+          <div class="spinner"></div>
+          <p>Step 3/4: Fetching fresh Prime Tech data from server...</p>
+        `;
+
+        const tenantRes = await fetch('/api/tenant', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!tenantRes.ok) {
+          const errorData = await tenantRes.json();
+          throw new Error(errorData.error || 'Failed to fetch tenant data');
+        }
+
+        const tenantData = await tenantRes.json();
+        const tenant = tenantData.tenant;
+
+        if (!tenant || !tenant.slug) {
+          throw new Error('No tenant slug found. Please contact support.');
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Step 4: Store fresh data with tenant-specific keys
+        statusEl.innerHTML = `
+          <div class="spinner"></div>
+          <p>Step 4/4: Saving fresh Prime Tech data...</p>
+        `;
+
+        if (user.tenantId) {
+          localStorage.setItem(`tenantSlug_${user.tenantId}`, tenant.slug);
+        }
+
+        // Also fetch and cache shop settings
+        const settingsRes = await fetch('/api/shop-settings', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (settingsRes.ok) {
+          const settingsData = await settingsRes.json();
+          if (settingsData.settings && user.tenantId) {
+            localStorage.setItem(`shopSettings_${user.tenantId}`, JSON.stringify(settingsData.settings));
+          }
+        }
+
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        // Success!
+        statusEl.className = 'status success';
+        statusEl.innerHTML = `
+          <div class="check">✅</div>
+          <p>Cache cleared and refreshed successfully!</p>
+        `;
+
+        const shopUrl = `${window.location.origin}/s/${tenant.slug}`;
+
+        resultEl.innerHTML = `
+          <div class="info">
+            <h3>✓ Prime Tech Data Restored!</h3>
+            
+            <div class="step">
+              <span class="step-icon">🏢</span>
+              <div class="step-text">
+                <strong>Business Name:</strong><br>
+                ${tenant.business_name || 'Prime Tech Electronics Ltd'}
+              </div>
+            </div>
+
+            <div class="step">
+              <span class="step-icon">🔗</span>
+              <div class="step-text">
+                <strong>Correct Slug:</strong><br>
+                <code>${tenant.slug}</code>
+              </div>
+            </div>
+
+            <div class="step">
+              <span class="step-icon">🌐</span>
+              <div class="step-text">
+                <strong>Your Shop URL:</strong><br>
+                <div class="url-box">${shopUrl}</div>
+              </div>
+            </div>
+
+            <div class="step">
+              <span class="step-icon">🗑️</span>
+              <div class="step-text">
+                <strong>Removed:</strong> ${removedKeys.length} cached item(s) including old Nyla Wigs data
+              </div>
+            </div>
+          </div>
+
+          <div class="info">
+            <h3>What to do next:</h3>
+            <div class="step">
+              <span class="step-icon">1️⃣</span>
+              <div class="step-text">Click the button below to go to Shop Settings</div>
+            </div>
+            <div class="step">
+              <span class="step-icon">2️⃣</span>
+              <div class="step-text">Verify the URL shows <code>${tenant.slug}</code></div>
+            </div>
+            <div class="step">
+              <span class="step-icon">3️⃣</span>
+              <div class="step-text">If it still shows wrong, click "Customize" and type: <code>${tenant.slug}</code></div>
+            </div>
+          </div>
+
+          <a href="/shop-settings" class="btn">Go to Shop Settings →</a>
+        `;
+
+      } catch (error) {
+        statusEl.className = 'status error';
+        statusEl.innerHTML = `
+          <p>❌ Error: ${error.message}</p>
+        `;
+        
+        resultEl.innerHTML = `
+          <div class="info">
+            <h3>Troubleshooting Steps:</h3>
+            
+            <div class="step">
+              <span class="step-icon">1️⃣</span>
+              <div class="step-text">Make sure you're logged into <strong>Prime Tech</strong> (not Nyla Wigs)</div>
+            </div>
+
+            <div class="step">
+              <span class="step-icon">2️⃣</span>
+              <div class="step-text">Try logging out completely and logging back in</div>
+            </div>
+
+            <div class="step">
+              <span class="step-icon">3️⃣</span>
+              <div class="step-text">Hard refresh this page: <code>Ctrl+F5</code> (Windows) or <code>Cmd+Shift+R</code> (Mac)</div>
+            </div>
+
+            <div class="step">
+              <span class="step-icon">4️⃣</span>
+              <div class="step-text">Try opening in Incognito/Private mode</div>
+            </div>
+          </div>
+          <a href="/login" class="btn">Go to Login</a>
+        `;
+      }
+    }
+
+    // Run automatically when page loads
+    clearAndFix();
+  </script>
+</body>
+</html>
