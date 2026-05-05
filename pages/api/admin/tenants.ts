@@ -128,7 +128,26 @@ export default secureRoute(async (req: SecureRequest, res: NextApiResponse) => {
         throw userError;
       }
 
-      // 4. Seed default SMS templates for this tenant
+      // 4. Create shop_settings with tenant's business info
+      await db.from('shop_settings').insert({
+        tenant_id: tenant.id,
+        user_id: authData.user.id,
+        business_name,
+        business_type,
+        business_email: business_email || '',
+        business_phone: business_phone || '',
+        business_address: '',
+        business_tagline: '',
+        logo_url: '',
+        primary_color: theme_color,
+        currency,
+        currency_symbol,
+        tiktok_url: '',
+        instagram_url: '',
+        facebook_url: '',
+      });
+
+      // 5. Seed default SMS templates for this tenant
       await db.from('message_templates').insert([
         {
           tenant_id: tenant.id,
