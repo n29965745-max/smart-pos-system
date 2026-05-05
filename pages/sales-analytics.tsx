@@ -90,16 +90,12 @@ export default function SalesAnalyticsPage() {
 
       if (response.ok) {
         setAnalytics(data);
-        setUseDemoData(false);
       } else {
-        // API error — show empty state, not demo data
         setAnalytics(null);
-        setUseDemoData(false);
       }
     } catch (error) {
       console.error('Error fetching analytics:', error);
       setAnalytics(null);
-      setUseDemoData(false);
     } finally {
       setLoading(false);
     }
