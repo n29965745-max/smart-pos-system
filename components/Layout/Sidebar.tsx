@@ -9,15 +9,7 @@ interface SidebarProps {
 export default function Sidebar({ onClose }: SidebarProps) {
   const router = useRouter();
   // Initialize from localStorage immediately - no delay on first render
-  const [shopSettings, setShopSettings] = useState<any>(() => {
-    if (typeof window !== 'undefined') {
-      const cached = localStorage.getItem('shopSettings');
-      if (cached) {
-        try { return JSON.parse(cached); } catch {}
-      }
-    }
-    return null;
-  });
+  const [shopSettings, setShopSettings] = useState<any>(null);
   const [tenantSlug, setTenantSlug] = useState<string | null>(null);
 
   useEffect(() => {
@@ -50,27 +42,26 @@ export default function Sidebar({ onClose }: SidebarProps) {
 
   const fetchShopSettings = async () => {
     try {
-      const userData = localStorage.getItem('user');
-      let url = '/api/shop-settings';
-      
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          if (user.email) {
-            url = `/api/shop-settings?email=${encodeURIComponent(user.email)}`;
-          }
-        } catch (e) {}
-      }
-      
-      const response = await fetch(url);
+      const token = localStorage.getItem('token');
+      const response = await fetch('/api/shop-settings', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {}
+      });
       const data = await response.json();
       
       if (response.ok && data.settings) {
         setShopSettings(data.settings);
-        localStorage.setItem('shopSettings', JSON.stringify(data.settings));
+        // Store with tenant ID to avoid cross-tenant contamination
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.tenantId) {
+          localStorage.setItem(`shopSettings_${user.tenantId}`, JSON.stringify(data.settings));
+        }
+      } else {
+        // Clear settings if fetch fails
+        setShopSettings(null);
       }
     } catch (error) {
       console.error('Error fetching shop settings:', error);
+      setShopSettings(null);
     }
   };
 
@@ -112,10 +103,13 @@ export default function Sidebar({ onClose }: SidebarProps) {
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     if (user.tenantId) {
       localStorage.removeItem(`tenantSlug_${user.tenantId}`);
+      localStorage.removeItem(`shopSettings_${user.tenantId}`);
     }
+    // Clear generic caches too
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     localStorage.removeItem('shopSettings');
+    localStorage.removeItem('tenantSlug');
     router.push('/login');
   };
 
