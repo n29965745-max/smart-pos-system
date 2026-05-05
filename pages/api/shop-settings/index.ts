@@ -23,6 +23,9 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
     } else if (req.method === 'PUT') {
       // Update shop settings - only for current tenant
       const settingsData = req.body;
+      
+      // Remove user_email from settingsData if it exists (frontend sends it but we don't need it)
+      const { user_email, ...cleanSettings } = settingsData;
 
       // Upsert shop settings for current tenant
       const { data, error } = await db
@@ -30,13 +33,14 @@ export default secureRoute(async function handler(req: SecureRequest, res: NextA
         .upsert({
           tenant_id: tenantId, // TENANT ISOLATION
           user_id: user.userId,
-          ...settingsData,
+          ...cleanSettings,
           updated_at: new Date().toISOString()
         })
         .select()
         .single();
 
       if (error) {
+        console.error('Shop settings upsert error:', error);
         return res.status(500).json({ error: error.message });
       }
 

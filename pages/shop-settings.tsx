@@ -121,27 +121,10 @@ export default function ShopSettingsPage() {
     setSaving(true);
 
     try {
-      const userData = localStorage.getItem('user');
-      let user_email = 'admin@system.local'; // Default fallback
-      
-      if (userData) {
-        try {
-          const user = JSON.parse(userData);
-          if (user.email) {
-            user_email = user.email;
-          }
-        } catch (e) {
-          console.log('Could not parse user data, using default email');
-        }
-      }
-
       const response = await fetch('/api/shop-settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          user_email,
-          ...settings
-        })
+        body: JSON.stringify(settings)
       });
 
       const data = await response.json();
