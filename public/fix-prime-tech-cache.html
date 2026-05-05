@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fix Prime Tech Cache - Smart POS</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      color: #1a202c;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+    .status {
+      font-size: 18px;
+      margin: 24px 0;
+      padding: 20px;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+    .status.loading {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .status.success {
+      background: #d1fae5;
+      color: #065f46;
+    }
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+    .info {
+      background: #f3f4f6;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+      text-align: left;
+    }
+    .info h3 {
+      color: #374151;
+      margin-bottom: 12px;
+      font-size: 16px;
+    }
+    .info p {
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+    .info code {
+      background: #e5e7eb;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+    }
+    .btn {
+      display: inline-block;
+      background: #10b981;
+      color: white;
+      padding: 14px 32px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 20px;
+      transition: background 0.2s;
+    }
+    .btn:hover {
+      background: #059669;
+    }
+    .spinner {
+      border: 3px solid #f3f4f6;
+      border-top: 3px solid #10b981;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .check {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔧 Fix Prime Tech Cache</h1>
+    
+    <div id="status" class="status loading">
+      <div class="spinner"></div>
+      <p>Clearing cached data...</p>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="info">
+      <h3>What this page does:</h3>
+      <p>✓ Clears old cached slug data from Nyla Wigs</p>
+      <p>✓ Clears old shop settings cache</p>
+      <p>✓ Forces fresh data fetch from server</p>
+      <p>✓ Verifies Prime Tech slug is correct</p>
+    </div>
+  </div>
+
+  <script>
+    async function fixCache() {
+      const statusEl = document.getElementById('status');
+      const resultEl = document.getElementById('result');
+      
+      try {
+        // Step 1: Clear all old localStorage keys
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.includes('tenantSlug') || key.includes('shopSettings'))) {
+            keysToRemove.push(key);
+          }
+        }
+        
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+        
+        // Step 2: Fetch fresh tenant data
+        const token = localStorage.getItem('token');
+        if (!token) {
+          throw new Error('Not logged in. Please login first.');
+        }
+
+        const response = await fetch('/api/tenant', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch tenant data');
+        }
+
+        const data = await response.json();
+        const correctSlug = data.tenant?.slug;
+
+        if (!correctSlug) {
+          throw new Error('No slug found for your tenant');
+        }
+
+        // Step 3: Store fresh data with tenant ID
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.tenantId) {
+          localStorage.setItem(`tenantSlug_${user.tenantId}`, correctSlug);
+        }
+
+        // Step 4: Show success
+        statusEl.className = 'status success';
+        statusEl.innerHTML = `
+          <div class="check">✓</div>
+          <p>Cache cleared successfully!</p>
+        `;
+
+        resultEl.innerHTML = `
+          <div class="info">
+            <h3>✓ Fixed!</h3>
+            <p><strong>Your correct slug:</strong> <code>${correctSlug}</code></p>
+            <p><strong>Your shop URL:</strong></p>
+            <p><code>${window.location.origin}/s/${correctSlug}</code></p>
+            <p style="margin-top: 16px;">Removed ${keysToRemove.length} cached item(s)</p>
+          </div>
+          <a href="/shop-settings" class="btn">Go to Shop Settings</a>
+        `;
+
+      } catch (error) {
+        statusEl.className = 'status error';
+        statusEl.innerHTML = `
+          <p>❌ Error: ${error.message}</p>
+        `;
+        
+        resultEl.innerHTML = `
+          <div class="info">
+            <h3>What to do:</h3>
+            <p>1. Make sure you're logged in</p>
+            <p>2. Try refreshing this page</p>
+            <p>3. If still not working, try hard refresh: <code>Ctrl+F5</code> (Windows) or <code>Cmd+Shift+R</code> (Mac)</p>
+          </div>
+          <a href="/login" class="btn">Go to Login</a>
+        `;
+      }
+    }
+
+    // Run automatically when page loads
+    fixCache();
+  </script>
+</body>
+</html>
