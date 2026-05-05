@@ -25,14 +25,19 @@ const _adminDb = createClient(
 
 /**
  * setTenantContext — Sets PostgreSQL session variable for RLS policies.
- * CRITICAL: This must be called before ANY database query to enforce tenant isolation.
- * The RLS function get_current_tenant_id() reads from app.current_user_id.
+ *
+ * SECURITY NOTE: We set app.current_tenant_id directly (not app.current_user_id)
+ * to avoid an extra DB lookup inside the RLS function on every row evaluation.
+ * The tenant_id is already verified server-side from the users table before this call.
+ *
+ * is_local=true scopes the setting to the current transaction only, preventing
+ * leakage across connection pool reuse.
  */
-async function setTenantContext(userId: string): Promise<void> {
+async function setTenantContext(tenantId: string | null): Promise<void> {
   try {
     await _adminDb.rpc('set_config', {
-      setting_name: 'app.current_user_id',
-      new_value: userId,
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId ?? '',
       is_local: true
     });
   } catch (err: any) {
@@ -164,8 +169,8 @@ export function secureRoute(handler: SecureHandler) {
       }
 
       // 5. Set PostgreSQL session variable for RLS enforcement
-      // This enables RLS policies to work even with service role key
-      await setTenantContext(user.id);
+      // Pass tenant_id directly — avoids per-row DB lookup in RLS function
+      await setTenantContext(isSuperAdmin ? null : user.tenant_id);
 
       // 6. Attach auth context — all values server-derived, never from client
       const secureReq = req as SecureRequest;
@@ -179,8 +184,8 @@ export function secureRoute(handler: SecureHandler) {
       };
       secureReq.tenantId = user.tenant_id ?? null;
 
-      // 7. Log tenant context for debugging (remove in production)
-      console.log(`[secureRoute] User ${user.email} accessing as tenant ${user.tenant_id || 'SUPERADMIN'}`);
+      // 7. Audit log — tenant context on every request
+      console.log(`[secureRoute] ${user.email} → tenant:${user.tenant_id || 'SUPERADMIN'} role:${user.role}`);
 
       return handler(secureReq, res);
     } catch (err: any) {
