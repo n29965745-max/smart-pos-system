@@ -84,7 +84,9 @@ export default function AdminPanel() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
-      setSuccess(`✅ "${form.business_name}" created. Owner: ${form.owner_email}`);
+      
+      const shopUrl = `${window.location.origin}/s/${form.slug}`;
+      setSuccess(`✅ "${form.business_name}" created!\n🔗 Shop URL: ${shopUrl}\n👤 Owner: ${form.owner_email}`);
       setShowCreate(false);
       setForm({ business_name: '', slug: '', business_email: '', business_phone: '', business_type: 'Retail Store', currency: 'KES', currency_symbol: 'KSh', theme_color: '#10b981', owner_name: '', owner_email: '', owner_password: '' });
       loadTenants();
@@ -167,37 +169,63 @@ export default function AdminPanel() {
               <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
-                    {['Business', 'Slug', 'Email', 'Users', 'Status', 'Created', 'Actions'].map(h => (
+                    {['Business', 'Shop URL', 'Email', 'Users', 'Status', 'Created', 'Actions'].map(h => (
                       <th key={h} style={{ textAlign: 'left', padding: '8px 12px', fontSize: 12, color: '#64748b', fontWeight: 600, textTransform: 'uppercase' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {tenants.map(t => (
-                    <tr key={t.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                      <td style={{ padding: '12px', color: '#f1f5f9', fontWeight: 500 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.theme_color }} />
-                          {t.business_name}
-                        </div>
-                      </td>
-                      <td style={{ padding: '12px', color: '#94a3b8', fontFamily: 'monospace', fontSize: 13 }}>{t.slug}</td>
-                      <td style={{ padding: '12px', color: '#94a3b8', fontSize: 13 }}>{t.business_email || '—'}</td>
-                      <td style={{ padding: '12px', color: '#94a3b8' }}>{t.user_count}</td>
-                      <td style={{ padding: '12px' }}><span style={s.badge(t.is_active)}>{t.is_active ? 'Active' : 'Inactive'}</span></td>
-                      <td style={{ padding: '12px', color: '#64748b', fontSize: 13 }}>{new Date(t.created_at).toLocaleDateString()}</td>
-                      <td style={{ padding: '12px' }}>
-                        <div style={{ display: 'flex', gap: 8 }}>
-                          <button style={{ ...s.btn, ...s.btnGhost, padding: '6px 12px', fontSize: 12 }} onClick={() => router.push(`/admin/tenants/${t.id}`)}>
-                            View
-                          </button>
-                          <button style={{ ...s.btn, padding: '6px 12px', fontSize: 12, background: t.is_active ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.15)', color: t.is_active ? '#fca5a5' : '#6ee7b7', border: 'none', cursor: 'pointer', borderRadius: 8, fontWeight: 600 }} onClick={() => toggleActive(t.id, t.is_active)}>
-                            {t.is_active ? 'Deactivate' : 'Activate'}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  {tenants.map(t => {
+                    const shopUrl = `${window.location.origin}/s/${t.slug}`;
+                    return (
+                      <tr key={t.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+                        <td style={{ padding: '12px', color: '#f1f5f9', fontWeight: 500 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: '50%', background: t.theme_color }} />
+                            {t.business_name}
+                          </div>
+                        </td>
+                        <td style={{ padding: '12px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                            <a 
+                              href={shopUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              style={{ color: '#10b981', fontSize: 13, fontFamily: 'monospace', textDecoration: 'none' }}
+                              title={shopUrl}
+                            >
+                              /s/{t.slug}
+                            </a>
+                            <button
+                              onClick={() => {
+                                navigator.clipboard.writeText(shopUrl);
+                                setSuccess(`✅ Copied: ${shopUrl}`);
+                                setTimeout(() => setSuccess(''), 2000);
+                              }}
+                              style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#64748b', padding: 4 }}
+                              title="Copy full URL"
+                            >
+                              📋
+                            </button>
+                          </div>
+                        </td>
+                        <td style={{ padding: '12px', color: '#94a3b8', fontSize: 13 }}>{t.business_email || '—'}</td>
+                        <td style={{ padding: '12px', color: '#94a3b8' }}>{t.user_count}</td>
+                        <td style={{ padding: '12px' }}><span style={s.badge(t.is_active)}>{t.is_active ? 'Active' : 'Inactive'}</span></td>
+                        <td style={{ padding: '12px', color: '#64748b', fontSize: 13 }}>{new Date(t.created_at).toLocaleDateString()}</td>
+                        <td style={{ padding: '12px' }}>
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            <button style={{ ...s.btn, ...s.btnGhost, padding: '6px 12px', fontSize: 12 }} onClick={() => router.push(`/admin/tenants/${t.id}`)}>
+                              View
+                            </button>
+                            <button style={{ ...s.btn, padding: '6px 12px', fontSize: 12, background: t.is_active ? 'rgba(239,68,68,0.15)' : 'rgba(16,185,129,0.15)', color: t.is_active ? '#fca5a5' : '#6ee7b7', border: 'none', cursor: 'pointer', borderRadius: 8, fontWeight: 600 }} onClick={() => toggleActive(t.id, t.is_active)}>
+                              {t.is_active ? 'Deactivate' : 'Activate'}
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             )}
