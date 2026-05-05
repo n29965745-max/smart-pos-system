@@ -36,6 +36,7 @@ if (typeof window !== 'undefined') {
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   const isPublicPage = ['/login', '/landing', '/', '/404', '/_error'].includes(router.pathname);
+  const isAdminPage = router.pathname.startsWith('/admin') || router.pathname.startsWith('/s/');
 
   useEffect(() => {
     // Initialize theme on app load
@@ -45,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        {isPublicPage ? (
+        {isPublicPage || isAdminPage ? (
           <Component {...pageProps} />
         ) : (
           <MainLayout>
