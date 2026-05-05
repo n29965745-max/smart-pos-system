@@ -18,12 +18,7 @@ export default function Sidebar({ onClose }: SidebarProps) {
     }
     return null;
   });
-  const [tenantSlug, setTenantSlug] = useState<string | null>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('tenantSlug');
-    }
-    return null;
-  });
+  const [tenantSlug, setTenantSlug] = useState<string | null>(null);
 
   useEffect(() => {
     fetchShopSettings();
@@ -38,10 +33,19 @@ export default function Sidebar({ onClose }: SidebarProps) {
         const data = await res.json();
         if (data.tenant?.slug) {
           setTenantSlug(data.tenant.slug);
-          localStorage.setItem('tenantSlug', data.tenant.slug);
+          // Store with tenant ID to avoid cross-tenant contamination
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          if (user.tenantId) {
+            localStorage.setItem(`tenantSlug_${user.tenantId}`, data.tenant.slug);
+          }
         }
+      } else {
+        // Clear slug if fetch fails (e.g., wrong tenant)
+        setTenantSlug(null);
       }
-    } catch {}
+    } catch {
+      setTenantSlug(null);
+    }
   };
 
   const fetchShopSettings = async () => {
@@ -104,8 +108,14 @@ export default function Sidebar({ onClose }: SidebarProps) {
   const visibleMenuItems = menuItems.filter(item => !item.adminOnly || isSuperAdmin);
 
   const handleLogout = () => {
+    // Clear all tenant-specific data
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    if (user.tenantId) {
+      localStorage.removeItem(`tenantSlug_${user.tenantId}`);
+    }
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.removeItem('shopSettings');
     router.push('/login');
   };
 
