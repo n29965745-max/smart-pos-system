@@ -67,7 +67,11 @@ export default function ShopSettingsPage() {
         if (tenantData.tenant?.slug) {
           setSlug(tenantData.tenant.slug);
           setSlugInput(tenantData.tenant.slug);
-          localStorage.setItem('tenantSlug', tenantData.tenant.slug);
+          // Store with tenant ID to avoid cross-tenant contamination
+          const user = JSON.parse(localStorage.getItem('user') || '{}');
+          if (user.tenantId) {
+            localStorage.setItem(`tenantSlug_${user.tenantId}`, tenantData.tenant.slug);
+          }
         }
       }
     } catch (error) {
@@ -98,7 +102,11 @@ export default function ShopSettingsPage() {
       if (!res.ok) throw new Error(data.error);
       setSlug(data.slug);
       setSlugInput(data.slug);
-      localStorage.setItem('tenantSlug', data.slug);
+      // Store with tenant ID to avoid cross-tenant contamination
+      const user = JSON.parse(localStorage.getItem('user') || '{}');
+      if (user.tenantId) {
+        localStorage.setItem(`tenantSlug_${user.tenantId}`, data.slug);
+      }
       setSlugEditing(false);
       showToast('Shop URL updated successfully!', 'success');
     } catch (err: any) {
@@ -140,7 +148,10 @@ export default function ShopSettingsPage() {
 
       if (response.ok) {
         // Update localStorage cache so sidebar shows new settings immediately
-        localStorage.setItem('shopSettings', JSON.stringify(settings));
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.tenantId) {
+          localStorage.setItem(`shopSettings_${user.tenantId}`, JSON.stringify(settings));
+        }
         showToast('Settings saved successfully! Refresh to see changes.', 'success');
       } else {
         showToast(data.error || 'Failed to save settings', 'error');
