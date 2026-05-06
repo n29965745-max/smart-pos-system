@@ -1,0 +1,3 @@
+Deployment triggered at: May 6, 2026
+Reason: Force redeploy after database function fix
+Changes: POS checkout with tenant isolation
