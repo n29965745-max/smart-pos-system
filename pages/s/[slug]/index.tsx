@@ -181,10 +181,10 @@ export default function TenantLanding() {
             </Link>
           </div>
 
-          {/* Trust badge */}
+          {/* Trust badge — dynamic based on business type */}
           <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#64748b', fontSize: 13 }}>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2.5"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7"/></svg>
-            Trusted by businesses in Kenya
+            Trusted by {tenant.type ? tenant.type.toLowerCase().replace(' store', '').replace(' shop', '') + ' businesses' : 'businesses'} in Kenya
           </div>
         </div>
 
