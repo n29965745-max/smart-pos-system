@@ -26,9 +26,10 @@ class CelcomSMSService {
   // Send SMS via Celcom Africa
   async sendSMS(params: SendSMSParams): Promise<SMSResult> {
     try {
-      const apiKey = process.env.CELCOM_API_KEY;
-      const partnerID = process.env.CELCOM_PARTNER_ID;
-      const shortcode = process.env.CELCOM_SENDER_ID || 'TEXTME';
+      // Trim and clean environment variables (remove quotes and spaces)
+      const apiKey = process.env.CELCOM_API_KEY?.trim().replace(/^["']|["']$/g, '');
+      const partnerID = process.env.CELCOM_PARTNER_ID?.trim().replace(/^["']|["']$/g, '');
+      const shortcode = (process.env.CELCOM_SENDER_ID || 'TEXTME').trim().replace(/^["']|["']$/g, '');
 
       if (!apiKey || !partnerID) {
         console.error('Celcom credentials not configured');
@@ -110,8 +111,9 @@ class CelcomSMSService {
   // Get delivery report
   async getDeliveryReport(messageId: string): Promise<any> {
     try {
-      const apiKey = process.env.CELCOM_API_KEY;
-      const partnerID = process.env.CELCOM_PARTNER_ID;
+      // Trim and clean environment variables
+      const apiKey = process.env.CELCOM_API_KEY?.trim().replace(/^["']|["']$/g, '');
+      const partnerID = process.env.CELCOM_PARTNER_ID?.trim().replace(/^["']|["']$/g, '');
 
       if (!apiKey || !partnerID) {
         throw new Error('Celcom credentials not configured');
@@ -137,8 +139,9 @@ class CelcomSMSService {
   // Get account balance
   async getBalance(): Promise<any> {
     try {
-      const apiKey = process.env.CELCOM_API_KEY;
-      const partnerID = process.env.CELCOM_PARTNER_ID;
+      // Trim and clean environment variables
+      const apiKey = process.env.CELCOM_API_KEY?.trim().replace(/^["']|["']$/g, '');
+      const partnerID = process.env.CELCOM_PARTNER_ID?.trim().replace(/^["']|["']$/g, '');
 
       if (!apiKey || !partnerID) {
         throw new Error('Celcom credentials not configured');
