@@ -262,7 +262,12 @@ export default function POSPage() {
 
   const fetchCart = async () => {
     try {
-      const response = await fetch(`/api/pos/cart?sessionId=${sessionId}`);
+      const token = localStorage.getItem('token');
+      const response = await fetch(`/api/pos/cart?sessionId=${sessionId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
       
       if (!response.ok) {
         console.error('Failed to fetch cart:', response.status, response.statusText);
@@ -302,9 +307,13 @@ export default function POSPage() {
 
     // Make API call and wait for response
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch('/api/pos/cart', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           sessionId,
           productId: product.id,
@@ -335,9 +344,13 @@ export default function POSPage() {
     if (newQuantity < 1) return;
 
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch('/api/pos/cart', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({ id: itemId, quantity: newQuantity })
       });
 
@@ -351,8 +364,12 @@ export default function POSPage() {
 
   const removeFromCart = async (itemId: string) => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`/api/pos/cart?id=${itemId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (response.ok) {
@@ -365,8 +382,12 @@ export default function POSPage() {
 
   const clearCart = async () => {
     try {
+      const token = localStorage.getItem('token');
       const response = await fetch(`/api/pos/cart?sessionId=${sessionId}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
       });
 
       if (response.ok) {

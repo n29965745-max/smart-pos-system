@@ -18,8 +18,10 @@ I've updated the checkout API to use proper tenant isolation. Now you just need 
 5. Copy and paste this SQL:
 
 ```sql
--- Create set_config function for tenant isolation
-CREATE OR REPLACE FUNCTION set_config(
+-- Drop and recreate set_config function for tenant isolation
+DROP FUNCTION IF EXISTS public.set_config(text, text, boolean);
+
+CREATE OR REPLACE FUNCTION public.set_config(
   setting_name text,
   new_value text,
   is_local boolean
@@ -29,15 +31,13 @@ LANGUAGE plpgsql
 SECURITY DEFINER
 AS $$
 BEGIN
-  -- Set the configuration parameter
   PERFORM set_config(setting_name, new_value, is_local);
   RETURN new_value;
 END;
 $$;
 
--- Grant execute permission
-GRANT EXECUTE ON FUNCTION set_config(text, text, boolean) TO authenticated;
-GRANT EXECUTE ON FUNCTION set_config(text, text, boolean) TO service_role;
+GRANT EXECUTE ON FUNCTION public.set_config(text, text, boolean) TO authenticated;
+GRANT EXECUTE ON FUNCTION public.set_config(text, text, boolean) TO service_role;
 ```
 
 6. Click **Run** (or press Ctrl+Enter)
