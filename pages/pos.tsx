@@ -516,12 +516,21 @@ export default function POSPage() {
         setPaymentMethod('cash');
         await fetchCart();
       } else {
-        showToast(`Error: ${data.error}`, 'error');
+        console.error('Checkout failed:', {
+          status: response.status,
+          statusText: response.statusText,
+          error: data.error,
+          data
+        });
+        showToast(`Error: ${data.error || 'Checkout failed'}`, 'error');
         setLoading(false);
       }
-    } catch (error) {
-      console.error('Error during checkout:', error);
-      showToast('Checkout failed', 'error');
+    } catch (error: any) {
+      console.error('Error during checkout:', {
+        message: error.message,
+        error
+      });
+      showToast(`Checkout failed: ${error.message || 'Unknown error'}`, 'error');
       setLoading(false);
     }
   };
