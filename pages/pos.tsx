@@ -408,10 +408,14 @@ export default function POSPage() {
     setLoading(true);
     try {
       const paid = paymentMethod === 'debt' ? 0 : parseFloat(amountPaid);
+      const token = localStorage.getItem('token');
       
       const response = await fetch('/api/pos/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           sessionId,
           customerId: selectedCustomer?.id,
