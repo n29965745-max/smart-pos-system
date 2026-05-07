@@ -73,12 +73,12 @@ export default function InventoryPage() {
     fetchProducts();
   }, [searchQuery, selectedCategory, filterTab, currentPage, itemsPerPage]);
 
-  // Auto-generate SKU when Add Product modal opens
+  // Auto-generate SKU when Add Product modal opens or product name changes
   useEffect(() => {
-    if (showAddModal && !formData.sku) {
+    if (showAddModal && formData.name && !formData.sku) {
       generateSKU();
     }
-  }, [showAddModal]);
+  }, [showAddModal, formData.name]);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -351,15 +351,34 @@ export default function InventoryPage() {
     setImagePreview('');
   };
 
-  const generateSKU = () => {
-    // Generate SKU format: PRD-YYYYMMDD-XXXX (e.g., PRD-20260507-A1B2)
-    const date = new Date();
-    const dateStr = date.getFullYear().toString() + 
-                    (date.getMonth() + 1).toString().padStart(2, '0') + 
-                    date.getDate().toString().padStart(2, '0');
-    const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const sku = `PRD-${dateStr}-${randomStr}`;
-    setFormData({ ...formData, sku });
+  const generateSKU = async () => {
+    // Generate SKU format: PRODUCTNAME-NUMBER (e.g., DIAMOND-1, DIAMOND-2)
+    // Get the current product count to determine the next number
+    try {
+      const response = await fetch('/api/inventory/list?limit=1');
+      const data = await response.json();
+      const totalProducts = data.pagination?.total || 0;
+      const nextNumber = totalProducts + 1;
+      
+      // Get first word of product name or use "PROD" if name is empty
+      const productName = formData.name.trim();
+      const namePrefix = productName 
+        ? productName.split(' ')[0].toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 10)
+        : 'PROD';
+      
+      const sku = `${namePrefix}-${nextNumber}`;
+      setFormData({ ...formData, sku });
+    } catch (error) {
+      console.error('Error generating SKU:', error);
+      // Fallback to simple random number if API fails
+      const randomNum = Math.floor(Math.random() * 10000) + 1;
+      const productName = formData.name.trim();
+      const namePrefix = productName 
+        ? productName.split(' ')[0].toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 10)
+        : 'PROD';
+      const sku = `${namePrefix}-${randomNum}`;
+      setFormData({ ...formData, sku });
+    }
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
