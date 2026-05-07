@@ -3,7 +3,6 @@ import type { NextApiResponse } from 'next';
 import { secureRoute, SecureRequest, getAdminDb } from '../../../lib/secure-route';
 
 async function handler(req: SecureRequest, res: NextApiResponse) {
-  const db = getAdminDb();
   const { tenantId } = req;
 
   if (req.method === 'GET') {
@@ -41,31 +40,54 @@ async function handler(req: SecureRequest, res: NextApiResponse) {
     try {
       const { transaction_id, customer_id, customer_name, product_id, product_name, quantity, amount, reason, notes } = req.body;
 
-      // Generate unique return_id
-      const return_id = `RET-${Date.now()}-${Math.random().toString(36).substring(2, 9).toUpperCase()}`;
+      // Validate required fields
+      if (!transaction_id || !product_name || !customer_name || !quantity || !amount || !reason) {
+        return res.status(400).json({ 
+          error: 'Missing required fields: transaction_id, product_name, customer_name, quantity, amount, reason' 
+        });
+      }
+
+      // Generate unique return_id with timestamp and random string
+      const timestamp = Date.now();
+      const randomStr = Math.random().toString(36).substring(2, 11).toUpperCase();
+      const return_id = `RET-${timestamp}-${randomStr}`;
+
+      console.log('Creating return with return_id:', return_id);
+
+      // Build insert object with only defined values
+      const insertData: any = {
+        return_id,
+        transaction_id, 
+        customer_name, 
+        product_name,
+        quantity: parseInt(quantity), 
+        amount: parseFloat(amount), 
+        reason, 
+        status: 'Pending',
+        tenant_id: tenantId,
+      };
+
+      // Only add optional fields if they exist
+      if (customer_id) insertData.customer_id = customer_id;
+      if (product_id) insertData.product_id = product_id;
+      if (notes) insertData.notes = notes;
 
       const { data: returnRecord, error } = await getAdminDb()
         .from('returns')
-        .insert([{
-          return_id,
-          transaction_id, 
-          customer_id, 
-          customer_name, 
-          product_id, 
-          product_name,
-          quantity, 
-          amount, 
-          reason, 
-          status: 'Pending', 
-          notes,
-          tenant_id: tenantId,
-        }])
-        .select().single();
+        .insert([insertData])
+        .select()
+        .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error creating return:', error);
+        throw error;
+      }
+
+      console.log('Return created successfully:', returnRecord);
       return res.status(201).json(returnRecord);
     } catch (error: any) {
-      return res.status(500).json({ error: error.message });
+      console.error('Error in POST /api/returns:', error);
+      return res.status(500).json({ error: error.message || 'Failed to create return' });
     }
   }
 
