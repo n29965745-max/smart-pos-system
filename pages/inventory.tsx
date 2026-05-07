@@ -884,15 +884,15 @@ export default function InventoryPage() {
                         <div className="flex-1 grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
                           <div>
                             <span className="text-[var(--text-secondary)]">Name:</span>
-                            <span className="ml-2 font-medium">{formData.name || 'Kaulo Plate'}</span>
+                            <span className="ml-2 font-medium">{formData.name || '-'}</span>
                           </div>
                           <div>
                             <span className="text-[var(--text-secondary)]">SKU:</span>
-                            <span className="ml-2 font-medium">{formData.sku || 'KAU-KALU-0003'}</span>
+                            <span className="ml-2 font-medium">{formData.sku || '-'}</span>
                           </div>
                           <div>
                             <span className="text-[var(--text-secondary)]">Category:</span>
-                            <span className="ml-2">{formData.category || 'Kaulo plates'}</span>
+                            <span className="ml-2">{formData.category || '-'}</span>
                           </div>
                           <div>
                             <span className="text-[var(--text-secondary)]">Base Unit:</span>
@@ -900,19 +900,19 @@ export default function InventoryPage() {
                           </div>
                           <div>
                             <span className="text-[var(--text-secondary)]">Purchase Unit:</span>
-                            <span className="ml-2">dozen</span>
+                            <span className="ml-2">-</span>
                           </div>
                           <div>
                             <span className="text-[var(--text-secondary)]">Buying Price:</span>
-                            <span className="ml-2">{formData.costPrice || '600'}</span>
+                            <span className="ml-2">{formData.costPrice || '-'}</span>
                           </div>
                           <div>
                             <span className="text-[var(--text-secondary)]">Retail Price:</span>
-                            <span className="ml-2">{formData.retailPrice || '70'}</span>
+                            <span className="ml-2">{formData.retailPrice || '-'}</span>
                           </div>
                           <div>
                             <span className="text-[var(--text-secondary)]">Wholesale Price:</span>
-                            <span className="ml-2">{formData.wholesalePrice || '65'}</span>
+                            <span className="ml-2">{formData.wholesalePrice || '-'}</span>
                           </div>
                           <div>
                             <span className="text-[var(--text-secondary)]">Initial Stock:</span>
