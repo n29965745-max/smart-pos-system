@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import DateRangeFilter, { getDateRange, formatDateLocal } from '../components/DateRangeFilter';
 import { useToast } from '../hooks/useToast';
 import Toast from '../components/Toast';
+import ResponsiveGrid, { ResponsiveCard } from '../components/ResponsiveGrid';
+import ResponsiveFilters from '../components/ResponsiveFilters';
 
 interface DashboardStats {
   allTimeProfit: number;
@@ -463,46 +465,48 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-[var(--bg-primary)] p-6">
+    <div className="min-h-screen bg-[var(--bg-primary)] p-4 sm:p-5 lg:p-6">
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-5 lg:space-y-6">
         {/* Header */}
-        <div className="flex justify-between items-center">
-          <div>
-            <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Dashboard Overview</h1>
-            <p className="text-sm text-[var(--text-secondary)] mt-1">A summary of your business performance</p>
-          </div>
-          <div className="flex items-center gap-4">
-            <select 
-              value={priceType}
-              onChange={(e) => setPriceType(e.target.value)}
-              className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-4 py-2 text-sm text-[var(--text-primary)]"
-            >
-              <option value="retail">Retail</option>
-              <option value="wholesale">Wholesale</option>
-            </select>
-            <DateRangeFilter 
-              value={dateRange} 
-              onChange={setDateRange}
-              startDate={startDate}
-              endDate={endDate}
-              onDateChange={(start, end) => {
-                setStartDate(start);
-                setEndDate(end);
-              }}
-            />
-            <button className="px-4 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm hover:bg-[var(--bg-secondary)] text-[var(--text-primary)]">
-              📤 Export Summary
-            </button>
-          </div>
-        </div>
+        <ResponsiveFilters
+          title="Dashboard Overview"
+          subtitle="A summary of your business performance"
+          actions={
+            <>
+              <select 
+                value={priceType}
+                onChange={(e) => setPriceType(e.target.value)}
+                className="w-full sm:w-auto bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-4 py-2 sm:py-2.5 text-sm text-[var(--text-primary)] min-h-[44px] sm:min-h-[36px]"
+              >
+                <option value="retail">Retail</option>
+                <option value="wholesale">Wholesale</option>
+              </select>
+              <DateRangeFilter 
+                value={dateRange} 
+                onChange={setDateRange}
+                startDate={startDate}
+                endDate={endDate}
+                onDateChange={(start, end) => {
+                  setStartDate(start);
+                  setEndDate(end);
+                }}
+              />
+              <button className="w-full sm:w-auto px-4 py-2 sm:py-2.5 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg text-sm hover:bg-[var(--bg-secondary)] text-[var(--text-primary)] min-h-[44px] sm:min-h-[36px]">
+                📤 Export Summary
+              </button>
+            </>
+          }
+        >
+          <></>
+        </ResponsiveFilters>
 
         {/* Top Row - Main Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <ResponsiveGrid cols={{ default: 1, sm: 2, lg: 4 }} gap={4}>
           {/* All Time Verified Profit - Redesigned */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-[var(--text-secondary)]">
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] line-clamp-2">
                 {dateRange === 'all' ? 'All Time Verified Profit' :
                  dateRange === 'today' ? "Today's Verified Profit" :
                  dateRange === 'yesterday' ? "Yesterday's Verified Profit" :
@@ -513,20 +517,20 @@ export default function Dashboard() {
                  dateRange === 'thisYear' ? 'This Year Verified Profit' :
                  'Verified Profit'}
               </p>
-              <span className="text-emerald-500">📈</span>
+              <span className="text-lg sm:text-xl flex-shrink-0">📈</span>
             </div>
             
             {/* Main Profit Amount */}
-            <p className="text-3xl font-bold text-emerald-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-500 mb-2 break-words">
               KSH {stats?.allTimeProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             
             {/* Revenue and Margin */}
             <div className="flex items-center justify-between mb-3 text-xs">
-              <p className="text-[var(--text-secondary)]">
+              <p className="text-[var(--text-secondary)] truncate pr-2">
                 from KSH {stats?.grossRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
-              <div className="px-3 py-0.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-full">
+              <div className="px-2 sm:px-3 py-0.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-full flex-shrink-0">
                 <span className="text-xs font-semibold text-[var(--text-primary)]">
                   {stats?.grossRevenue > 0 ? ((stats?.allTimeProfit / stats?.grossRevenue) * 100).toFixed(1) : '0.0'}%
                 </span>
@@ -538,7 +542,7 @@ export default function Dashboard() {
               {/* Retail Box */}
               <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-2">
                 <p className="text-xs text-[var(--text-secondary)] mb-0.5">Retail</p>
-                <p className="text-base font-bold text-emerald-600 dark:text-emerald-400 mb-0.5">
+                <p className="text-sm sm:text-base font-bold text-emerald-600 dark:text-emerald-400 mb-0.5 break-words">
                   KSH {stats?.retailProfit?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                 </p>
                 <p className="text-xs text-[var(--text-secondary)]">
@@ -549,7 +553,7 @@ export default function Dashboard() {
               {/* Wholesale Box */}
               <div className="bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-lg p-2">
                 <p className="text-xs text-[var(--text-secondary)] mb-0.5">Wholesale</p>
-                <p className="text-base font-bold text-emerald-600 dark:text-emerald-400 mb-0.5">
+                <p className="text-sm sm:text-base font-bold text-emerald-600 dark:text-emerald-400 mb-0.5 break-words">
                   KSH {stats?.wholesaleProfit?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
                 </p>
                 <p className="text-xs text-[var(--text-secondary)]">
@@ -562,15 +566,15 @@ export default function Dashboard() {
             <p className="text-xs text-[var(--text-secondary)] italic">
               ✓ Strict validation applied • Excludes invalid pricing
             </p>
-          </div>
+          </ResponsiveCard>
 
           {/* Potential Profit */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-[var(--text-secondary)]">Potential Profit</p>
-              <span className="text-blue-500">📊</span>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)]">Potential Profit</p>
+              <span className="text-lg sm:text-xl flex-shrink-0">📊</span>
             </div>
-            <p className="text-3xl font-bold text-blue-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-500 mb-2 break-words">
               KSH {stats?.potentialProfit.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-2">
@@ -579,20 +583,20 @@ export default function Dashboard() {
             <p className="text-xs text-[var(--text-secondary)] mt-2 italic">
               ⚠ Profit is reduced due to pricing issues
             </p>
-          </div>
+          </ResponsiveCard>
 
           {/* Gross Sales Revenue */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-[var(--text-secondary)]">
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] line-clamp-2">
                 {dateRange === 'all' ? 'Gross Sales Revenue' :
                  dateRange === 'today' ? "Today's Gross Sales" :
                  dateRange === 'yesterday' ? "Yesterday's Gross Sales" :
                  'Gross Sales Revenue'}
               </p>
-              <span className="text-purple-500">💰</span>
+              <span className="text-lg sm:text-xl flex-shrink-0">💰</span>
             </div>
-            <p className="text-3xl font-bold text-purple-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-500 mb-2 break-words">
               KSH {stats?.grossRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             <div className="space-y-1 text-xs mt-2">
@@ -608,12 +612,12 @@ export default function Dashboard() {
             <p className="text-xs text-[var(--text-secondary)] mt-2">
               Total sales before returns & expenses
             </p>
-          </div>
+          </ResponsiveCard>
 
           {/* Net Revenue for Selected Range - Compact Design */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-sm text-[var(--text-secondary)]">
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] line-clamp-2">
                 {dateRange === 'today' ? "Today's Net Revenue" :
                  dateRange === 'yesterday' ? "Yesterday's Net Revenue" :
                  dateRange === 'last7days' ? "Last 7 Days Net Revenue" :
@@ -623,20 +627,20 @@ export default function Dashboard() {
                  dateRange === 'thisYear' ? "This Year Net Revenue" :
                  "Today's Net Revenue"}
               </p>
-              <span className="text-emerald-500">💵</span>
+              <span className="text-lg sm:text-xl flex-shrink-0">💵</span>
             </div>
             
             {/* Main Net Revenue Amount */}
-            <p className="text-3xl font-bold text-emerald-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-emerald-500 mb-2 break-words">
               KSH {((stats?.todayNetRevenue || 0) - (stats?.todayReturns || 0) - (stats?.todayExpenses || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             
             {/* From Gross and Margin */}
             <div className="flex items-center justify-between mb-3 text-xs">
-              <p className="text-[var(--text-secondary)]">
+              <p className="text-[var(--text-secondary)] truncate pr-2">
                 from KSH {stats?.todayNetRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </p>
-              <div className="px-3 py-0.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-full">
+              <div className="px-2 sm:px-3 py-0.5 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-full flex-shrink-0">
                 <span className="text-xs font-semibold text-[var(--text-primary)]">
                   {stats?.todayNetRevenue > 0 ? (((stats?.todayNetRevenue - stats?.todayReturns - stats?.todayExpenses) / stats?.todayNetRevenue) * 100).toFixed(1) : '100.0'}%
                 </span>
@@ -666,22 +670,22 @@ export default function Dashboard() {
                 <span className="text-emerald-500">KSH {((stats?.todayNetRevenue || 0) - (stats?.todayReturns || 0) - (stats?.todayExpenses || 0)).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
               </div>
             </div>
-          </div>
-        </div>
+          </ResponsiveCard>
+        </ResponsiveGrid>
 
         {/* Bottom Row - Inventory & Expenses */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <ResponsiveGrid cols={{ default: 1, sm: 2, lg: 4 }} gap={4}>
           {/* Today's Expenses */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-[var(--text-secondary)]">
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] line-clamp-2">
                 {dateRange === 'today' ? "Today's Expenses" :
                  dateRange === 'yesterday' ? "Yesterday's Expenses" :
                  'Expenses'}
               </p>
-              <span className="text-red-500">📉</span>
+              <span className="text-lg sm:text-xl flex-shrink-0">📉</span>
             </div>
-            <p className="text-3xl font-bold text-red-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-500 mb-2 break-words">
               KSH {stats?.todayExpenses.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-2">
@@ -690,147 +694,147 @@ export default function Dashboard() {
             <div className="mt-3 flex gap-2">
               <button
                 onClick={() => router.push('/expenses')}
-                className="flex-1 px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-xs hover:bg-[var(--bg-tertiary)] text-[var(--text-primary)]"
+                className="flex-1 px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-xs hover:bg-[var(--bg-tertiary)] text-[var(--text-primary)] min-h-[36px]"
               >
                 ➕ Add
               </button>
               <button
                 onClick={() => router.push('/expenses')}
-                className="flex-1 px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-xs hover:bg-[var(--bg-tertiary)] text-[var(--text-primary)]"
+                className="flex-1 px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-xs hover:bg-[var(--bg-tertiary)] text-[var(--text-primary)] min-h-[36px]"
               >
                 👁 View
               </button>
             </div>
-          </div>
+          </ResponsiveCard>
 
           {/* Total Inventory Value (Cost) */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-[var(--text-secondary)]">Total Inventory Value (Cost)</p>
-              <span className="text-orange-500">💼</span>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] line-clamp-2">Total Inventory Value (Cost)</p>
+              <span className="text-lg sm:text-xl flex-shrink-0">💼</span>
             </div>
-            <p className="text-3xl font-bold text-orange-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-500 mb-2 break-words">
               KSH {stats?.inventoryValueCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-2">
               Current value at buying price
             </p>
-          </div>
+          </ResponsiveCard>
 
           {/* Total Inventory Value (Selling) */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-[var(--text-secondary)]">Total Inventory Value (Selling)</p>
-              <span className="text-blue-500">💎</span>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)] line-clamp-2">Total Inventory Value (Selling)</p>
+              <span className="text-lg sm:text-xl flex-shrink-0">💎</span>
             </div>
-            <p className="text-3xl font-bold text-blue-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-blue-500 mb-2 break-words">
               KSH {stats?.inventoryValueSelling.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-2">
               Current value at {priceType} price
             </p>
-          </div>
+          </ResponsiveCard>
 
           {/* Total Units in Stock */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-[var(--text-secondary)]">Total Units in Stock</p>
-              <span className="text-purple-500">📦</span>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)]">Total Units in Stock</p>
+              <span className="text-lg sm:text-xl flex-shrink-0">📦</span>
             </div>
-            <p className="text-3xl font-bold text-purple-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-purple-500 mb-2 break-words">
               {stats?.totalUnits.toLocaleString()}
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-2">
               Total units for all products
             </p>
-          </div>
-        </div>
+          </ResponsiveCard>
+        </ResponsiveGrid>
 
         {/* Additional Metrics Row - 3 columns only */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <ResponsiveGrid cols={{ default: 1, sm: 2, lg: 3 }} gap={4}>
           {/* Product Categories */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-[var(--text-secondary)]">Product Categories</p>
-              <span className="text-blue-500">📂</span>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)]">Product Categories</p>
+              <span className="text-lg sm:text-xl flex-shrink-0">📂</span>
             </div>
-            <p className="text-3xl font-bold text-[var(--text-primary)] mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-[var(--text-primary)] mb-2">
               {stats?.productCategories || 0}
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-2">
               Number of unique active categories
             </p>
-          </div>
+          </ResponsiveCard>
 
           {/* Outstanding Debt */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-[var(--text-secondary)]">Outstanding Debt</p>
-              <span className="text-orange-500">💳</span>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)]">Outstanding Debt</p>
+              <span className="text-lg sm:text-xl flex-shrink-0">💳</span>
             </div>
-            <p className="text-3xl font-bold text-orange-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-orange-500 mb-2 break-words">
               KSH {stats?.outstandingDebt?.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 }) || '0.00'}
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-2">
               Total outstanding customer debt
             </p>
-          </div>
+          </ResponsiveCard>
 
           {/* Low Stock Alerts */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-2">
-              <p className="text-xs text-[var(--text-secondary)]">Low Stock Alerts</p>
-              <span className="text-red-500">⚠️</span>
+              <p className="text-xs sm:text-sm text-[var(--text-secondary)]">Low Stock Alerts</p>
+              <span className="text-lg sm:text-xl flex-shrink-0">⚠️</span>
             </div>
-            <p className="text-3xl font-bold text-red-500 mb-2">
+            <p className="text-xl sm:text-2xl lg:text-3xl font-bold text-red-500 mb-2">
               {stats?.lowStockCount || 0}
             </p>
             <p className="text-xs text-[var(--text-secondary)] mt-2">
               Items below minimum stock
             </p>
-          </div>
-        </div>
+          </ResponsiveCard>
+        </ResponsiveGrid>
 
         {/* Sales & Profit Trend Chart + Pricing Data Audit - Side by Side */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
           {/* Sales & Profit Trend Chart - Takes 2 columns (66%) */}
-          <div className="lg:col-span-2 bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default" className="lg:col-span-2">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="text-lg font-semibold text-[var(--text-primary)]">Sales & Profit Trend</h2>
+              <h2 className="text-base sm:text-lg font-semibold text-[var(--text-primary)]">Sales & Profit Trend</h2>
             </div>
 
-            {/* Chart Area */}
-            <div className="relative bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] p-4" style={{ height: '280px' }}>
+            {/* Chart Area - with horizontal scroll on mobile */}
+            <div className="relative bg-[var(--bg-secondary)] rounded border border-[var(--border-color)] p-2 sm:p-4 overflow-x-auto" style={{ height: '280px' }}>
               {renderChart()}
             </div>
 
-            {/* Legend */}
-            <div className="flex items-center justify-center gap-6 mt-4 text-xs">
+            {/* Legend - Responsive */}
+            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-4 text-xs">
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-emerald-500"></div>
+                <div className="w-3 h-3 bg-emerald-500 flex-shrink-0"></div>
                 <span className="text-[var(--text-secondary)]">Gross Sales</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-3 bg-green-400"></div>
+                <div className="w-3 h-3 bg-green-400 flex-shrink-0"></div>
                 <span className="text-[var(--text-secondary)]">Net Sales</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-0.5 bg-red-500"></div>
+                <div className="w-3 h-0.5 bg-red-500 flex-shrink-0"></div>
                 <span className="text-[var(--text-secondary)]">Expenses</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="w-3 h-0.5 bg-blue-400"></div>
+                <div className="w-3 h-0.5 bg-blue-400 flex-shrink-0"></div>
                 <span className="text-[var(--text-secondary)]">Verified Profit</span>
               </div>
             </div>
-          </div>
+          </ResponsiveCard>
 
           {/* Pricing Data Audit - Takes 1 column (33%) */}
-          <div className="bg-[var(--card-bg)] border border-[var(--border-color)] rounded-lg p-6">
+          <ResponsiveCard padding="default">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-2">
-                <p className="text-base font-semibold text-[var(--text-primary)]">Pricing Data Audit</p>
-                <span className="text-yellow-500">⚠️</span>
+                <p className="text-sm sm:text-base font-semibold text-[var(--text-primary)]">Pricing Data Audit</p>
+                <span className="text-lg sm:text-xl">⚠️</span>
               </div>
               <button
                 onClick={() => {
@@ -840,7 +844,7 @@ export default function Dashboard() {
                   }
                   setShowPricingProducts(!showPricingProducts);
                 }}
-                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors min-h-[44px] min-w-[44px] sm:min-h-[36px] sm:min-w-[36px] flex items-center justify-center"
                 title={showPricingProducts ? "Hide products" : "View products with issues"}
               >
                 {showPricingProducts ? '👁‍🗨' : '👁'}
@@ -909,32 +913,32 @@ export default function Dashboard() {
                   <div className="text-center py-4 text-[var(--text-secondary)] text-sm">No products with issues found</div>
                 ) : (
                   <>
-                    <div className="overflow-x-auto bg-[#0a1628] rounded-lg border border-[var(--border-color)]">
-                      <table className="w-full text-xs">
+                    <div className="overflow-x-auto bg-[#0a1628] rounded-lg border border-[var(--border-color)] -mx-2 sm:mx-0">
+                      <table className="w-full text-xs min-w-[600px]">
                         <thead>
                           <tr className="border-b border-gray-700">
-                            <th className="text-left py-2 px-3 text-gray-400 font-normal">Product</th>
-                            <th className="text-left py-2 px-3 text-gray-400 font-normal">Cost</th>
-                            <th className="text-left py-2 px-3 text-gray-400 font-normal">Retail</th>
-                            <th className="text-left py-2 px-3 text-gray-400 font-normal">Wholesale</th>
-                            <th className="text-left py-2 px-3 text-gray-400 font-normal">Issues</th>
-                            <th className="text-right py-2 px-3 text-gray-400 font-normal">Actions</th>
+                            <th className="text-left py-2 px-2 sm:px-3 text-gray-400 font-normal">Product</th>
+                            <th className="text-left py-2 px-2 sm:px-3 text-gray-400 font-normal">Cost</th>
+                            <th className="text-left py-2 px-2 sm:px-3 text-gray-400 font-normal">Retail</th>
+                            <th className="text-left py-2 px-2 sm:px-3 text-gray-400 font-normal">Wholesale</th>
+                            <th className="text-left py-2 px-2 sm:px-3 text-gray-400 font-normal">Issues</th>
+                            <th className="text-right py-2 px-2 sm:px-3 text-gray-400 font-normal">Actions</th>
                           </tr>
                         </thead>
                         <tbody>
                           {pricingProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage).map((product: any, index: number) => (
                             <tr key={product.id} className="border-b border-gray-800 hover:bg-gray-900/50">
-                              <td className="py-3 px-3 text-gray-200">{product.name}</td>
-                              <td className="py-3 px-3 text-gray-200">
+                              <td className="py-3 px-2 sm:px-3 text-gray-200">{product.name}</td>
+                              <td className="py-3 px-2 sm:px-3 text-gray-200">
                                 {parseFloat(product.cost_price || 0).toFixed(0)}
                               </td>
-                              <td className="py-3 px-3 text-gray-200">
+                              <td className="py-3 px-2 sm:px-3 text-gray-200">
                                 {parseFloat(product.retail_price || 0).toFixed(0)}
                               </td>
-                              <td className="py-3 px-3 text-gray-200">
+                              <td className="py-3 px-2 sm:px-3 text-gray-200">
                                 {parseFloat(product.wholesale_price || 0).toFixed(0)}
                               </td>
-                              <td className="py-3 px-3">
+                              <td className="py-3 px-2 sm:px-3">
                                 <div className="flex flex-wrap gap-1">
                                   {product.issues?.map((issue: string, idx: number) => (
                                     <span key={idx} className="px-1.5 py-0.5 bg-red-600 text-white text-xs rounded">
@@ -943,14 +947,14 @@ export default function Dashboard() {
                                   ))}
                                 </div>
                               </td>
-                              <td className="py-3 px-3">
+                              <td className="py-3 px-2 sm:px-3">
                                 <div className="flex justify-end gap-1">
-                                  <button className="p-1.5 hover:bg-gray-800 rounded" title="Edit">
+                                  <button className="p-1.5 hover:bg-gray-800 rounded min-h-[36px] min-w-[36px] flex items-center justify-center" title="Edit">
                                     <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                     </svg>
                                   </button>
-                                  <button className="p-1.5 hover:bg-gray-800 rounded" title="Delete">
+                                  <button className="p-1.5 hover:bg-gray-800 rounded min-h-[36px] min-w-[36px] flex items-center justify-center" title="Delete">
                                     <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                     </svg>
@@ -973,17 +977,17 @@ export default function Dashboard() {
                           <button
                             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                             disabled={currentPage === 1}
-                            className="px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed min-h-[36px]"
                           >
                             Prev
                           </button>
-                          <span className="px-2 py-1 text-[var(--text-secondary)]">
+                          <span className="px-2 py-2 text-[var(--text-secondary)] flex items-center">
                             {currentPage}/{Math.ceil(pricingProducts.length / productsPerPage)}
                           </span>
                           <button
                             onClick={() => setCurrentPage(prev => Math.min(Math.ceil(pricingProducts.length / productsPerPage), prev + 1))}
                             disabled={currentPage >= Math.ceil(pricingProducts.length / productsPerPage)}
-                            className="px-2 py-1 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="px-3 py-2 bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded text-xs text-[var(--text-primary)] hover:bg-[var(--bg-tertiary)] disabled:opacity-50 disabled:cursor-not-allowed min-h-[36px]"
                           >
                             Next
                           </button>
@@ -994,7 +998,7 @@ export default function Dashboard() {
                 )}
               </div>
             )}
-          </div>
+          </ResponsiveCard>
         </div>
       </div>
     </div>
