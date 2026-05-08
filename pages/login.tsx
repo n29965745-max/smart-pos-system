@@ -66,57 +66,56 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center" style={{
-      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
-    }}>
-      <div className="w-full max-w-md p-8">
-        {/* Logo and Title */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm mb-4">
-            <span className="text-3xl font-bold text-white">S</span>
-          </div>
-          <h1 className="text-white text-2xl font-bold">Smart POS System</h1>
-          <p className="text-white/80 text-sm mt-1">Multi-Tenant Business Management</p>
+    <div className="min-h-screen bg-slate-900">
+      {/* Header Bar */}
+      <div className="w-full py-8 px-6" style={{
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+      }}>
+        <div className="max-w-7xl mx-auto">
+          <h1 className="text-white text-3xl font-bold">Smart POS System</h1>
+          <p className="text-white/90 text-base mt-1">Multi-Tenant Business Management</p>
+          
+          <h2 className="text-white text-2xl font-bold mt-6">Welcome back</h2>
+          <p className="text-white/90 text-sm">Sign in to your account to continue</p>
         </div>
+      </div>
 
-        {/* Login Card */}
-        <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-white/10">
-          <h2 className="text-2xl font-bold text-white mb-2">Welcome back</h2>
-          <p className="text-slate-300 text-sm mb-6">Sign in to your account to continue</p>
-
+      {/* Login Form */}
+      <div className="max-w-7xl mx-auto px-6 py-8">
+        <div className="max-w-md">
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none placeholder-slate-400"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 text-white rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none placeholder-slate-500"
                 placeholder="Enter your email"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">Password</label>
+              <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="w-full px-4 py-3 bg-slate-700/50 border border-slate-600 text-white rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none placeholder-slate-400"
+                className="w-full px-4 py-2 bg-slate-800 border border-slate-700 text-white rounded focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none placeholder-slate-500"
                 placeholder="Enter your password"
               />
             </div>
 
             {success && (
-              <div className="p-3 rounded-lg text-sm bg-green-500/10 border border-green-500/20 text-green-400">
+              <div className="p-3 rounded text-sm bg-green-500/10 border border-green-500/20 text-green-400">
                 {success}
               </div>
             )}
 
             {error && (
-              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
+              <div className="p-3 bg-red-500/10 border border-red-500/20 rounded text-red-400 text-sm">
                 {error}
               </div>
             )}
@@ -124,7 +123,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full text-white font-semibold py-3 px-6 rounded-lg transition-all duration-200 disabled:opacity-50"
+              className="px-6 py-2 text-white font-medium rounded transition-all duration-200 disabled:opacity-50"
               style={{
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 opacity: loading ? 0.5 : 1
@@ -134,16 +133,16 @@ export default function Login() {
             </button>
           </form>
 
-          <div className="mt-4 text-center">
+          <div className="mt-4">
             <a href="#" className="text-sm text-purple-400 hover:text-purple-300 transition-colors">
               Forgot your password?
             </a>
           </div>
-        </div>
 
-        <p className="text-center text-white/60 text-sm mt-6">
-          Protected by enterprise-grade security
-        </p>
+          <p className="text-slate-500 text-sm mt-6">
+            Protected by enterprise-grade security
+          </p>
+        </div>
       </div>
     </div>
   );
