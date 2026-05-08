@@ -95,6 +95,7 @@ export default function Login() {
                   src={settings.logo_url} 
                   alt={settings.business_name}
                   className="w-16 h-16 object-contain rounded-full bg-white p-2 shadow-lg transition-transform duration-300 hover:scale-110"
+                  style={{ maxWidth: '64px', maxHeight: '64px' }}
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     const fallback = e.currentTarget.nextElementSibling as HTMLElement;
@@ -180,6 +181,7 @@ export default function Login() {
                 src={settings.logo_url} 
                 alt={settings.business_name}
                 className="w-16 h-16 object-contain rounded-full bg-white p-2 shadow-lg mb-4"
+                style={{ maxWidth: '64px', maxHeight: '64px' }}
               />
             ) : (
               <div className="w-16 h-16 rounded-full flex items-center justify-center shadow-lg mb-4" style={{ 
