@@ -149,32 +149,32 @@ export default function Checkout() {
               <div className="lg:col-span-2 space-y-5">
                 {/* Contact */}
                 <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h2 className="font-bold text-lg mb-4">Contact Information</h2>
+                  <h2 className="font-bold text-lg text-gray-900 mb-4">Contact Information</h2>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">Full Name *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name *</label>
                       <input
                         type="text" name="fullName" value={formData.fullName}
                         onChange={handleChange} required
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 text-sm"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 text-sm text-gray-900"
                         style={{ '--tw-ring-color': p } as any}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-1.5">Phone *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone *</label>
                         <input
                           type="tel" name="phone" value={formData.phone}
                           onChange={handleChange} required
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1.5">Email</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Email</label>
                         <input
                           type="email" name="email" value={formData.email}
                           onChange={handleChange}
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900"
                         />
                       </div>
                     </div>
@@ -183,49 +183,49 @@ export default function Checkout() {
 
                 {/* Shipping */}
                 <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h2 className="font-bold text-lg mb-4">Delivery Address</h2>
+                  <h2 className="font-bold text-lg text-gray-900 mb-4">Delivery Address</h2>
                   <div className="space-y-4">
                     <div>
-                      <label className="block text-sm font-medium mb-1.5">Street Address *</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1.5">Street Address *</label>
                       <input
                         type="text" name="street" value={formData.street}
                         onChange={handleChange} required
-                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm"
+                        className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900"
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-1.5">City *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">City *</label>
                         <input
                           type="text" name="city" value={formData.city}
                           onChange={handleChange} required
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1.5">County / State</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">County / State</label>
                         <input
                           type="text" name="state" value={formData.state}
                           onChange={handleChange}
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900"
                         />
                       </div>
                     </div>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-sm font-medium mb-1.5">Postal Code</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Postal Code</label>
                         <input
                           type="text" name="postalCode" value={formData.postalCode}
                           onChange={handleChange}
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900"
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium mb-1.5">Country *</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Country *</label>
                         <input
                           type="text" name="country" value={formData.country}
                           onChange={handleChange} required
-                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm"
+                          className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900"
                         />
                       </div>
                     </div>
@@ -234,7 +234,7 @@ export default function Checkout() {
 
                 {/* Payment */}
                 <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h2 className="font-bold text-lg mb-4">Payment Method</h2>
+                  <h2 className="font-bold text-lg text-gray-900 mb-4">Payment Method</h2>
                   <div className="space-y-3">
                     {[
                       { value: 'cod', label: 'Cash on Delivery', desc: 'Pay when you receive your order' },
@@ -251,7 +251,7 @@ export default function Checkout() {
                           onChange={handleChange} className="mr-3"
                         />
                         <div>
-                          <p className="font-medium text-sm">{opt.label}</p>
+                          <p className="font-medium text-sm text-gray-900">{opt.label}</p>
                           <p className="text-xs text-gray-500">{opt.desc}</p>
                         </div>
                       </label>
@@ -261,12 +261,12 @@ export default function Checkout() {
 
                 {/* Notes */}
                 <div className="bg-white p-6 rounded-lg shadow-sm">
-                  <h2 className="font-bold text-lg mb-4">Order Notes <span className="text-gray-400 font-normal text-sm">(optional)</span></h2>
+                  <h2 className="font-bold text-lg text-gray-900 mb-4">Order Notes <span className="text-gray-400 font-normal text-sm">(optional)</span></h2>
                   <textarea
                     name="customerNotes" value={formData.customerNotes}
                     onChange={handleChange} rows={3}
                     placeholder="Any special instructions..."
-                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm resize-none"
+                    className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none text-sm text-gray-900 resize-none"
                   />
                 </div>
               </div>
@@ -274,7 +274,7 @@ export default function Checkout() {
               {/* ── Right: Summary ── */}
               <div className="lg:col-span-1">
                 <div className="bg-white p-6 rounded-lg shadow-sm sticky top-20">
-                  <h2 className="font-bold text-lg mb-4">Order Summary</h2>
+                  <h2 className="font-bold text-lg text-gray-900 mb-4">Order Summary</h2>
 
                   <div className="space-y-3 mb-4 pb-4 border-b max-h-60 overflow-y-auto">
                     {cartItems.map(item => (
@@ -289,7 +289,7 @@ export default function Checkout() {
                           <p className="text-xs text-gray-700 line-clamp-2">{item.product_name}</p>
                           <p className="text-xs text-gray-500 mt-0.5">Qty: {item.quantity}</p>
                         </div>
-                        <p className="text-sm font-medium shrink-0">
+                        <p className="text-sm font-medium text-gray-900 shrink-0">
                           KES {(item.product_price * item.quantity).toLocaleString()}
                         </p>
                       </div>
@@ -299,17 +299,17 @@ export default function Checkout() {
                   <div className="space-y-2 text-sm mb-4 pb-4 border-b">
                     <div className="flex justify-between">
                       <span className="text-gray-600">Subtotal</span>
-                      <span>KES {subtotal.toLocaleString()}</span>
+                      <span className="text-gray-900">KES {subtotal.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600">Shipping</span>
-                      <span className={shippingFee === 0 ? 'text-green-600 font-medium' : ''}>
+                      <span className={shippingFee === 0 ? 'text-green-600 font-medium' : 'text-gray-900'}>
                         {shippingFee === 0 ? 'FREE' : `KES ${shippingFee.toLocaleString()}`}
                       </span>
                     </div>
                   </div>
 
-                  <div className="flex justify-between font-bold text-base mb-5">
+                  <div className="flex justify-between font-bold text-base text-gray-900 mb-5">
                     <span>Total</span>
                     <span style={{ color: p }}>KES {total.toLocaleString()}</span>
                   </div>
