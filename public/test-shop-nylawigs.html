@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Nylawigs Shop</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .loading { background: #fff3cd; color: #856404; }
+        pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Nylawigs Shop Diagnostic Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Tenant API</h2>
+        <button onclick="testTenantAPI()">Test Tenant API</button>
+        <div id="tenant-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: Products API (Simple)</h2>
+        <button onclick="testProductsSimple()">Test Products Simple API</button>
+        <div id="products-simple-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 3: Products API (Full)</h2>
+        <button onclick="testProductsFull()">Test Products Full API</button>
+        <div id="products-full-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 4: Flash Deals API</h2>
+        <button onclick="testFlashDeals()">Test Flash Deals API</button>
+        <div id="flash-deals-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 5: Visit Shop Page</h2>
+        <a href="/shop/nylawigs" target="_blank">
+            <button>Open Shop Page</button>
+        </a>
+        <p>This should open the shop page in a new tab. If you get a 404, there's a routing issue.</p>
+    </div>
+
+    <script>
+        async function testTenantAPI() {
+            const resultDiv = document.getElementById('tenant-result');
+            resultDiv.innerHTML = '<div class="status loading">Testing...</div>';
+            
+            try {
+                const response = await fetch('/api/tenant/by-slug/nylawigs');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Success! Status: ${response.status}</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="status error">❌ Error! Status: ${response.status}</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">❌ Network Error!</div>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        async function testProductsSimple() {
+            const resultDiv = document.getElementById('products-simple-result');
+            resultDiv.innerHTML = '<div class="status loading">Testing...</div>';
+            
+            try {
+                const response = await fetch('/api/ecommerce/products/simple?tenantSlug=nylawigs&limit=5');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Success! Status: ${response.status}</div>
+                        <p><strong>Products found:</strong> ${data.products?.length || 0}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="status error">❌ Error! Status: ${response.status}</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">❌ Network Error!</div>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        async function testProductsFull() {
+            const resultDiv = document.getElementById('products-full-result');
+            resultDiv.innerHTML = '<div class="status loading">Testing...</div>';
+            
+            try {
+                const response = await fetch('/api/ecommerce/products?tenantSlug=nylawigs&limit=5');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Success! Status: ${response.status}</div>
+                        <p><strong>Products found:</strong> ${data.products?.length || 0}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="status error">❌ Error! Status: ${response.status}</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">❌ Network Error!</div>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        async function testFlashDeals() {
+            const resultDiv = document.getElementById('flash-deals-result');
+            resultDiv.innerHTML = '<div class="status loading">Testing...</div>';
+            
+            try {
+                const response = await fetch('/api/ecommerce/flash-deals?tenantSlug=nylawigs');
+                const data = await response.json();
+                
+                if (response.ok) {
+                    resultDiv.innerHTML = `
+                        <div class="status success">✅ Success! Status: ${response.status}</div>
+                        <p><strong>Deals found:</strong> ${data.deals?.length || 0}</p>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="status error">❌ Error! Status: ${response.status}</div>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="status error">❌ Network Error!</div>
+                    <pre>${error.message}</pre>
+                `;
+            }
+        }
+
+        // Auto-run tests on page load
+        window.onload = function() {
+            console.log('Running automatic tests...');
+            testTenantAPI();
+            setTimeout(testProductsSimple, 500);
+        };
+    </script>
+</body>
+</html>
