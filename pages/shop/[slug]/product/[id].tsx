@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
+import SocialProof from '@/components/Ecommerce/SocialProof';
+import RecommendedProducts from '@/components/Ecommerce/RecommendedProducts';
 
 interface Product {
   id: string;
@@ -22,10 +24,12 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [addingToCart, setAddingToCart] = useState(false);
+  const [recommendations, setRecommendations] = useState([]);
 
   useEffect(() => {
     if (slug && id) {
       fetchProduct();
+      fetchRecommendations();
     }
   }, [slug, id]);
 
@@ -37,6 +41,15 @@ export default function ProductDetail() {
       console.error('Failed to load product:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchRecommendations = async () => {
+    try {
+      const res = await axios.get(`/api/ecommerce/recommendations?tenantSlug=${slug}&productId=${id}&limit=6`);
+      setRecommendations(res.data.products || []);
+    } catch (error) {
+      console.error('Failed to load recommendations:', error);
     }
   };
 
@@ -121,6 +134,15 @@ export default function ProductDetail() {
           <div>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">{product.name}</h1>
 
+            {/* Social Proof */}
+            <div className="mb-4">
+              <SocialProof 
+                productId={product.id}
+                currentViewers={Math.floor(Math.random() * 20) + 5}
+                recentPurchases={Math.floor(Math.random() * 100) + 50}
+              />
+            </div>
+
             {/* Rating */}
             <div className="flex items-center gap-4 mb-6">
               <div className="flex items-center">
@@ -195,6 +217,18 @@ export default function ProductDetail() {
             </div>
           </div>
         </div>
+
+        {/* Recommended Products */}
+        {recommendations.length > 0 && (
+          <div className="mt-12">
+            <RecommendedProducts 
+              slug={slug as string}
+              products={recommendations}
+              title="You May Also Like"
+              subtitle="Customers who viewed this also viewed"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

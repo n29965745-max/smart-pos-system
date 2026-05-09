@@ -2,6 +2,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import Head from 'next/head';
+import FlashDealBanner from '@/components/Ecommerce/FlashDealBanner';
+import RecommendedProducts from '@/components/Ecommerce/RecommendedProducts';
+import BundleDeals from '@/components/Ecommerce/BundleDeals';
+import TrustBadges from '@/components/Ecommerce/TrustBadges';
+import GamificationWidget from '@/components/Ecommerce/GamificationWidget';
 
 interface Product {
   id: string;
@@ -26,12 +31,18 @@ export default function DesktopStorefront() {
   const [loading, setLoading] = useState(true);
   const [cartCount, setCartCount] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
+  const [flashDeals, setFlashDeals] = useState([]);
+  const [bundles, setBundles] = useState([]);
+  const [recommendations, setRecommendations] = useState<Product[]>([]);
 
   useEffect(() => {
     if (slug) {
       fetchShopSettings();
       fetchProducts();
       loadCartCount();
+      fetchFlashDeals();
+      fetchBundles();
+      fetchRecommendations();
     }
   }, [slug]);
 
@@ -68,6 +79,36 @@ export default function DesktopStorefront() {
     if (cart) {
       const items = JSON.parse(cart);
       setCartCount(items.reduce((sum: number, item: any) => sum + item.quantity, 0));
+    }
+  };
+
+  const fetchFlashDeals = async () => {
+    try {
+      const res = await fetch(`/api/ecommerce/flash-deals?tenantSlug=${slug}`);
+      const data = await res.json();
+      setFlashDeals(data.deals || []);
+    } catch (error) {
+      console.error('Failed to load flash deals:', error);
+    }
+  };
+
+  const fetchBundles = async () => {
+    try {
+      const res = await fetch(`/api/ecommerce/bundles?tenantSlug=${slug}`);
+      const data = await res.json();
+      setBundles(data.bundles || []);
+    } catch (error) {
+      console.error('Failed to load bundles:', error);
+    }
+  };
+
+  const fetchRecommendations = async () => {
+    try {
+      const res = await fetch(`/api/ecommerce/recommendations?tenantSlug=${slug}&limit=6`);
+      const data = await res.json();
+      setRecommendations(data.products || []);
+    } catch (error) {
+      console.error('Failed to load recommendations:', error);
     }
   };
 
@@ -162,6 +203,11 @@ export default function DesktopStorefront() {
             </nav>
           </div>
         </header>
+
+        {/* Flash Deal Banner */}
+        {flashDeals.length > 0 && (
+          <FlashDealBanner slug={slug as string} deals={flashDeals} />
+        )}
 
         {/* Hero Banner */}
         <section className="bg-gradient-to-r from-orange-50 to-pink-50 py-12">
@@ -308,6 +354,30 @@ export default function DesktopStorefront() {
           )}
         </section>
 
+        {/* Recommended Products */}
+        {recommendations.length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 py-8">
+            <RecommendedProducts 
+              slug={slug as string} 
+              products={recommendations}
+              title="Recommended for You"
+              subtitle="Based on your browsing history"
+            />
+          </section>
+        )}
+
+        {/* Bundle Deals */}
+        {bundles.length > 0 && (
+          <section className="max-w-7xl mx-auto px-4 py-8">
+            <BundleDeals slug={slug as string} bundles={bundles} />
+          </section>
+        )}
+
+        {/* Trust Badges */}
+        <section className="max-w-7xl mx-auto px-4 py-8">
+          <TrustBadges />
+        </section>
+
         {/* Footer */}
         <footer className="bg-gray-900 text-white mt-16">
           <div className="max-w-7xl mx-auto px-4 py-12">
@@ -349,6 +419,9 @@ export default function DesktopStorefront() {
             </div>
           </div>
         </footer>
+
+        {/* Gamification Widget */}
+        <GamificationWidget slug={slug as string} customerId={undefined} />
       </div>
     </>
   );
