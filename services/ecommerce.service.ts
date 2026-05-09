@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { logInventoryMovement } from './inventory-movement.service';
+import { deductInventory } from './inventory.service';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -14,8 +14,9 @@ export async function getOrCreateCart(tenantId: string, customerId?: string, ses
   try {
     // Set tenant context
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     // Find existing active cart
@@ -74,8 +75,9 @@ export async function addToCart(params: {
 
     // Set tenant context
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     // Get product details
@@ -157,8 +159,9 @@ export async function addToCart(params: {
 export async function getCartItems(tenantId: string, cartId: string) {
   try {
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     const { data, error } = await supabase
@@ -187,8 +190,9 @@ export async function getCartItems(tenantId: string, cartId: string) {
 export async function removeFromCart(tenantId: string, itemId: string) {
   try {
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     const { error } = await supabase
@@ -212,8 +216,9 @@ export async function updateCartItemQuantity(
 ) {
   try {
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     const { data, error } = await supabase
@@ -257,8 +262,9 @@ export async function createOrder(params: {
 
     // Set tenant context
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     // Get cart items
@@ -327,9 +333,8 @@ export async function createOrder(params: {
       return { success: false, error: orderError };
     }
 
-    // Create order items and update inventory
+    // Create order items
     for (const item of cartItems) {
-      // Insert order item
       await supabase.from('online_order_items').insert({
         tenant_id: tenantId,
         order_id: order.id,
@@ -342,36 +347,26 @@ export async function createOrder(params: {
         size: item.size,
         color: item.color
       });
+    }
 
-      // Update product stock (atomic operation with row locking)
-      const { data: product } = await supabase
-        .from('products')
-        .select('stock_quantity')
-        .eq('id', item.product_id)
-        .single();
+    // Atomically deduct inventory with row locking — prevents overselling
+    const inventoryResult = await deductInventory(
+      tenantId,
+      cartItems.map(item => ({
+        productId: item.product_id,
+        quantity: item.quantity,
+        productName: item.product_name
+      })),
+      'online_sale',
+      order.order_number,
+      `Online order ${order.order_number}`
+    );
 
-      if (product) {
-        const newStock = product.stock_quantity - item.quantity;
-
-        await supabase
-          .from('products')
-          .update({ stock_quantity: newStock })
-          .eq('id', item.product_id);
-
-        // Log inventory movement
-        await logInventoryMovement({
-          productId: item.product_id,
-          tenantId,
-          movementType: 'sale',
-          stockType: 'Retail',
-          quantityChange: -item.quantity,
-          stockBefore: product.stock_quantity,
-          stockAfter: newStock,
-          relatedTransactionId: order.order_number,
-          reason: 'Online order',
-          notes: `Order ${order.order_number}`
-        });
-      }
+    if (!inventoryResult.success) {
+      // Roll back order and items
+      await supabase.from('online_order_items').delete().eq('order_id', order.id);
+      await supabase.from('online_orders').delete().eq('id', order.id);
+      return { success: false, error: inventoryResult.error || 'Inventory update failed' };
     }
 
     // Mark cart as converted
@@ -390,8 +385,9 @@ export async function createOrder(params: {
 export async function getOrder(tenantId: string, orderId: string) {
   try {
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     const { data: order, error: orderError } = await supabase
@@ -425,8 +421,9 @@ export async function updateOrderStatus(
 ) {
   try {
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     const updates: any = { order_status: status, updated_at: new Date().toISOString() };
@@ -458,8 +455,9 @@ export async function updateOrderStatus(
 export async function getCustomerOrders(tenantId: string, customerId: string) {
   try {
     await supabase.rpc('set_config', {
-      setting: 'app.current_tenant_id',
-      value: tenantId
+      setting_name: 'app.current_tenant_id',
+      new_value: tenantId,
+      is_local: true
     });
 
     const { data, error } = await supabase

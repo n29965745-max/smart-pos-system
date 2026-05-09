@@ -1,113 +1,125 @@
-import { prisma } from '@/lib/prisma';
-import { ValidationError, NotFoundError } from '@/types';
-import { logger } from '@/lib/logger';
+/**
+ * Atomic Inventory Service
+ *
+ * All stock mutations go through this service.
+ * Uses PostgreSQL advisory locks + row-level locking to prevent overselling.
+ * Writes to both products.stock_quantity AND inventory_movements atomically.
+ *
+ * Security guarantees:
+ * - tenant_id is always server-derived, never from client
+ * - All operations are wrapped in a DB transaction via RPC
+ * - Row locking prevents concurrent oversell race conditions
+ */
 
-export class InventoryService {
-  async getInventory(productId: bigint | number, branchId: bigint | number) {
-    try {
-      const inventory = await prisma.branchInventory.findFirst({
-        where: {
-          productId: BigInt(productId),
-          branchId: Number(branchId),
-        },
-      });
+import { createClient } from '@supabase/supabase-js';
 
-      if (!inventory) {
-        throw new NotFoundError('Inventory item not found');
-      }
+const db = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
-      return inventory;
-    } catch (error) {
-      logger.error('Failed to get inventory', error);
-      throw error;
+export type MovementType = 'sale' | 'restock' | 'adjustment' | 'return' | 'initial_stock' | 'online_sale' | 'online_return';
+
+export interface InventoryDeductItem {
+  productId: string;
+  quantity: number;
+  productName?: string;
+}
+
+export interface DeductResult {
+  success: boolean;
+  error?: string;
+  movements?: Array<{
+    productId: string;
+    stockBefore: number;
+    stockAfter: number;
+    quantityChange: number;
+  }>;
+}
+
+/**
+ * deductInventory — atomically deducts stock for multiple items.
+ *
+ * Uses the deduct_inventory_atomic RPC which runs inside a transaction
+ * with SELECT FOR UPDATE row locking to prevent overselling.
+ *
+ * @param tenantId - Server-derived tenant ID (never from client)
+ * @param items - Products and quantities to deduct
+ * @param movementType - Type of movement for audit trail
+ * @param referenceId - Order/transaction ID for traceability
+ * @param notes - Optional notes
+ */
+export async function deductInventory(
+  tenantId: string,
+  items: InventoryDeductItem[],
+  movementType: MovementType,
+  referenceId: string,
+  notes?: string
+): Promise<DeductResult> {
+  try {
+    const { data, error } = await db.rpc('deduct_inventory_atomic', {
+      p_tenant_id: tenantId,
+      p_items: items.map(i => ({
+        product_id: i.productId,
+        quantity: i.quantity,
+        product_name: i.productName ?? null
+      })),
+      p_movement_type: movementType,
+      p_reference_id: referenceId,
+      p_notes: notes ?? null
+    });
+
+    if (error) {
+      console.error('[inventory.service] deductInventory RPC error:', error.message);
+      return { success: false, error: error.message };
     }
-  }
 
-  async updateStock(productId: bigint | number, branchId: bigint | number, quantity: number, reason: string, userId: bigint | number) {
-    try {
-      const inventory = await prisma.branchInventory.findFirst({
-        where: { productId: BigInt(productId), branchId: Number(branchId) },
-      });
-
-      if (!inventory) {
-        throw new NotFoundError('Inventory item not found');
-      }
-
-      const newQuantity = inventory.stockLevel + quantity;
-
-      if (newQuantity < 0) {
-        throw new ValidationError('Insufficient stock');
-      }
-
-      // Update inventory
-      const updated = await prisma.branchInventory.update({
-        where: { id: inventory.id },
-        data: {
-          stockLevel: newQuantity,
-          lastStockCheck: new Date(),
-        },
-      });
-
-      logger.info(`Stock updated for product ${productId}: ${quantity}`);
-      return updated;
-    } catch (error) {
-      logger.error('Failed to update stock', error);
-      throw error;
+    if (!data?.success) {
+      return { success: false, error: data?.error ?? 'Inventory deduction failed' };
     }
-  }
 
-  async checkLowStock(branchId: bigint | number) {
-    try {
-      const lowStockItems = await prisma.branchInventory.findMany({
-        where: {
-          branchId: Number(branchId),
-          stockLevel: {
-            lte: 10, // Default reorder level
-          },
-        },
-        include: { product: true },
-      });
-
-      return lowStockItems;
-    } catch (error) {
-      logger.error('Failed to check low stock', error);
-      throw error;
-    }
-  }
-
-  async reconcileInventory(branchId: bigint | number, items: Array<{ productId: bigint | number; actualQuantity: number }>, userId: bigint | number) {
-    try {
-      const results = [];
-
-      for (const item of items) {
-        const inventory = await prisma.branchInventory.findFirst({
-          where: { productId: BigInt(item.productId), branchId: Number(branchId) },
-        });
-
-        if (!inventory) continue;
-
-        const difference = item.actualQuantity - inventory.stockLevel;
-
-        if (difference !== 0) {
-          const updated = await prisma.branchInventory.update({
-            where: { id: inventory.id },
-            data: {
-              stockLevel: item.actualQuantity,
-              lastStockCheck: new Date(),
-            },
-          });
-
-          results.push(updated);
-        }
-      }
-
-      logger.info(`Inventory reconciled for branch ${branchId}: ${results.length} items adjusted`);
-      return results;
-    } catch (error) {
-      logger.error('Failed to reconcile inventory', error);
-      throw error;
-    }
+    return { success: true, movements: data.movements };
+  } catch (err: any) {
+    console.error('[inventory.service] deductInventory exception:', err?.message);
+    return { success: false, error: err?.message ?? 'Internal error' };
   }
 }
 
-export const inventoryService = new InventoryService();
+/**
+ * restoreInventory — atomically restores stock (for cancellations/returns).
+ */
+export async function restoreInventory(
+  tenantId: string,
+  items: InventoryDeductItem[],
+  movementType: MovementType,
+  referenceId: string,
+  notes?: string
+): Promise<DeductResult> {
+  try {
+    const { data, error } = await db.rpc('restore_inventory_atomic', {
+      p_tenant_id: tenantId,
+      p_items: items.map(i => ({
+        product_id: i.productId,
+        quantity: i.quantity,
+        product_name: i.productName ?? null
+      })),
+      p_movement_type: movementType,
+      p_reference_id: referenceId,
+      p_notes: notes ?? null
+    });
+
+    if (error) {
+      console.error('[inventory.service] restoreInventory RPC error:', error.message);
+      return { success: false, error: error.message };
+    }
+
+    if (!data?.success) {
+      return { success: false, error: data?.error ?? 'Inventory restore failed' };
+    }
+
+    return { success: true, movements: data.movements };
+  } catch (err: any) {
+    console.error('[inventory.service] restoreInventory exception:', err?.message);
+    return { success: false, error: err?.message ?? 'Internal error' };
+  }
+}
