@@ -61,8 +61,7 @@ export default function CartPage() {
 
   const selectedItems = items.filter(i => selected.has(i.product_id));
   const subtotal = selectedItems.reduce((s, i) => s + i.product_price * i.quantity, 0);
-  const shipping = subtotal >= 5000 ? 0 : 500;
-  const total = subtotal + shipping;
+  const total = subtotal;
 
   return (
     <>
@@ -192,7 +191,7 @@ export default function CartPage() {
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Shipping</span>
-                    <span className="font-medium text-green-600">{shipping === 0 ? 'FREE' : `KES ${shipping.toLocaleString()}`}</span>
+                    <span className="font-medium text-green-600">FREE</span>
                   </div>
                 </div>
                 <div className="flex justify-between font-bold text-base mb-4">

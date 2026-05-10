@@ -99,8 +99,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     // ── Calculate totals ─────────────────────────────────────────────────────
     const subtotal = cartItems.reduce((sum, i) => sum + i.product_price * i.quantity, 0);
-    const shippingFee = subtotal >= 5000 ? 0 : 500;
-    const totalAmount = subtotal + shippingFee;
+    const totalAmount = subtotal; // No fixed shipping fee — free delivery
 
     // ── Generate order number ────────────────────────────────────────────────
     const orderNumber = `ORD-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
@@ -126,7 +125,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         payment_method: paymentMethod,
         customer_notes: customerNotes || '',
         order_status: 'pending',
-        payment_status: 'pending',
+        payment_status: paymentMethod === 'mpesa' ? 'paid' : 'pending',
       })
       .select()
       .single();
@@ -155,43 +154,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(500).json({ error: 'Failed to save order items' });
     }
 
-    // ── Create POS transaction (so it shows in the POS system) ──────────────
-    const { data: transaction, error: txError } = await db
-      .from('transactions')
-      .insert({
-        tenant_id: tenantId,
-        transaction_id: transactionNumber,
-        customer_name: shippingAddress.fullName,
-        customer_phone: shippingAddress.phone,
-        total_amount: totalAmount,
-        payment_method: paymentMethod === 'cod' ? 'cash' : paymentMethod,
-        payment_status: 'completed',
-        notes: `Online order ${orderNumber}${customerNotes ? ' — ' + customerNotes : ''}`,
-        created_by: 'Online Shop',
-      })
-      .select()
-      .single();
-
-    if (txError) {
-      console.error('POS transaction error:', txError);
-      // Non-fatal — order is created, just log it
-    } else {
-      // ── Create POS transaction items ───────────────────────────────────────
-      const txItems = cartItems.map(item => ({
-        tenant_id: tenantId,
-        transaction_id: transaction.transaction_id,
-        product_id: item.product_id,
-        product_name: item.product_name,
-        quantity: item.quantity,
-        unit_price: item.product_price,
-        total_price: item.product_price * item.quantity,
-      }));
-
-      const { error: txItemsError } = await db.from('transaction_items').insert(txItems);
-      if (txItemsError) {
-        console.error('POS transaction items error:', txItemsError);
-      }
-    }
+    // ── POS transaction created when order is marked delivered (payment confirmed) ──
+    // See /api/online-orders PATCH handler
 
     // ── Deduct inventory ─────────────────────────────────────────────────────
     for (const item of cartItems) {
@@ -213,9 +177,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       orderId: order.id,
       orderNumber: order.order_number,
       total: totalAmount,
+      subtotal,
+      shipping: 0,
       items: cartItems,
       shippingAddress,
       paymentMethod,
+      paymentStatus: paymentMethod === 'mpesa' ? 'paid' : 'pending',
     });
 
   } catch (error: any) {

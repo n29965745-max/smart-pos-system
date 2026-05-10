@@ -98,6 +98,7 @@ export default function Checkout() {
         items: data.items,
         shippingAddress: data.shippingAddress,
         paymentMethod: data.paymentMethod,
+        paymentStatus: data.paymentStatus,
         total: data.total,
         date: new Date().toISOString(),
       }));
@@ -111,8 +112,6 @@ export default function Checkout() {
   };
 
   const subtotal = cartItems.reduce((s, i) => s + i.product_price * i.quantity, 0);
-  const shippingFee = subtotal >= 5000 ? 0 : 500;
-  const total = subtotal + shippingFee;
 
   if (loading) {
     return (
@@ -312,17 +311,11 @@ export default function Checkout() {
                       <span className="text-gray-600">Subtotal</span>
                       <span className="text-gray-900">KES {subtotal.toLocaleString()}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">Shipping</span>
-                      <span className={shippingFee === 0 ? 'text-green-600 font-medium' : 'text-gray-900'}>
-                        {shippingFee === 0 ? 'FREE' : `KES ${shippingFee.toLocaleString()}`}
-                      </span>
-                    </div>
                   </div>
 
                   <div className="flex justify-between font-bold text-base text-gray-900 mb-5">
                     <span>Total</span>
-                    <span style={{ color: p }}>KES {total.toLocaleString()}</span>
+                    <span style={{ color: p }}>KES {subtotal.toLocaleString()}</span>
                   </div>
 
                   <button
@@ -331,7 +324,7 @@ export default function Checkout() {
                     className="w-full text-white py-3 rounded-lg font-bold text-sm transition disabled:opacity-50"
                     style={{ backgroundColor: p }}
                   >
-                    {submitting ? 'Placing order...' : `Place Order · KES ${total.toLocaleString()}`}
+                    {submitting ? 'Placing order...' : `Place Order · KES ${subtotal.toLocaleString()}`}
                   </button>
 
                   <div className="mt-4 space-y-1 text-xs text-gray-500">
