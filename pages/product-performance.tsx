@@ -166,11 +166,15 @@ export default function ProductPerformancePage() {
   return (
     <div className="min-h-screen bg-[var(--bg-secondary)]">
       <div className="p-4 sm:p-5 lg:p-6">
-        {/* Header - Mobile First */}
+        {/* Page Title */}
         <div className="mb-4 sm:mb-5 lg:mb-6">
-          {/* Filters - Horizontal Scroll on Mobile */}
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Product Performance</h1>
+        </div>
+
+        {/* Filters - Horizontal Layout */}
+        <div className="mb-4 sm:mb-5 lg:mb-6">
           <div className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-xl p-3 sm:p-4">
-            <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
+            <div className="flex items-center gap-2">
               <DateRangeFilter 
                 value={selectedRange}
                 onChange={setSelectedRange}
@@ -181,7 +185,7 @@ export default function ProductPerformancePage() {
               
               <button
                 onClick={exportToCSV}
-                className="shrink-0 min-h-[44px] min-w-[44px] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 hover:bg-[var(--bg-primary)] transition-colors flex items-center gap-2"
+                className="min-h-[44px] min-w-[44px] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-3 py-2 hover:bg-[var(--bg-primary)] transition-colors flex items-center gap-2"
                 title="Export CSV"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -118,9 +118,14 @@ export default function SalesAnalyticsPage() {
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Header - Mobile First: Stack on mobile, side-by-side on larger screens */}
-      <div className="space-y-3 sm:space-y-4">
-        <div className="flex justify-end">
+      {/* Page Title */}
+      <div className="mb-3 sm:mb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Sales Analytics</h1>
+      </div>
+
+      {/* Filters - Horizontal Layout */}
+      <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl p-3 sm:p-4">
+        <div className="flex items-center gap-2">
           <DateRangeFilter 
             value={dateFilter}
             onChange={setDateFilter}

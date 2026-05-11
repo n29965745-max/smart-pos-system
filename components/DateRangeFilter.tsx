@@ -88,12 +88,12 @@ export default function DateRangeFilter({
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-2">
+    <div className="flex items-center gap-2">
       {/* Dropdown */}
       <div className="relative">
         <button
           onClick={() => setShowDropdown(!showDropdown)}
-          className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-primary)] transition-colors flex items-center gap-2 min-w-[100px] justify-between"
+          className="min-h-[44px] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-3 py-2 text-sm text-[var(--text-primary)] hover:bg-[var(--bg-primary)] transition-colors flex items-center gap-2 min-w-[120px] justify-between whitespace-nowrap"
         >
           <span>{getDisplayLabel(value)}</span>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -119,34 +119,67 @@ export default function DateRangeFilter({
         )}
       </div>
 
-      {/* Date pickers */}
-      <div className="flex flex-wrap items-center gap-2">
-        <div className="flex items-center gap-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-3 py-2">
-          <svg className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <input
-            type="date"
-            value={displayStart}
-            onChange={(e) => onDateChange?.(e.target.value, displayEnd)}
-            className="bg-transparent border-none text-sm text-[var(--text-primary)] focus:outline-none w-[110px]"
-          />
-        </div>
-        <span className="text-[var(--text-secondary)] text-sm">to</span>
-        <div className="flex items-center gap-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-3 py-2">
-          <svg className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <input
-            type="date"
-            value={displayEnd}
-            onChange={(e) => onDateChange?.(displayStart, e.target.value)}
-            className="bg-transparent border-none text-sm text-[var(--text-primary)] focus:outline-none w-[110px]"
-          />
-        </div>
+      {/* Date pickers - Horizontal layout */}
+      <div className="flex items-center gap-2 min-h-[44px] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-3 py-2">
+        <svg className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <input
+          type="text"
+          value={displayStart ? formatToMMDDYYYY(displayStart) : ''}
+          placeholder="mm/dd/yyyy"
+          onFocus={(e) => {
+            e.target.type = 'date';
+            e.target.value = displayStart;
+          }}
+          onBlur={(e) => {
+            e.target.type = 'text';
+            e.target.value = displayStart ? formatToMMDDYYYY(displayStart) : '';
+          }}
+          onChange={(e) => {
+            if (e.target.type === 'date') {
+              onDateChange?.(e.target.value, displayEnd);
+            }
+          }}
+          className="bg-transparent border-none text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none w-[100px]"
+        />
+      </div>
+      
+      <span className="text-[var(--text-secondary)] text-sm">to</span>
+      
+      <div className="flex items-center gap-2 min-h-[44px] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-3 py-2">
+        <svg className="w-4 h-4 text-[var(--text-secondary)] flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <input
+          type="text"
+          value={displayEnd ? formatToMMDDYYYY(displayEnd) : ''}
+          placeholder="mm/dd/yyyy"
+          onFocus={(e) => {
+            e.target.type = 'date';
+            e.target.value = displayEnd;
+          }}
+          onBlur={(e) => {
+            e.target.type = 'text';
+            e.target.value = displayEnd ? formatToMMDDYYYY(displayEnd) : '';
+          }}
+          onChange={(e) => {
+            if (e.target.type === 'date') {
+              onDateChange?.(displayStart, e.target.value);
+            }
+          }}
+          className="bg-transparent border-none text-sm text-[var(--text-primary)] placeholder:text-[var(--text-secondary)] focus:outline-none w-[100px]"
+        />
       </div>
     </div>
   );
+}
+
+// Helper function to format YYYY-MM-DD to MM/DD/YYYY
+function formatToMMDDYYYY(dateStr: string): string {
+  if (!dateStr) return '';
+  const [year, month, day] = dateStr.split('-');
+  return `${month}/${day}/${year}`;
 }
 
 export function getDateRange(range: string): { startDate: Date | null; endDate: Date | null } {

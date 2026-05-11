@@ -283,9 +283,13 @@ export default function TransactionsPage() {
   return (
     <div className="min-h-screen bg-[var(--bg-primary)]">
       <div className="px-3 py-4 sm:px-5 sm:py-5 lg:px-6 lg:py-6">
-        {/* Header - Mobile Optimized */}
-        <div className="space-y-3 sm:space-y-4 mb-6">
-          {/* Action Button Only */}
+        {/* Page Title */}
+        <div className="mb-4 sm:mb-5">
+          <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Transactions</h1>
+        </div>
+
+        {/* Action Button */}
+        <div className="mb-4 sm:mb-5">
           <div className="flex justify-end">
             <button
               onClick={() => router.push('/pos')}
@@ -299,11 +303,11 @@ export default function TransactionsPage() {
           </div>
         </div>
 
-        {/* Filters - Mobile Optimized */}
+        {/* Filters - Horizontal Layout */}
         <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl p-3 sm:p-4 mb-6 shadow-sm">
-          {/* Type Tabs - Horizontal Scroll on Mobile */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 mb-3 scrollbar-hide">
-            <div className="flex items-center gap-1 shrink-0 bg-[var(--bg-tertiary)] rounded-lg p-1">
+          {/* Type Tabs and Date Range - Single Row */}
+          <div className="flex flex-wrap items-center gap-2 mb-3">
+            <div className="flex items-center gap-1 bg-[var(--bg-tertiary)] rounded-lg p-1">
               {['all', 'retail', 'wholesale'].map(t => (
                 <button 
                   key={t} 
@@ -320,24 +324,22 @@ export default function TransactionsPage() {
             </div>
 
             {/* Date Range Filter */}
-            <div className="shrink-0">
-              <DateRangeFilter
-                value={dateRange}
-                onChange={setDateRange}
-                startDate={startDate ? formatDateLocal(new Date(startDate)) : ''}
-                endDate={endDate ? formatDateLocal(new Date(endDate)) : ''}
-                onDateChange={(start, end) => {
-                  const s = new Date(start); s.setHours(0,0,0,0);
-                  const e = new Date(end); e.setHours(23,59,59,999);
-                  setStartDate(s.toISOString()); setEndDate(e.toISOString());
-                }}
-              />
-            </div>
+            <DateRangeFilter
+              value={dateRange}
+              onChange={setDateRange}
+              startDate={startDate ? formatDateLocal(new Date(startDate)) : ''}
+              endDate={endDate ? formatDateLocal(new Date(endDate)) : ''}
+              onDateChange={(start, end) => {
+                const s = new Date(start); s.setHours(0,0,0,0);
+                const e = new Date(end); e.setHours(23,59,59,999);
+                setStartDate(s.toISOString()); setEndDate(e.toISOString());
+              }}
+            />
 
             {/* Export Button */}
             <button 
               onClick={exportTransactions}
-              className="shrink-0 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-2.5 hover:bg-[var(--bg-primary)] active:scale-95 transition-all min-h-[40px] min-w-[40px] flex items-center justify-center"
+              className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-2.5 hover:bg-[var(--bg-primary)] active:scale-95 transition-all min-h-[40px] min-w-[40px] flex items-center justify-center"
               title="Export CSV"
             >
               <svg className="w-5 h-5 text-[var(--text-primary)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

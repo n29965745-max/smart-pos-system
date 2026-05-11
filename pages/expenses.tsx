@@ -235,37 +235,35 @@ export default function Expenses() {
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Header - Mobile First: Stack on mobile, side-by-side on larger screens */}
-      <div className="space-y-3 sm:space-y-4">
-        <div className="flex justify-end">
-          <button 
-            onClick={() => setShowAddModal(true)}
-            className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium flex items-center justify-center gap-2 transition-colors"
-          >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-            Add Expense
-          </button>
-        </div>
+      {/* Page Title */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Expense Management</h1>
+        <button 
+          onClick={() => setShowAddModal(true)}
+          className="min-h-[44px] px-4 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 text-sm font-medium flex items-center justify-center gap-2 transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+          <span className="hidden sm:inline">Add Expense</span>
+          <span className="sm:hidden">Add</span>
+        </button>
       </div>
 
-      {/* Filters - Mobile First: Horizontal scroll on mobile */}
+      {/* Filters - Horizontal Layout */}
       <div className="bg-[var(--bg-secondary)] rounded-xl p-3 sm:p-4">
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-hide">
-          <div className="shrink-0">
-            <DateRangeFilter
-              value={dateRange}
-              onChange={setDateRange}
-              startDate={startDate ? formatDateLocal(new Date(startDate)) : ''}
-              endDate={endDate ? formatDateLocal(new Date(endDate)) : ''}
-              onDateChange={(start, end) => {
-                const s = new Date(start); s.setHours(0,0,0,0);
-                const e = new Date(end); e.setHours(23,59,59,999);
-                setStartDate(s.toISOString()); setEndDate(e.toISOString());
-              }}
-            />
-          </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <DateRangeFilter
+            value={dateRange}
+            onChange={setDateRange}
+            startDate={startDate ? formatDateLocal(new Date(startDate)) : ''}
+            endDate={endDate ? formatDateLocal(new Date(endDate)) : ''}
+            onDateChange={(start, end) => {
+              const s = new Date(start); s.setHours(0,0,0,0);
+              const e = new Date(end); e.setHours(23,59,59,999);
+              setStartDate(s.toISOString()); setEndDate(e.toISOString());
+            }}
+          />
           <button 
-            className="shrink-0 min-h-[44px] min-w-[44px] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-2.5 hover:bg-[var(--bg-primary)] transition-colors flex items-center justify-center" 
+            className="min-h-[44px] min-w-[44px] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-2.5 hover:bg-[var(--bg-primary)] transition-colors flex items-center justify-center" 
             title="Export"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>

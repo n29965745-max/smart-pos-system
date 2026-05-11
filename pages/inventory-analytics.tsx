@@ -131,26 +131,29 @@ export default function InventoryAnalyticsPage() {
 
   return (
     <div className="space-y-3 sm:space-y-4">
-      {/* Header - Mobile First: Stack on mobile, side-by-side on larger screens */}
-      <div className="space-y-3 sm:space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2">
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="min-h-[44px] bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-            >
-              <option value="retail">Retail</option>
-              <option value="wholesale">Wholesale</option>
-            </select>
-            <DateRangeFilter 
-              value={dateFilter}
-              onChange={setDateFilter}
-              startDate={startDate}
-              endDate={endDate}
-              onDateChange={handleDateChange}
-            />
-          </div>
+      {/* Page Title */}
+      <div className="mb-3 sm:mb-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Inventory Analytics</h1>
+      </div>
+
+      {/* Filters - Horizontal Layout */}
+      <div className="bg-[var(--bg-secondary)] border border-[var(--border-color)] rounded-xl p-3 sm:p-4">
+        <div className="flex items-center gap-2">
+          <select
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value)}
+            className="min-h-[44px] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+          >
+            <option value="retail">Retail</option>
+            <option value="wholesale">Wholesale</option>
+          </select>
+          <DateRangeFilter 
+            value={dateFilter}
+            onChange={setDateFilter}
+            startDate={startDate}
+            endDate={endDate}
+            onDateChange={handleDateChange}
+          />
         </div>
       </div>
 
