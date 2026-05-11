@@ -229,11 +229,11 @@ export default function ProductPerformancePage() {
                 <tr>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Product</th>
                   <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Units</th>
-                  <th className="hidden sm:table-cell px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Revenue</th>
-                  <th className="hidden md:table-cell px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Cost</th>
-                  <th className="hidden md:table-cell px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Profit</th>
-                  <th className="hidden sm:table-cell px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Margin</th>
-                  <th className="hidden md:table-cell px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Returns</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Revenue</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Cost</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Profit</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Margin</th>
+                  <th className="px-4 sm:px-6 py-3 text-left text-xs sm:text-sm font-medium text-[var(--text-secondary)]">Returns</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--border-color)]">
@@ -267,17 +267,28 @@ export default function ProductPerformancePage() {
                       <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm font-semibold text-[var(--text-primary)]">
                         {product.unitsSold}
                       </td>
-                      <td className="hidden sm:table-cell px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium text-[var(--text-primary)]">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium text-[var(--text-primary)]">
                         KSH {parseFloat(product.netRevenue).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
-                      <td className="hidden md:table-cell px-6 py-4 text-sm text-[var(--text-secondary)]">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm text-[var(--text-secondary)]">
                         KSH {parseFloat(product.netCost).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
-                      <td className="hidden md:table-cell px-6 py-4 text-sm font-semibold text-emerald-500">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm font-semibold text-emerald-500">
                         KSH {parseFloat(product.netProfit).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
-                      <td className="hidden sm:table-cell px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium text-[var(--text-primary)]">
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm font-medium text-[var(--text-primary)]">
                         {parseFloat(product.profitMargin).toFixed(2)}%
+                      </td>
+                      <td className="px-4 sm:px-6 py-3 sm:py-4 text-sm text-[var(--text-secondary)]">
+                        {parseFloat(product.returnRate).toFixed(2)}%
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
                       </td>
                       <td className="hidden md:table-cell px-6 py-4 text-sm text-[var(--text-secondary)]">
                         {parseFloat(product.returnRate).toFixed(2)}%
