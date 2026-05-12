@@ -205,15 +205,18 @@ LIMIT 1;
 -- MIGRATION COMPLETE
 -- =====================================================
 
-RAISE NOTICE '========================================';
-RAISE NOTICE 'Immersive Visual Shop Schema Migration Complete!';
-RAISE NOTICE '========================================';
-RAISE NOTICE 'Tables Created:';
-RAISE NOTICE '  - product_images (with RLS)';
-RAISE NOTICE '  - product_videos (with RLS)';
-RAISE NOTICE '  - product_recommendations_cache (with RLS)';
-RAISE NOTICE 'Columns Added:';
-RAISE NOTICE '  - shop_settings.background_image_url';
-RAISE NOTICE '  - shop_settings.background_video_url';
-RAISE NOTICE '  - shop_settings.ai_assistant_enabled';
-RAISE NOTICE '========================================';
+DO $$
+BEGIN
+  RAISE NOTICE '========================================';
+  RAISE NOTICE 'Immersive Visual Shop Schema Migration Complete!';
+  RAISE NOTICE '========================================';
+  RAISE NOTICE 'Tables Created:';
+  RAISE NOTICE '  - product_images (with RLS)';
+  RAISE NOTICE '  - product_videos (with RLS)';
+  RAISE NOTICE '  - product_recommendations_cache (with RLS)';
+  RAISE NOTICE 'Columns Added:';
+  RAISE NOTICE '  - shop_settings.background_image_url';
+  RAISE NOTICE '  - shop_settings.background_video_url';
+  RAISE NOTICE '  - shop_settings.ai_assistant_enabled';
+  RAISE NOTICE '========================================';
+END $$;
