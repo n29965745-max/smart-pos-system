@@ -1,71 +1,134 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+/**
+ * Product Recommendations API Endpoint
+ * 
+ * GET /api/ecommerce/recommendations?tenantSlug=xxx&productId=xxx&browsingHistory=id1,id2,id3
+ * 
+ * Returns personalized product recommendations.
+ * 
+ * Tasks: 3.3
+ * Requirements: 7.1, 7.2, 7.3, 7.5
+ */
+
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
+import recommendationService from '../../../services/recommendation.service';
 
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { tenantSlug, productId, limit = '6' } = req.query;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-  if (req.method === 'GET') {
-    try {
-      // Get tenant ID from slug
-      const { data: tenant } = await supabase
-        .from('tenants')
-        .select('id')
-        .eq('slug', tenantSlug)
-        .single();
+// Rate limiting: 10 requests per minute per IP
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 10;
+const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 
-      if (!tenant) {
-        return res.status(404).json({ error: 'Tenant not found' });
-      }
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
 
-      await supabase.rpc('set_config', {
-        setting: 'app.current_tenant_id',
-        value: tenant.id
-      });
-
-      // If productId provided, get recommendations for that product
-      if (productId) {
-        const { data: recommendations } = await supabase
-          .from('product_recommendations')
-          .select(`
-            *,
-            recommended_product:recommended_product_id (
-              id,
-              name,
-              retail_price,
-              image_url,
-              stock_quantity
-            )
-          `)
-          .eq('source_product_id', productId)
-          .eq('tenant_id', tenant.id)
-          .order('score', { ascending: false })
-          .limit(parseInt(limit as string));
-
-        if (recommendations && recommendations.length > 0) {
-          const products = recommendations.map(r => r.recommended_product);
-          return res.status(200).json({ products });
-        }
-      }
-
-      // Fallback: Return random products
-      const { data: products } = await supabase
-        .from('products')
-        .select('id, name, retail_price, image_url, stock_quantity')
-        .eq('tenant_id', tenant.id)
-        .gt('stock_quantity', 0)
-        .limit(parseInt(limit as string));
-
-      return res.status(200).json({ products: products || [] });
-    } catch (error) {
-      console.error('Recommendations exception:', error);
-      return res.status(500).json({ error: 'Failed to fetch recommendations' });
-    }
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_LIMIT_WINDOW });
+    return true;
   }
 
-  return res.status(405).json({ error: 'Method not allowed' });
+  if (record.count >= RATE_LIMIT) {
+    return false;
+  }
+
+  record.count++;
+  return true;
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ success: false, error: 'Method not allowed' });
+  }
+
+  try {
+    // Rate limiting
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+    const ipString = Array.isArray(ip) ? ip[0] : ip;
+    
+    if (!checkRateLimit(ipString)) {
+      return res.status(429).json({
+        success: false,
+        error: 'Too many requests',
+        retryAfter: 60
+      });
+    }
+
+    const { tenantSlug, productId, browsingHistory, context, limit } = req.query;
+
+    if (!tenantSlug || typeof tenantSlug !== 'string') {
+      return res.status(400).json({ success: false, error: 'Tenant slug is required' });
+    }
+
+    // Get tenant by slug
+    const { data: tenant, error: tenantError } = await supabase
+      .from('tenants')
+      .select('id')
+      .eq('slug', tenantSlug)
+      .single();
+
+    if (tenantError || !tenant) {
+      return res.status(404).json({ success: false, error: 'Shop not found' });
+    }
+
+    const tenantId = tenant.id;
+
+    // Parse browsing history
+    let browsingHistoryArray: string[] = [];
+    if (browsingHistory && typeof browsingHistory === 'string') {
+      browsingHistoryArray = browsingHistory.split(',').filter(Boolean);
+    }
+
+    // Parse limit
+    const limitNumber = limit && typeof limit === 'string' ? parseInt(limit, 10) : 6;
+
+    // Generate recommendations
+    let recommendations;
+    
+    if (productId && typeof productId === 'string') {
+      // Product-specific recommendations
+      recommendations = await recommendationService.generateRecommendations(
+        tenantId,
+        productId,
+        browsingHistoryArray,
+        limitNumber
+      );
+    } else {
+      // Homepage recommendations (trending products)
+      recommendations = await recommendationService.getTrendingProducts(
+        tenantId,
+        '', // No product to exclude
+        limitNumber
+      );
+      
+      recommendations = recommendations.map(product => ({
+        product,
+        reason: 'trending' as const,
+        score: 1.0
+      }));
+    }
+
+    return res.status(200).json({
+      success: true,
+      data: {
+        recommendations,
+        context: context || (productId ? 'product-detail' : 'homepage'),
+        generatedAt: new Date().toISOString()
+      }
+    });
+  } catch (error: any) {
+    console.error('Error in recommendations endpoint:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Internal server error',
+      message: error.message
+    });
+  }
 }
