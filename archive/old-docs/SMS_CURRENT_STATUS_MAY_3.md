@@ -83,7 +83,7 @@ git push
 These should already be set:
 - `SMS_PROVIDER="africastalking"`
 - `AFRICASTALKING_USERNAME="NYLAWIGS"`
-- `AFRICASTALKING_API_KEY="atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867"`
+- `AFRICASTALKING_API_KEY=REDACTED
 - `SMS_TEST_MODE="false"` (for production) or `"true"` (for testing)
 
 ### 3. Test After Deployment

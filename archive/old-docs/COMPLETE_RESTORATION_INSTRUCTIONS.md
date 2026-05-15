@@ -39,7 +39,7 @@ Runs COUNT queries to confirm all data was inserted.
 ## How to Execute
 
 ### Option 1: Supabase SQL Editor (RECOMMENDED)
-1. Go to your Supabase dashboard: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
+1. Go to your Supabase dashboard: https://supabase.REDACTED_APP_SECRET
 2. Click "SQL Editor" in the left sidebar
 3. Click "New Query"
 4. Open the file `RESTORE_EVERYTHING_FINAL.sql` from your computer

@@ -7,7 +7,7 @@ The POS page shows no products because the API is missing the `SUPABASE_SERVICE_
 
 ### Step 1: Get Your Service Role Key
 
-1. Go to: https://supabase.com/dashboard/project/ugemjqouxnholwlgvzer/settings/api
+1. Go to: https://supabase.REDACTED_APP_SECRET
 2. Scroll down to "Project API keys"
 3. Find the **service_role** key (NOT the anon key)
 4. Click the eye icon to reveal it
@@ -47,7 +47,7 @@ After adding the environment variable to Vercel:
 
 Once the API is working, add demo products:
 
-1. Go to Supabase SQL Editor: https://supabase.com/dashboard/project/ugemjqouxnholwlgvzer/sql
+1. Go to Supabase SQL Editor: https://supabase.REDACTED_APP_SECRET
 2. Copy the SQL from `lib/demo-products.sql`
 3. Paste and run it
 4. Verify: `SELECT COUNT(*) FROM products;`

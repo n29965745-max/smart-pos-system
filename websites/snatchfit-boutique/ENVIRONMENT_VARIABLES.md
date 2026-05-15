@@ -13,8 +13,8 @@ This document explains all environment variables needed for SnatchFit Boutique.
 **MONGODB_URI**
 - **What it is**: Connection string to your MongoDB database
 - **Where to get it**: MongoDB Atlas dashboard
-- **Format**: `mongodb+srv://username:password@cluster.mongodb.net/dbname`
-- **Example**: `mongodb+srv://snatchfit_user:mypassword123@cluster0.abc123.mongodb.net/snatchfit?retryWrites=true&w=majority`
+- **Format**: `mongodb+srv://username:REDACTED_PASSWORD@cluster.mongodb.net/dbname`
+- **Example**: `mongodb+srv://snatchfit_user:REDACTED_PASSWORD@cluster0.abc123.mongodb.net/snatchfit?retryWrites=true&w=majority`
 - **Required**: YES
 
 ### Authentication
@@ -49,7 +49,7 @@ This document explains all environment variables needed for SnatchFit Boutique.
 - **What it is**: Secret Stripe API key (must be kept secret)
 - **Where to get it**: Stripe Dashboard → Developers → API keys
 - **Format**: Starts with `sk_test_` (for testing) or `sk_live_` (for production)
-- **Example**: `sk_test_51234567890abcdefghijklmnopqrstuvwxyz`
+- **Example**: `REDACTED_STRIPE_TEST`
 - **Required**: YES
 - **Security**: Keep this secret! Never commit to git.
 
@@ -109,10 +109,10 @@ This document explains all environment variables needed for SnatchFit Boutique.
 Create a `.env.local` file in the project root:
 
 ```env
-MONGODB_URI=mongodb+srv://snatchfit_user:password@cluster0.abc123.mongodb.net/snatchfit
-JWT_SECRET=your_random_secret_key_min_32_chars_long
+MONGODB_URI=mongodb+srv://snatchfit_user:REDACTED_PASSWORD@cluster0.abc123.mongodb.net/snatchfit
+JWT_SECRET=REDACTED
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
 NEXTAUTH_SECRET=your_nextauth_secret_key_min_32_chars
 NEXTAUTH_URL=http://localhost:3000
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -128,10 +128,10 @@ NODE_ENV=development
 For production deployment, use `.env.production`:
 
 ```env
-MONGODB_URI=mongodb+srv://snatchfit_user:password@cluster0.abc123.mongodb.net/snatchfit
-JWT_SECRET=your_production_jwt_secret_key_min_32_chars_long
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_live_xxxxx
-STRIPE_SECRET_KEY=sk_live_xxxxx
+MONGODB_URI=mongodb+srv://snatchfit_user:REDACTED_PASSWORD@cluster0.abc123.mongodb.net/snatchfit
+JWT_SECRET=REDACTED
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=REDACTED_STRIPE_PK_LIVE
+STRIPE_SECRET_KEY=REDACTED_STRIPE_LIVE
 NEXTAUTH_SECRET=your_production_nextauth_secret_key_min_32_chars
 NEXTAUTH_URL=https://snatchfit-boutique.vercel.app
 NEXT_PUBLIC_APP_URL=https://snatchfit-boutique.vercel.app

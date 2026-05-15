@@ -1,7 +1,7 @@
 // Debug Africa's Talking Sandbox API Response
 const fetch = require('node-fetch');
 
-const API_KEY = 'atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867';
+const API_KEY = 'REDACTED_AFRICASTALKING_KEY';
 const USERNAME = 'NYLAWIGS';
 const PHONE = '+254743794815';
 

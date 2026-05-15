@@ -81,7 +81,7 @@ Each SMS costs approximately KSH 1.00
 
 ### Root Cause Analysis
 The 422 error from Celcom API means invalid request format. This happens when:
-1. API key has quotes: `"0621e4ea38a9d2b9000c97c90bf40c97"` instead of `0621e4ea38a9d2b9000c97c90bf40c97`
+1. API key has quotes: `"REDACTED_HEX_SECRET"` instead of `REDACTED_HEX_SECRET`
 2. Partner ID has quotes: `"36"` instead of `36`
 3. Values have spaces: ` celcom ` instead of `celcom`
 

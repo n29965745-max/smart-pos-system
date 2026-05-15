@@ -18,7 +18,7 @@ Dashboard API expects `sales_transactions` table which doesn't exist in restored
 
 **Run SQL in Supabase:**
 
-1. Open: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql/new
+1. Open: https://supabase.REDACTED_APP_SECRET
 2. Copy entire content from `CREATE_MISSING_TABLES.sql`
 3. Paste and click "Run"
 4. Wait for: "✅ Missing tables created successfully!"

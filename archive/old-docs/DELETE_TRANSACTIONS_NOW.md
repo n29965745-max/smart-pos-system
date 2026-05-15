@@ -2,7 +2,7 @@
 
 ## Instructions
 
-1. Go to Supabase Dashboard: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/editor
+1. Go to Supabase Dashboard: https://supabase.REDACTED_APP_SECRET
 2. Click on "SQL Editor" in the left sidebar
 3. Copy and paste this SQL:
 

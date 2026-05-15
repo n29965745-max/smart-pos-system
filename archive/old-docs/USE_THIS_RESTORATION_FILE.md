@@ -18,7 +18,7 @@ The previous attempts failed because customer IDs from the old database don't ma
 
 ## How to Run
 
-1. Go to your Supabase dashboard: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql/new
+1. Go to your Supabase dashboard: https://supabase.REDACTED_APP_SECRET
 2. Copy the entire contents of `FINAL_RESTORATION.sql`
 3. Paste into the SQL Editor
 4. Click "Run" button

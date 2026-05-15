@@ -18,17 +18,17 @@ https://xqnteamrznvoqgaazhpu.supabase.co
 
 ```
 NEXT_PUBLIC_SUPABASE_ANON_KEY
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNzk5NjUsImV4cCI6MjA5MjY1NTk2NX0.5kfYBMtKYGC5Efu9EOJx1zL3HkUZeYAlbgwusWRbF8o
+REDACTED_JWT_TOKEN
 ```
 
 ```
 SUPABASE_SERVICE_ROLE_KEY
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzA3OTk2NSwiZXhwIjoyMDkyNjU1OTY1fQ.mbP8Wh08cSGDM05t
+REDACTED_JWT_TOKEN
 ```
 
 ```
 DATABASE_URL
-postgresql://postgres.xqnteamrznvoqgaazhpu:mbP8Wh08cSGDM05t@aws-0-us-east-1.pooler.supabase.com:6543/postgres
+postgresql://postgres.xqnteamrznvoqgaazhpu:REDACTED_DB_PASSWORD@aws-0-us-east-1.pooler.supabase.com:6543/postgres
 ```
 
 ---
@@ -37,17 +37,17 @@ postgresql://postgres.xqnteamrznvoqgaazhpu:mbP8Wh08cSGDM05t@aws-0-us-east-1.pool
 
 ```
 JWT_SECRET
-PisrrctrHtXwGjenW4iGf3alBLZvx682AyLgvXZT+Jo=
+REDACTED_APP_SECRET
 ```
 
 ```
 JWT_REFRESH_SECRET
-oBFcQCpfQA2qNyeDWTmCdAUIFBo60pVtQOkol6DgrrU=
+REDACTED_APP_SECRET
 ```
 
 ```
 ENCRYPTION_KEY
-b2a573b62dcdde600ca88c2d83c0f6ab6181d1b5999a6d3c05e14fd3fa836938
+REDACTED_APP_SECRET
 ```
 
 ---
@@ -56,7 +56,7 @@ b2a573b62dcdde600ca88c2d83c0f6ab6181d1b5999a6d3c05e14fd3fa836938
 
 ```
 REDIS_URL
-redis://default:gQAAAAAAAX5TAAIncDE2Y2ViMWM0YTRlOTg0NTc0OGY3NWJmNGRhZmFiYzk0YXAxOTc4NzU@free-pig-97875.upstash.io:6379
+redis://default:REDACTED_REDIS_PASSWORD@free-pig-97875.upstash.io:6379
 ```
 
 ---
@@ -80,7 +80,7 @@ celcom
 
 ```
 CRON_SECRET
-sms_automation_secret_2026
+REDACTED_CRON_SECRET
 ```
 
 ---
@@ -95,13 +95,13 @@ NYLAWIGS
 
 ```
 AFRICASTALKING_API_KEY
-atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867
+REDACTED_AFRICASTALKING_KEY
 ```
 
 **Celcom Africa (Active):**
 ```
 CELCOM_API_KEY
-0621e4ea38a9d2b9000c97c90bf40c97
+REDACTED_HEX_SECRET
 ```
 
 ```
@@ -117,7 +117,7 @@ TEXTME
 **SMS Leopard (Backup):**
 ```
 SMSLEOPARD_ACCESS_TOKEN
-NXBNYU9lbVFyUnB2QW5XekpLVzU6ZjI5T3F4Skt2SVVIUzQ5QXRURHQzSEt6Ykw5cG9Dcm1CMHlwNm9COA==
+REDACTED_APP_SECRET
 ```
 
 ```
@@ -128,7 +128,7 @@ NYLAWIGS
 **Mobitech (Backup):**
 ```
 MOBITECH_API_KEY
-5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695
+REDACTED_APP_SECRET
 ```
 
 ```

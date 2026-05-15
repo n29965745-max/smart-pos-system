@@ -84,7 +84,7 @@ export default async function handler(req, res) {
 ```typescript
 // pages/shop/[slug]/index.tsx
 import FlashDealBanner from '@/components/Ecommerce/FlashDealBanner';
-import GamificationWidget from '@/components/Ecommerce/GamificationWidget';
+import GamificationWidget from '@REDACTED_APP_SECRET';
 
 // In component
 <FlashDealBanner slug={slug} deals={flashDeals} />

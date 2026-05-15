@@ -26,7 +26,7 @@ Say this:
 
 > "Hello, I'm calling about account MT6896. You told me the account is active and to use FULL_CIRCLE as the sender name. I've updated my code but I'm still getting error 1006 'Invalid credentials' when I try to send SMS. 
 >
-> My API key is: 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695
+> My API key is: REDACTED_APP_SECRET
 >
 > Can you please check:
 > 1. Is this API key activated in your system?
@@ -51,7 +51,7 @@ I contacted you earlier about using FULL_CIRCLE as my sender name, and you confi
 
 ACCOUNT DETAILS:
 - Account: MT6896
-- API Key: 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695
+- API Key: REDACTED_APP_SECRET
 - Sender Name: FULL_CIRCLE
 - Balance: KSH 50 (topped up)
 
@@ -70,7 +70,7 @@ POST https://api.mobitechtechnologies.com/sms/sendsms
   "sender_name": "FULL_CIRCLE",
   "service_id": 0,
   "message": "Test message",
-  "apikey": "5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695"
+  "apikey": "REDACTED_APP_SECRET"
 }
 
 QUESTIONS:
@@ -114,7 +114,7 @@ Based on the error, here's what might be wrong:
 
 When you contact them, get clear answers to these questions:
 
-1. ✅ **"Is API key 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695 activated?"**
+1. ✅ **"Is API key REDACTED_APP_SECRET activated?"**
 
 2. ✅ **"Is FULL_CIRCLE approved and linked to this API key?"**
 

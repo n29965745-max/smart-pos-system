@@ -22,7 +22,7 @@ You need to add/update these:
 - **Action**: Add new variable
 
 ### 3. AFRICASTALKING_API_KEY
-- **Value**: `atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867`
+- **Value**: `REDACTED_AFRICASTALKING_KEY`
 - **Action**: Add new variable
 
 ### 4. SMS_TEST_MODE
@@ -41,7 +41,7 @@ You need to add/update these:
 ### Step 2: Add AFRICASTALKING_API_KEY
 1. Click "Add Environment Variable" button
 2. **Name**: `AFRICASTALKING_API_KEY`
-3. **Value**: `atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867`
+3. **Value**: `REDACTED_AFRICASTALKING_KEY`
 4. **Environments**: Check all
 5. Click "Save"
 
@@ -81,7 +81,7 @@ After redeployment, your environment will have:
 ```
 SMS_PROVIDER=africastalking
 AFRICASTALKING_USERNAME=NYLAWIGS
-AFRICASTALKING_API_KEY=atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867
+AFRICASTALKING_API_KEY=REDACTED
 SMS_TEST_MODE=false
 ```
 

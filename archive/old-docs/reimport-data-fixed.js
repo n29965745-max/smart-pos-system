@@ -3,7 +3,7 @@ const fs = require('fs');
 
 const supabase = createClient(
   'https://xqnteamrznvoqgaazhpu.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzA3OTk2NSwiZXhwIjoyMDkyNjU1OTY1fQ.tF_yqWJm7vYqxPZEqLHqVGJxQYGPxqYqxPZEqLHqVGI'
+  'REDACTED_JWT_TOKEN'
 );
 
 async function reimportData() {

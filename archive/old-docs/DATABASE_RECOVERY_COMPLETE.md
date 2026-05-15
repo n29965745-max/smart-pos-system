@@ -24,7 +24,7 @@ You have a NEW empty database (hrqlvcbmzqjtqsrjkcux) that we created earlier. Op
 
 1. **Keep it as backup** - Might be useful later
 2. **Delete it** - To avoid confusion
-   - Go to: https://supabase.com/dashboard/project/hrqlvcbmzqjtqsrjkcux/settings/general
+   - Go to: https://supabase.REDACTED_APP_SECRET
    - Scroll down to "Delete Project"
 
 ## Testing

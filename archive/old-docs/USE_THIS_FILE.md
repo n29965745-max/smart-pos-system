@@ -27,7 +27,7 @@ code FINAL_WORKING_RESTORE.sql
 - Press `Ctrl + C` (copy)
 
 ### Step 3: Run in Supabase
-1. Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql
+1. Go to: https://supabase.REDACTED_APP_SECRET
 2. Click "New Query"
 3. Press `Ctrl + V` (paste all 418 lines)
 4. Click "Run"

@@ -1,7 +1,7 @@
 // Direct Mobitech SMS Test
 const fetch = require('node-fetch');
 
-const API_KEY = '5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695';
+const API_KEY = 'REDACTED_APP_SECRET';
 const PHONE = '254789715533'; // Your Airtel number
 const MESSAGE = 'Test from Nyla Wigs - Direct API call';
 

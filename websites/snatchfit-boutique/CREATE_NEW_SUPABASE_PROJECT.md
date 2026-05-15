@@ -213,23 +213,21 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = pk_test_xxxxx
 
 **Secret Key:**
 ```
-STRIPE_SECRET_KEY = sk_test_xxxxx
+STRIPE_SECRET_KEY = REDACTED_STRIPE_TEST
 ```
 
 ### Save these:
 
 ```
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
 ```
 
 ---
 
 ## Step 7: Generate Secret Keys
 
-### Generate JWT_SECRET:
-
-Open terminal and run:
+### Generate JWT_SECRET=REDACTED terminal and run:
 
 ```bash
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
@@ -237,7 +235,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 Copy the output and save as:
 ```
-JWT_SECRET=xxxxx
+JWT_SECRET=REDACTED
 ```
 
 ### Generate NEXTAUTH_SECRET:
@@ -269,10 +267,10 @@ SUPABASE_SERVICE_ROLE_KEY=eyJ...
 
 # Stripe
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
 
 # Secrets
-JWT_SECRET=xxxxx
+JWT_SECRET=REDACTED
 NEXTAUTH_SECRET=xxxxx
 
 # URLs (will update after Vercel deployment)

@@ -43,3 +43,11 @@ Thumbs.db
 prisma/migrations/
 .vercel
 .env*.local
+
+# Secrets — never commit real credentials
+.env.production
+!.env.example
+**/setup-credentials.js
+
+# Local security tooling output
+.security-scan/

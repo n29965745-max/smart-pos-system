@@ -48,7 +48,7 @@ This test sends SMS **without** the FULL_CIRCLE sender name.
 **Call: +254 722 386 000**
 
 **What to say:**
-> "I'm calling about account MT6896. You told me the account is active, but I'm getting error 1006 'Invalid credentials' when I try to send SMS. My API key is 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695. Can you please activate this API key in your system and link it to FULL_CIRCLE sender name?"
+> "I'm calling about account MT6896. You told me the account is active, but I'm getting error 1006 'Invalid credentials' when I try to send SMS. My API key is REDACTED_APP_SECRET. Can you please activate this API key in your system and link it to FULL_CIRCLE sender name?"
 
 ### Email (If no answer)
 **To: support@mobitechtechnologies.com**

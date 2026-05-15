@@ -223,10 +223,10 @@ Edit `pages/shop/[slug]/index.tsx`:
 ```typescript
 // Add imports at the top
 import FlashDealBanner from '@/components/Ecommerce/FlashDealBanner';
-import RecommendedProducts from '@/components/Ecommerce/RecommendedProducts';
+import RecommendedProducts from '@REDACTED_APP_SECRET';
 import BundleDeals from '@/components/Ecommerce/BundleDeals';
 import TrustBadges from '@/components/Ecommerce/TrustBadges';
-import GamificationWidget from '@/components/Ecommerce/GamificationWidget';
+import GamificationWidget from '@REDACTED_APP_SECRET';
 
 // Add state for new features
 const [flashDeals, setFlashDeals] = useState([]);

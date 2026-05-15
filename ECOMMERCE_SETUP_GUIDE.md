@@ -269,7 +269,7 @@ WHERE o.order_number = 'ORD-20260507-1234';
      ```
      NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
      SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-     JWT_SECRET=your-jwt-secret
+     JWT_SECRET=REDACTED
      ```
 
 3. **Configure Custom Domain** (Optional)

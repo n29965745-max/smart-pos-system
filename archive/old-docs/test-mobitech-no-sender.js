@@ -5,7 +5,7 @@
 
 const fetch = require('node-fetch');
 
-const MOBITECH_API_KEY = '5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695';
+const MOBITECH_API_KEY=REDACTED
 const MOBITECH_URL = 'https://api.mobitechtechnologies.com/sms/sendsms';
 
 async function testMobitechNoSender() {
@@ -59,7 +59,7 @@ async function testMobitechNoSender() {
       console.log('❌ API key is NOT activated in Mobitech system');
       console.log('❌ This is not about the sender name');
       console.log('\n📞 Tell Mobitech:');
-      console.log('"My API key 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695 is not activated. Please activate it for account MT6896"');
+      console.log('"My API key REDACTED_APP_SECRET is not activated. Please activate it for account MT6896"');
     } else {
       console.log('\n❌ FAILED:', result.message || result[0]?.status_desc || 'Unknown error');
       console.log('\n🔍 Response details:', result);

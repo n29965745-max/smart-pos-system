@@ -14,7 +14,7 @@ The issue is likely that the `nylawigs` tenant doesn't exist or has no products 
 
 **Run this SQL in Supabase:**
 
-1. Open Supabase Dashboard: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
+1. Open Supabase Dashboard: https://supabase.REDACTED_APP_SECRET
 2. Go to **SQL Editor**
 3. Copy and paste the contents of `lib/fix-nylawigs-shop.sql`
 4. Click **Run**

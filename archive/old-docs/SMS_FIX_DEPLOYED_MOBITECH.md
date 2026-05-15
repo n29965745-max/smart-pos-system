@@ -78,7 +78,7 @@ Check these:
    - Wait full 3 minutes
 
 2. **Environment Variables** (in Vercel):
-   - `MOBITECH_API_KEY` = 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695
+   - `MOBITECH_API_KEY` = REDACTED_APP_SECRET
    - `SMS_PROVIDER` = mobitech
    - `SMS_TEST_MODE` = false
 

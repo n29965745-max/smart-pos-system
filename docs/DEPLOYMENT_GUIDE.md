@@ -25,8 +25,8 @@ Add these 3 variables for **Production**, **Preview**, and **Development**:
 
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://ugemjqouxnholwlgvzer.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnZW1qcW91eG5ob2x3bGd2emVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYwNjcwNTcsImV4cCI6MjA5MTY0MzA1N30.y2LWeoxZfYgxd-ag1k-SK0eVvK1hycVmS2KYsCCZf04
-DATABASE_URL=postgresql://postgres:mbP8Wh08cSGDM05t@db.ugemjqouxnholwlgvzer.supabase.co:5432/postgres
+NEXT_PUBLIC_SUPABASE_ANON_KEY=REDACTED_JWT_TOKEN
+DATABASE_URL=postgresql://postgres:REDACTED_DB_PASSWORD@db.ugemjqouxnholwlgvzer.supabase.co:5432/postgres
 ```
 
 ### Step 4: Redeploy (if needed)

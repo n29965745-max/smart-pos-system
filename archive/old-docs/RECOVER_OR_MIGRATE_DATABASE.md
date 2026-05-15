@@ -94,7 +94,7 @@ FROM transactions;
 
 ### Step 3: Import Data to New Database
 
-1. Go to new Supabase project: https://supabase.com/dashboard/project/hrqlvcbmzqjtqsrjkcux
+1. Go to new Supabase project: https://supabase.REDACTED_APP_SECRET
 2. Go to SQL Editor
 3. Paste the INSERT statements from Step 2
 4. Run them

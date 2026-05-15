@@ -4,7 +4,7 @@
 
 From your screenshot, I can see:
 - **Key Name**: `Bz3LDHWNx1tL6A2BL4ie` (This is what you first provided)
-- **Access_token**: `Onc2TEBVU054MXdMNkEyOkwxbWU6TmltZXoyTjZoUnVYNWgxcEduWlBpUjNPdnZuQWlXelYzbXRROWtiN2paUnVuWU5XcXpZdHhSR1ZOdw==`
+- **Access_token**: `REDACTED_APP_SECRET`
 
 ## Problem
 

@@ -62,7 +62,7 @@ Create a test API endpoint to check:
 2. Settings → Environment Variables
 3. Verify all 4 variables are there:
    - SMS_PROVIDER = celcom
-   - CELCOM_API_KEY = 0621e4ea38a9d2b9000c97c90bf40c97
+   - CELCOM_API_KEY=REDACTED
    - CELCOM_PARTNER_ID = 36
    - CELCOM_SENDER_ID = TEXTME
 

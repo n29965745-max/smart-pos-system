@@ -28,7 +28,7 @@ SUPABASE_SERVICE_ROLE_KEY
 
 **Value:**
 ```
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVnZW1qcW91eG5ob2x3bGd2emVyIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NjA2NzA1NywiZXhwIjoyMDkxNjQzMDU3fQ.WHvAHGslQVJfoDK5hdlPc_f1vcMzTh3QP1Y4xPSqfL4
+REDACTED_JWT_TOKEN
 ```
 
 **Environments:** (Select ALL three)

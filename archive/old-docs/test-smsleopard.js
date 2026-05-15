@@ -1,7 +1,7 @@
 // Test SMS Leopard Integration
 require('dotenv').config({ path: '.env.local' });
 
-const SMSLEOPARD_ACCESS_TOKEN = process.env.SMSLEOPARD_ACCESS_TOKEN;
+const SMSLEOPARD_ACCESS_TOKEN=REDACTED
 const SMSLEOPARD_SENDER_ID = process.env.SMSLEOPARD_SENDER_ID || 'NYLAWIGS';
 
 async function testSMSLeopard() {
@@ -11,7 +11,7 @@ async function testSMSLeopard() {
   if (!SMSLEOPARD_ACCESS_TOKEN) {
     console.log('❌ ERROR: SMS Leopard access token not found in .env.local\n');
     console.log('Please add these to your .env.local file:');
-    console.log('SMSLEOPARD_ACCESS_TOKEN="your_access_token_here"');
+    console.log(SMSLEOPARD_ACCESS_TOKEN=REDACTED);
     console.log('SMSLEOPARD_SENDER_ID="NYLAWIGS"');
     console.log('\nGet your access token from: https://app.smsleopard.com/api-keys');
     return;

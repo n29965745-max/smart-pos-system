@@ -3,7 +3,7 @@
 ## Quick Steps:
 
 1. **Open Supabase SQL Editor**
-   - Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql/new
+   - Go to: https://supabase.REDACTED_APP_SECRET
    - Login if needed
 
 2. **Copy the SQL**

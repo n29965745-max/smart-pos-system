@@ -17,7 +17,7 @@ https://vercel.com/brunowachira001-coders-projects/smart-pos-system/settings/env
 
 2. **NEXT_PUBLIC_SUPABASE_ANON_KEY**
    ```
-   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNzk5NjUsImV4cCI6MjA5MjY1NTk2NX0.5kfYBMtKYGC5Efu9EOJx1zL3HkUZeYAlbgwusWRbF8o
+   REDACTED_JWT_TOKEN
    ```
 
 ### Step 3: Redeploy

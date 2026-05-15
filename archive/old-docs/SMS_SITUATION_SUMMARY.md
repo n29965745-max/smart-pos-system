@@ -8,7 +8,7 @@
 - ✅ 14 message templates in database
 - ❌ **BLOCKED: API Key returns 401 Unauthorized**
 
-**Problem:** The API key `atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78` is being rejected by Africa's Talking.
+**Problem:** The API key `REDACTED_AFRICASTALKING_KEY` is being rejected by Africa's Talking.
 
 **Possible Reasons:**
 1. API key is invalid or expired
@@ -59,7 +59,7 @@ Hi,
 I'm trying to use my Africa's Talking account but getting a 401 Unauthorized error when using my API key.
 
 Username: NYLAWIGS
-API Key: atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78
+API Key: REDACTED_AFRICASTALKING_KEY
 
 Can you please:
 1. Verify my account status

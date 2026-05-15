@@ -128,9 +128,9 @@ Add these to your deployment platform:
 
 ```env
 MONGODB_URI=your_mongodb_connection_string
-JWT_SECRET=your_jwt_secret_key
+JWT_SECRET=REDACTED
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
 NEXTAUTH_SECRET=your_nextauth_secret
 NEXTAUTH_URL=https://your-domain.vercel.app
 NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app

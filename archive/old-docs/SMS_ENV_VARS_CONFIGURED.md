@@ -9,7 +9,7 @@ All 4 required SMS environment variables have been added to Vercel:
 1. ✅ `AFRICASTALKING_USERNAME` = `NYLAWIGS` (Production mode)
 2. ✅ `AFRICASTALKING_API_KEY` = `atsk_98bf2...` (88 characters)
 3. ✅ `AFRICASTALKING_SENDER_ID` = `NYLAWIGS`
-4. ✅ `CRON_SECRET` = `sms_automation_secret_2026`
+4. ✅ `CRON_SECRET` = `REDACTED_CRON_SECRET`
 
 ## Code Changes Made
 

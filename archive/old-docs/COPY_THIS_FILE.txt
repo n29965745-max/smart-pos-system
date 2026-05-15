@@ -17,7 +17,7 @@ This file is 410 lines and contains:
 HOW TO USE:
 1. Open: gedit FINAL_COMPLETE_RESTORE.sql
 2. Copy all (Ctrl + A, then Ctrl + C)
-3. Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql
+3. Go to: https://supabase.REDACTED_APP_SECRET
 4. Click "New Query"
 5. Paste (Ctrl + V)
 6. Click "Run"

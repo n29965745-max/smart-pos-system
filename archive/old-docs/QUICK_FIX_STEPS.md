@@ -11,7 +11,7 @@
 ## Step 1: Create Admin User (2 minutes)
 
 1. Open Supabase SQL Editor:
-   👉 https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql/new
+   👉 https://supabase.REDACTED_APP_SECRET
 
 2. Copy ALL content from `create-admin-user.sql` file
 
@@ -33,7 +33,7 @@
 
    **NEXT_PUBLIC_SUPABASE_ANON_KEY**
    ```
-   eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNzk5NjUsImV4cCI6MjA5MjY1NTk2NX0.5kfYBMtKYGC5Efu9EOJx1zL3HkUZeYAlbgwusWRbF8o
+   REDACTED_JWT_TOKEN
    ```
 
 3. Click "Save" for each variable

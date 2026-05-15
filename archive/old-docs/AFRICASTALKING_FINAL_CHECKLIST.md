@@ -3,7 +3,7 @@
 ## Current Status
 - ✅ App Created: QUANTYX DIGITAL TECH
 - ✅ Username: NYLAWIGS
-- ✅ API Key Generated: atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867
+- ✅ API Key Generated: REDACTED_AFRICASTALKING_KEY
 - ⏳ Waiting Period: **Need to wait 5 minutes after generating API key**
 
 ## What We Need To Check

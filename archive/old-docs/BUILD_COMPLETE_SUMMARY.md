@@ -83,9 +83,9 @@ I've successfully built a complete AI-powered automated SMS communication system
 
 4. **Add Environment Variables**
    ```env
-   AFRICASTALKING_API_KEY=your_key
+   AFRICASTALKING_API_KEY=REDACTED
    AFRICASTALKING_USERNAME=your_username
-   CRON_SECRET=random_secret
+   CRON_SECRET=REDACTED
    ```
 
 5. **Configure & Deploy**

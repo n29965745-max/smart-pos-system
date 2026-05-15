@@ -11,7 +11,7 @@ Your code has been pushed to GitHub and Vercel is now deploying with the new Afr
 3. ⏳ Building with new environment variables:
    - `SMS_PROVIDER=africastalking`
    - `AFRICASTALKING_USERNAME=NYLAWIGS`
-   - `AFRICASTALKING_API_KEY=atsk_cf48...`
+   - `AFRICASTALKING_API_KEY=REDACTED
    - `SMS_TEST_MODE=false`
 4. ⏳ Deploying to production
 

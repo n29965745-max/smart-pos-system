@@ -35,9 +35,9 @@ git push origin main
    In Vercel dashboard, go to Settings → Environment Variables and add:
    ```
    MONGODB_URI=your_mongodb_connection_string
-   JWT_SECRET=your_jwt_secret_key
+   JWT_SECRET=REDACTED
    NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
-   STRIPE_SECRET_KEY=sk_test_xxxxx
+   STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
    NEXTAUTH_SECRET=your_nextauth_secret
    NEXTAUTH_URL=https://your-domain.vercel.app
    NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app
@@ -93,14 +93,14 @@ See detailed instructions in DEPLOYMENT_CHECKLIST.md
 
 ```env
 # Database
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/snatchfit
+MONGODB_URI=mongodb+srv://username:REDACTED_PASSWORD@cluster.mongodb.net/snatchfit
 
 # JWT
-JWT_SECRET=your_random_secret_key_min_32_chars_long
+JWT_SECRET=REDACTED
 
 # Stripe
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
 
 # NextAuth
 NEXTAUTH_SECRET=your_nextauth_secret_key_min_32_chars

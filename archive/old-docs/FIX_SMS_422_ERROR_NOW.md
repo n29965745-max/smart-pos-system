@@ -35,7 +35,7 @@ celcom
 (no quotes, no spaces)
 
 CELCOM_API_KEY
-0621e4ea38a9d2b9000c97c90bf40c97
+REDACTED_HEX_SECRET
 (no quotes, no spaces)
 
 CELCOM_PARTNER_ID
@@ -56,7 +56,7 @@ false
 ❌ "celcom"
 ❌ 'celcom'
 ❌  celcom  (spaces)
-❌ "0621e4ea38a9d2b9000c97c90bf40c97"
+❌ "REDACTED_HEX_SECRET"
 ```
 
 ### Step 3: Redeploy with Latest Commit

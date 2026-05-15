@@ -135,7 +135,7 @@
 
 ### Environment Variables Required
 ```bash
-JWT_SECRET=<64-character-random-string>
+JWT_SECRET=REDACTED
 NEXT_PUBLIC_SUPABASE_URL=<your-url>
 NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<your-service-key>

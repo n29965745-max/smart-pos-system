@@ -4,8 +4,8 @@
 Both API keys return **401 Unauthorized** with message: "The supplied authentication is invalid"
 
 ### API Keys Tried:
-1. `atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78` ❌
-2. `atsk_e6b093b9c70f7b7ba4486798b116c498a29149bf59fd2517a935d8c4e9dc02d5a6582c01` ❌
+1. `REDACTED_AFRICASTALKING_KEY` ❌
+2. `REDACTED_AFRICASTALKING_KEY` ❌
 
 ### Username Used:
 - `NYLAWIGS`
@@ -58,7 +58,7 @@ I'm getting a 401 Unauthorized error when trying to use the SMS API.
 
 My details:
 - Username: NYLAWIGS
-- API Key: atsk_e6b093b9c70f7b7ba4486798b116c498a29149bf59fd2517a935d8c4e9dc02d5a6582c01
+- API Key: REDACTED_AFRICASTALKING_KEY
 - Error: "The supplied authentication is invalid"
 
 I've tried:

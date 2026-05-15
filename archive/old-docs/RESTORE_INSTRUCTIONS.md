@@ -12,7 +12,7 @@ Run the SQL file to restore all 121 products and 58 customers with correct data.
 ## Steps:
 
 ### 1. Open Supabase SQL Editor
-Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql/new
+Go to: https://supabase.REDACTED_APP_SECRET
 
 ### 2. Copy the SQL
 Open the file: `RESTORE_DATABASE_NOW.sql`

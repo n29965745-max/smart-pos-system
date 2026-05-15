@@ -91,11 +91,11 @@ Add to your `.env.local` file:
 
 ```env
 # Africa's Talking API
-AFRICASTALKING_API_KEY=your_api_key_here
+AFRICASTALKING_API_KEY=REDACTED
 AFRICASTALKING_USERNAME=your_username_here
 
 # Cron Job Security
-CRON_SECRET=your_random_secret_here
+CRON_SECRET=REDACTED
 ```
 
 ### Step 6: Test SMS Sending

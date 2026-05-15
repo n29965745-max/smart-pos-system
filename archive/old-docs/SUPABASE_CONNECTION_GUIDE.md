@@ -37,7 +37,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 SUPABASE_SERVICE_ROLE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
 # Direct Database URL - For direct PostgreSQL connections
-DATABASE_URL="postgresql://postgres:mbP8Wh08cSGDM05t@db.ugemjqouxnholwlgvzer.supabase.co:5432/postgres"
+DATABASE_URL="postgresql://postgres:REDACTED_DB_PASSWORD@db.ugemjqouxnholwlgvzer.supabase.co:5432/postgres"
 ```
 
 ### 2. Supabase Client (`lib/supabase.ts`)
@@ -221,7 +221,7 @@ Your app is deployed on Vercel with these environment variables:
 NEXT_PUBLIC_SUPABASE_URL=https://ugemjqouxnholwlgvzer.supabase.co
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-DATABASE_URL=postgresql://postgres:mbP8Wh08cSGDM05t@db...
+DATABASE_URL=postgresql://postgres:REDACTED_DB_PASSWORD@db...
 ```
 
 These are automatically loaded from your `.env.local` file during deployment.
@@ -368,7 +368,7 @@ Supabase automatically backs up your database:
 **Export all data:**
 ```bash
 # Using pg_dump (requires PostgreSQL client)
-pg_dump "postgresql://postgres:mbP8Wh08cSGDM05t@db.ugemjqouxnholwlgvzer.supabase.co:5432/postgres" > backup.sql
+pg_dump "postgresql://postgres:REDACTED_DB_PASSWORD@db.ugemjqouxnholwlgvzer.supabase.co:5432/postgres" > backup.sql
 ```
 
 **Or export via Dashboard:**
@@ -422,6 +422,6 @@ Your Supabase connection:
 
 **Your Supabase Project:**
 - URL: https://ugemjqouxnholwlgvzer.supabase.co
-- Dashboard: https://supabase.com/dashboard/project/ugemjqouxnholwlgvzer
+- Dashboard: https://supabase.REDACTED_APP_SECRET
 
 Everything is properly connected and working!

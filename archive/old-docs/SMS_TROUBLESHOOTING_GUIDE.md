@@ -2,7 +2,7 @@
 
 ## 🔑 Your Africa's Talking Credentials
 
-**API Key:** `atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78`
+**API Key:** `REDACTED_AFRICASTALKING_KEY`
 
 **Username:** `sandbox` (⚠️ This is TEST MODE - see below for production)
 
@@ -58,10 +58,10 @@ Replace `AFRICASTALKING_USERNAME="sandbox"` with your production username
 
 | Name | Value |
 |------|-------|
-| `AFRICASTALKING_API_KEY` | `atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78` |
+| `AFRICASTALKING_API_KEY` | `REDACTED_AFRICASTALKING_KEY` |
 | `AFRICASTALKING_USERNAME` | `sandbox` (or your production username) |
 | `AFRICASTALKING_SENDER_ID` | `NYLAWIGS` |
-| `CRON_SECRET` | `sms_automation_secret_2026` |
+| `CRON_SECRET` | `REDACTED_CRON_SECRET` |
 
 **Important:** Select "Production", "Preview", and "Development" for each variable
 
@@ -252,7 +252,7 @@ Once test works, switch `AFRICASTALKING_USERNAME` to production
 
 ## 🎉 Summary
 
-**Your API Key:** `atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78`
+**Your API Key:** `REDACTED_AFRICASTALKING_KEY`
 
 **Current Mode:** Sandbox (test only)
 

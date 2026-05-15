@@ -10,7 +10,7 @@ Ensure these are set in production (Vercel/your hosting):
 
 ```bash
 # Required for HMAC token signing
-JWT_SECRET=<minimum-32-character-random-string>
+JWT_SECRET=REDACTED
 
 # Supabase credentials
 NEXT_PUBLIC_SUPABASE_URL=<your-supabase-url>
@@ -18,7 +18,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=<your-anon-key>
 SUPABASE_SERVICE_ROLE_KEY=<your-service-role-key>
 ```
 
-**Generate JWT_SECRET:**
+**Generate JWT_SECRET=REDACTED
 ```bash
 # Generate a secure 64-character secret
 node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"

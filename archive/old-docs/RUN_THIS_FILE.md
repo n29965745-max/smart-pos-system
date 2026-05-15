@@ -21,7 +21,7 @@ gedit COMPLETE_WORKING_RESTORE.sql
 ### Step 2: Copy All (Ctrl + A, then Ctrl + C)
 
 ### Step 3: Run in Supabase
-1. Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql
+1. Go to: https://supabase.REDACTED_APP_SECRET
 2. Click "New Query"
 3. Paste (Ctrl + V)
 4. Click "Run"

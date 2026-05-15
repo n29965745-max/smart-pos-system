@@ -41,14 +41,14 @@ Go to Vercel → Project Settings → Environment Variables
 **MUST BE SET TO THESE EXACT VALUES:**
 
 ```
-AFRICASTALKING_API_KEY = atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78
+AFRICASTALKING_API_KEY=REDACTED
 
 AFRICASTALKING_USERNAME = NYLAWIGS
 (NOT "sandbox" - this is critical!)
 
 AFRICASTALKING_SENDER_ID = NYLAWIGS
 
-CRON_SECRET = sms_automation_secret_2026
+CRON_SECRET=REDACTED
 ```
 
 **If you changed any of these, you MUST redeploy:**

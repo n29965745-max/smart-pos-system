@@ -4,7 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 
 const NEW_SUPABASE_URL = 'https://xqnteamrznvoqgaazhpu.supabase.co';
-const NEW_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNzk5NjUsImV4cCI6MjA5MjY1NTk2NX0.5kfYBMtKYGC5Efu9EOJx1zL3HkUZeYAlbgwusWRbF8o";
+const NEW_SUPABASE_KEY = "REDACTED_JWT_TOKEN";
 
 const supabase = createClient(NEW_SUPABASE_URL, NEW_SUPABASE_KEY);
 

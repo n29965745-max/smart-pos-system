@@ -214,7 +214,7 @@ The Smart POS System has been **fully audited, stabilized, secured, and verified
    NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
    SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-   JWT_SECRET=your-32-char-secret
+   JWT_SECRET=REDACTED
    ```
 
 2. **Deploy to Vercel**

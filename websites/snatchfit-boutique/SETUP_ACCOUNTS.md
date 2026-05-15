@@ -39,7 +39,7 @@ Follow these steps in order to set up all required accounts and services.
 
 ### Example Connection String
 ```
-mongodb+srv://snatchfit_user:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/snatchfit?retryWrites=true&w=majority
+mongodb+srv://snatchfit_user:REDACTED_PASSWORD@cluster0.xxxxx.mongodb.net/snatchfit?retryWrites=true&w=majority
 ```
 
 ---
@@ -127,13 +127,13 @@ git push -u origin main
 2. Add each variable below:
 
 ```
-MONGODB_URI=mongodb+srv://snatchfit_user:YOUR_PASSWORD@cluster0.xxxxx.mongodb.net/snatchfit?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://snatchfit_user:REDACTED_PASSWORD@cluster0.xxxxx.mongodb.net/snatchfit?retryWrites=true&w=majority
 
-JWT_SECRET=your_random_secret_key_min_32_chars_long_generate_random_string_here_12345
+JWT_SECRET=REDACTED
 
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx_from_stripe_dashboard
 
-STRIPE_SECRET_KEY=sk_test_xxxxx_from_stripe_dashboard
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST_from_stripe_dashboard
 
 NEXTAUTH_SECRET=your_nextauth_secret_key_min_32_chars_long_generate_random_string_here_12345
 

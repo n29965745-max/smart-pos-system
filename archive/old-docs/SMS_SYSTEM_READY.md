@@ -187,9 +187,9 @@ Save our number for updates!
 
 ### Environment Variables (.env.local):
 ```
-AFRICASTALKING_API_KEY=your_api_key
+AFRICASTALKING_API_KEY=REDACTED
 AFRICASTALKING_USERNAME=your_username
-CRON_SECRET=your_cron_secret
+CRON_SECRET=REDACTED
 ```
 
 ### Vercel Cron Job:

@@ -6,7 +6,7 @@
 
 const axios = require('axios');
 
-const API_KEY = '0621e4ea38a9d2b9000c97c90bf40c97';
+const API_KEY = 'REDACTED_HEX_SECRET';
 const PARTNER_ID = '36';
 const SHORTCODE = 'TEXTME';
 const API_URL = 'https://isms.celcomafrica.com/api/services/sendsms/';

@@ -19,10 +19,10 @@ Get these from:
 - **Stripe**: https://dashboard.stripe.com (test keys)
 
 ```env
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/snatchfit
-JWT_SECRET=your_random_secret_key_min_32_chars_long
+MONGODB_URI=mongodb+srv://user:REDACTED_PASSWORD@cluster.mongodb.net/snatchfit
+JWT_SECRET=REDACTED
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
 NEXTAUTH_SECRET=your_secret_key
 NEXTAUTH_URL=http://localhost:3000
 NEXT_PUBLIC_ADMIN_EMAIL=admin@snatchfit.com

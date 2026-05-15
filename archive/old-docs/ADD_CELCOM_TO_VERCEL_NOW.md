@@ -26,7 +26,7 @@ Environment: Production, Preview, Development (check all 3)
 #### Variable 2: CELCOM_API_KEY
 ```
 Name: CELCOM_API_KEY
-Value: 0621e4ea38a9d2b9000c97c90bf40c97
+Value: REDACTED_HEX_SECRET
 Environment: Production, Preview, Development (check all 3)
 ```
 
@@ -63,7 +63,7 @@ If Vercel allows bulk import, use this:
 
 ```env
 SMS_PROVIDER=celcom
-CELCOM_API_KEY=0621e4ea38a9d2b9000c97c90bf40c97
+CELCOM_API_KEY=REDACTED
 CELCOM_PARTNER_ID=36
 CELCOM_SENDER_ID=TEXTME
 ```

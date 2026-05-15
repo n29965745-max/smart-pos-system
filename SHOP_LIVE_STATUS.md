@@ -313,8 +313,8 @@ Your shop is fully optimized for mobile:
 - `QUICK_REFERENCE.md` - Quick reference
 
 ### Database Access:
-- **Supabase Dashboard:** https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
-- **SQL Editor:** https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql
+- **Supabase Dashboard:** https://supabase.REDACTED_APP_SECRET
+- **SQL Editor:** https://supabase.REDACTED_APP_SECRET
 
 ### Deployment:
 - **Vercel Dashboard:** https://vercel.com/dashboard

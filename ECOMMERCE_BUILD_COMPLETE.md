@@ -231,7 +231,7 @@ GET    /api/ecommerce/products/[id]            - Get product details
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
-JWT_SECRET=your-jwt-secret
+JWT_SECRET=REDACTED
 ```
 
 ### Deployment Steps

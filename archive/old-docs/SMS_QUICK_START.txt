@@ -41,9 +41,9 @@
 ├──────────────────────────────────────────────────────────────────┤
 │ Add to .env.local file:                                          │
 │                                                                  │
-│   AFRICASTALKING_API_KEY=your_api_key_here                      │
+│   AFRICASTALKING_API_KEY=REDACTED                      │
 │   AFRICASTALKING_USERNAME=your_username_here                    │
-│   CRON_SECRET=any_random_secret_string                          │
+│   CRON_SECRET=REDACTED                          │
 │                                                                  │
 └──────────────────────────────────────────────────────────────────┘
 

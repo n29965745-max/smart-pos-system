@@ -6,7 +6,7 @@ Creates the missing `sales_transactions` table that the dashboard needs to displ
 ## 📋 Steps
 
 ### 1. Open Supabase SQL Editor
-Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql/new
+Go to: https://supabase.REDACTED_APP_SECRET
 
 ### 2. Copy the SQL Below
 Copy the ENTIRE SQL script from `CREATE_MISSING_TABLES.sql` file

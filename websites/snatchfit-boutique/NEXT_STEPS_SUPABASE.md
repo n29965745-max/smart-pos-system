@@ -126,7 +126,7 @@ ALTER TABLE cart_items ENABLE ROW LEVEL SECURITY;
 
 ```
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY = pk_test_xxxxx
-STRIPE_SECRET_KEY = sk_test_xxxxx
+STRIPE_SECRET_KEY = REDACTED_STRIPE_TEST
 ```
 
 **Save these values - you'll need them in Step 4**
@@ -146,7 +146,7 @@ node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
 
 Run this command twice to get:
 ```
-JWT_SECRET = (paste output here)
+JWT_SECRET=REDACTED output here)
 NEXTAUTH_SECRET = (paste output here)
 ```
 

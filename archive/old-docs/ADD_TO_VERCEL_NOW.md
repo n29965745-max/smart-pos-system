@@ -3,7 +3,7 @@
 ## Your API Key (Copy This):
 
 ```
-atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78
+REDACTED_AFRICASTALKING_KEY
 ```
 
 ---
@@ -25,7 +25,7 @@ In the left sidebar, click **Environment Variables**
 ### 5. Add Variable #1
 - Click **"Add New"** button
 - **Name:** `AFRICASTALKING_API_KEY`
-- **Value:** `atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78`
+- **Value:** `REDACTED_AFRICASTALKING_KEY`
 - Check: ✅ Production ✅ Preview ✅ Development
 - Click **Save**
 
@@ -46,7 +46,7 @@ In the left sidebar, click **Environment Variables**
 ### 8. Add Variable #4
 - Click **"Add New"** button
 - **Name:** `CRON_SECRET`
-- **Value:** `sms_automation_secret_2026`
+- **Value:** `REDACTED_CRON_SECRET`
 - Check: ✅ Production ✅ Preview ✅ Development
 - Click **Save**
 

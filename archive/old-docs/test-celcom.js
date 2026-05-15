@@ -4,7 +4,7 @@
 const axios = require('axios');
 
 // REPLACE THESE WITH YOUR ACTUAL CREDENTIALS FROM CELCOM DASHBOARD
-const CELCOM_API_KEY = 'YOUR_API_KEY_HERE';
+const CELCOM_API_KEY=REDACTED
 const CELCOM_PARTNER_ID = 'YOUR_PARTNER_ID_HERE';
 const CELCOM_SENDER_ID = 'INFOTEXT'; // Use INFOTEXT until NYLAWIGS is approved
 
@@ -76,7 +76,7 @@ async function testCelcomSMS() {
 }
 
 // Check if credentials are set
-if (CELCOM_API_KEY === 'YOUR_API_KEY_HERE' || CELCOM_PARTNER_ID === 'YOUR_PARTNER_ID_HERE') {
+if (CELCOM_API_KEY=REDACTED 'YOUR_API_KEY_HERE' || CELCOM_PARTNER_ID === 'YOUR_PARTNER_ID_HERE') {
   console.log('❌ ERROR: Please update the credentials in this file first!');
   console.log('\n📝 Steps:');
   console.log('1. Open test-celcom.js in your editor');

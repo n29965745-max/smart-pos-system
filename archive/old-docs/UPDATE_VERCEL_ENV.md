@@ -22,10 +22,10 @@ Click on: smart-pos-system-peach
 - New: `https://xqnteamrznvoqgaazhpu.supabase.co`
 
 **NEXT_PUBLIC_SUPABASE_ANON_KEY**
-- New: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNzk5NjUsImV4cCI6MjA5MjY1NTk2NX0.5kfYBMtKYGC5Efu9EOJx1zL3HkUZeYAlbgwusWRbF8o`
+- New: `REDACTED_JWT_TOKEN`
 
 **SUPABASE_SERVICE_ROLE_KEY** (if you have it)
-- Get from: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/settings/api
+- Get from: https://supabase.REDACTED_APP_SECRET
 - Copy the "service_role" key (secret)
 
 ### Step 5: Redeploy

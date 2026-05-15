@@ -12,7 +12,7 @@ You're getting **Status 400** errors when trying to complete a sale. This is lik
 
 ### Step 1: Check Cart Items in Supabase
 
-1. Go to your Supabase dashboard: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
+1. Go to your Supabase dashboard: https://supabase.REDACTED_APP_SECRET
 2. Click on **SQL Editor** in the left sidebar
 3. Click **New Query**
 4. Copy and paste this SQL:

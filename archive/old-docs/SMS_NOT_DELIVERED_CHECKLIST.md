@@ -63,7 +63,7 @@ node test-celcom-now.js
 
 ### 5. Verify Environment Variables
 Check that these are set in Vercel:
-- `CELCOM_API_KEY` = `0621e4ea38a9d2b9000c97c90bf40c97`
+- `CELCOM_API_KEY` = `REDACTED_HEX_SECRET`
 - `CELCOM_PARTNER_ID` = `36`
 - `CELCOM_SENDER_ID` = `TEXTME`
 - `SMS_PROVIDER` = `celcom`

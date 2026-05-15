@@ -250,9 +250,9 @@
 - [ ] Install dependencies: `npm install`
 - [ ] Add environment variables to `.env.local`:
   ```env
-  AFRICASTALKING_API_KEY=your_api_key
+  AFRICASTALKING_API_KEY=REDACTED
   AFRICASTALKING_USERNAME=your_username
-  CRON_SECRET=your_random_secret
+  CRON_SECRET=REDACTED
   ```
 - [ ] Configure SMS settings in Shop Settings
 - [ ] Test SMS sending

@@ -47,7 +47,7 @@ This will install:
 
 Your connection string should look like:
 ```
-mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/snatchfit?retryWrites=true&w=majority
+mongodb+srv://username:REDACTED_PASSWORD@cluster0.xxxxx.mongodb.net/snatchfit?retryWrites=true&w=majority
 ```
 
 ### Step 5: Stripe Setup (5 minutes)
@@ -72,14 +72,14 @@ Edit `.env.local` and fill in:
 
 ```env
 # MongoDB - from Step 4
-MONGODB_URI=mongodb+srv://username:password@cluster0.xxxxx.mongodb.net/snatchfit?retryWrites=true&w=majority
+MONGODB_URI=mongodb+srv://username:REDACTED_PASSWORD@cluster0.xxxxx.mongodb.net/snatchfit?retryWrites=true&w=majority
 
 # JWT - generate a random string (min 32 chars)
-JWT_SECRET=your_super_secret_jwt_key_min_32_characters_long_12345
+JWT_SECRET=REDACTED
 
 # Stripe - from Step 5
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxxxxxxxxxx
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
 
 # NextAuth
 NEXTAUTH_SECRET=your_nextauth_secret_key_here_min_32_chars

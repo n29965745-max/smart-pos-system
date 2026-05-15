@@ -80,7 +80,7 @@ Successfully transformed the online shop into a world-class ecommerce marketplac
 
 ### 4. **Product Recommendations** 🎯
 **Files Created:**
-- `components/Ecommerce/RecommendedProducts.tsx` - Recommendation display
+- `REDACTED_APP_SECRET.tsx` - Recommendation display
 
 **Features:**
 - "You May Also Like" section
@@ -386,7 +386,7 @@ All components are fully responsive:
 1. `lib/ecommerce-advanced-schema.sql` - Database schema
 2. `components/Ecommerce/FlashDealBanner.tsx`
 3. `components/Ecommerce/SocialProof.tsx`
-4. `components/Ecommerce/RecommendedProducts.tsx`
+4. `REDACTED_APP_SECRET.tsx`
 5. `components/Ecommerce/GamificationWidget.tsx`
 6. `components/Ecommerce/TrustBadges.tsx`
 7. `components/Ecommerce/BundleDeals.tsx`

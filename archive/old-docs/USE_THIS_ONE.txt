@@ -18,7 +18,7 @@ HOW TO USE:
 1. gedit WORKS_100_PERCENT.sql
 2. Ctrl + A (select all)
 3. Ctrl + C (copy)
-4. Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql
+4. Go to: https://supabase.REDACTED_APP_SECRET
 5. New Query
 6. Ctrl + V (paste)
 7. Run

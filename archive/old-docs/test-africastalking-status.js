@@ -2,7 +2,7 @@
 const fetch = require('node-fetch');
 
 const AFRICASTALKING_USERNAME = 'NYLAWIGS';
-const AFRICASTALKING_API_KEY = 'atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867';
+const AFRICASTALKING_API_KEY=REDACTED
 
 async function checkBalance() {
   console.log('\n📊 Checking Account Balance...\n');

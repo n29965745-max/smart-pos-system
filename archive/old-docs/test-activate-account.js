@@ -2,7 +2,7 @@
 // Run this with: node test-activate-account.js
 
 const AfricasTalking = require('africastalking')({
-  apiKey: 'atsk_eff3a4e2e08357a814e1ffe1b3d66c96fddc7067fb2e5213845e6e3ad3159900c2ac512e',
+  apiKey: 'REDACTED_AFRICASTALKING_KEY',
   username: 'sandbox'
 });
 

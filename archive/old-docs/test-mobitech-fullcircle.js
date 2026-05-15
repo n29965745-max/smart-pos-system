@@ -1,7 +1,7 @@
 // Test Mobitech SMS with FULL_CIRCLE sender name
 const fetch = require('node-fetch');
 
-const MOBITECH_API_KEY = '5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695';
+const MOBITECH_API_KEY=REDACTED
 const MOBITECH_URL = 'https://api.mobitechtechnologies.com/sms/sendsms';
 
 async function testMobitechSMS() {

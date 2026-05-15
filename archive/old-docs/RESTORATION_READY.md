@@ -14,7 +14,7 @@ I've created **RESTORE_EVERYTHING_FINAL.sql** with ALL your data properly struct
 ## Quick Start - 3 Steps
 
 ### Step 1: Open Supabase SQL Editor
-Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql
+Go to: https://supabase.REDACTED_APP_SECRET
 
 ### Step 2: Copy & Paste the SQL
 1. Open `RESTORE_EVERYTHING_FINAL.sql` from your project folder

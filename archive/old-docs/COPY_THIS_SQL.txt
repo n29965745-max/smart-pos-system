@@ -2,7 +2,7 @@
 COPY THIS ENTIRE FILE AND RUN IN SUPABASE
 ========================================
 
-Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql/new
+Go to: https://supabase.REDACTED_APP_SECRET
 
 Then copy everything below this line and paste it there:
 

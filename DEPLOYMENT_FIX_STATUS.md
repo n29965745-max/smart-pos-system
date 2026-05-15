@@ -86,7 +86,7 @@ I've created a comprehensive fix that will:
 ## 🚀 QUICK FIX (5 Minutes)
 
 ### Step 1: Open Supabase
-1. Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
+1. Go to: https://supabase.REDACTED_APP_SECRET
 2. Click **SQL Editor**
 3. Click **New Query**
 

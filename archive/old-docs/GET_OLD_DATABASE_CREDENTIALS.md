@@ -7,7 +7,7 @@ Your OLD Supabase project (with all the data):
 
 ## Steps to Get Credentials
 
-1. Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
+1. Go to: https://supabase.REDACTED_APP_SECRET
 
 2. Click "Settings" (gear icon in left sidebar)
 

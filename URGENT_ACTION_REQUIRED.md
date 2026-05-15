@@ -11,7 +11,7 @@
 
 ### Step 1: Open Supabase (2 minutes)
 
-1. Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
+1. Go to: https://supabase.REDACTED_APP_SECRET
 2. Click **SQL Editor** in the left sidebar
 3. Click **New Query**
 

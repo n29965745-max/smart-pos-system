@@ -6,7 +6,7 @@ Migrate from old database (`ugemjqouxnholwlgvzer` - no access) to new database (
 ## Step 1: Setup New Database Schema
 
 Go to Supabase dashboard for project `xqnteamrznvoqgaazhpu`:
-https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
+https://supabase.REDACTED_APP_SECRET
 
 Click "SQL Editor" → "New query" and run `lib/setup-complete-database.sql`
 

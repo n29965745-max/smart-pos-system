@@ -1,136 +1,72 @@
-# ✅ Essential Environment Variables for Vercel (Celcom Only)
+# Essential Environment Variables for Vercel (Celcom)
 
-## Step 1: Go to Vercel Dashboard
+Use placeholders below. Copy real values from your local `.env.local` or password manager — **never commit real secrets**.
+
+## Step 1: Vercel dashboard
+
 https://vercel.com/your-project/settings/environment-variables
 
-## Step 2: Add Each Variable Below
-
-**IMPORTANT**: For each variable, select **Production**, **Preview**, AND **Development** environments.
+For each variable, enable **Production**, **Preview**, and **Development**.
 
 ---
 
-### 🔴 CRITICAL - Database & Supabase (Required for Login)
+### Database and Supabase (required for login)
 
-```
-NEXT_PUBLIC_SUPABASE_URL
-https://xqnteamrznvoqgaazhpu.supabase.co
-```
-
-```
-NEXT_PUBLIC_SUPABASE_ANON_KEY
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNzk5NjUsImV4cCI6MjA5MjY1NTk2NX0.5kfYBMtKYGC5Efu9EOJx1zL3HkUZeYAlbgwusWRbF8o
-```
-
-```
-SUPABASE_SERVICE_ROLE_KEY
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzA3OTk2NSwiZXhwIjoyMDkyNjU1OTY1fQ.mbP8Wh08cSGDM05t
-```
-
-```
-DATABASE_URL
-postgresql://postgres.xqnteamrznvoqgaazhpu:mbP8Wh08cSGDM05t@aws-0-us-east-1.pooler.supabase.com:6543/postgres
-```
+| Variable | Example value |
+|----------|----------------|
+| `NEXT_PUBLIC_SUPABASE_URL` | `https://YOUR_PROJECT.supabase.co` |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | From Supabase → Settings → API |
+| `SUPABASE_SERVICE_ROLE_KEY` | From Supabase → Settings → API (server only) |
+| `DATABASE_URL` | Supabase → Settings → Database → Connection string (pooler) |
 
 ---
 
-### 🔴 CRITICAL - Security Keys
+### Security keys
 
-```
-JWT_SECRET
-PisrrctrHtXwGjenW4iGf3alBLZvx682AyLgvXZT+Jo=
-```
-
-```
-JWT_REFRESH_SECRET
-oBFcQCpfQA2qNyeDWTmCdAUIFBo60pVtQOkol6DgrrU=
-```
-
-```
-ENCRYPTION_KEY
-b2a573b62dcdde600ca88c2d83c0f6ab6181d1b5999a6d3c05e14fd3fa836938
-```
+| Variable | Notes |
+|----------|--------|
+| `JWT_SECRET` | Long random string (32+ chars) |
+| `JWT_REFRESH_SECRET` | Different long random string |
+| `ENCRYPTION_KEY` | 64-char hex or strong random string |
 
 ---
 
-### 🔴 CRITICAL - Redis
+### Redis (optional)
 
-```
-REDIS_URL
-redis://default:gQAAAAAAAX5TAAIncDE2Y2ViMWM0YTRlOTg0NTc0OGY3NWJmNGRhZmFiYzk0YXAxOTc4NzU@free-pig-97875.upstash.io:6379
-```
-
----
-
-### Application Settings
-
-```
-NODE_ENV
-production
-```
-
-```
-SMS_TEST_MODE
-false
-```
-
-```
-SMS_PROVIDER
-celcom
-```
-
-```
-CRON_SECRET
-sms_automation_secret_2026
-```
+| Variable | Notes |
+|----------|--------|
+| `REDIS_URL` | Upstash or other Redis URL with password |
 
 ---
 
-### 📱 SMS Provider - Celcom Africa (Your Active Provider)
+### Application
 
-```
-CELCOM_API_KEY
-0621e4ea38a9d2b9000c97c90bf40c97
-```
-
-```
-CELCOM_PARTNER_ID
-36
-```
-
-```
-CELCOM_SENDER_ID
-TEXTME
-```
+| Variable | Suggested value |
+|----------|-----------------|
+| `NODE_ENV` | `production` |
+| `SMS_TEST_MODE` | `false` |
+| `SMS_PROVIDER` | `celcom` |
+| `CRON_SECRET` | Random secret for cron routes |
 
 ---
 
-## Step 3: Trigger Redeploy
+### SMS (Celcom)
 
-After adding ALL variables above:
-
-1. Go to **Deployments** tab
-2. Click the **three dots** on the latest deployment
-3. Click **Redeploy**
-4. Wait for deployment to complete (2-3 minutes)
-
----
-
-## Step 4: Test Login
-
-Once redeployed, go to your site and try logging in. The error should be fixed! ✅
+| Variable | Notes |
+|----------|--------|
+| `CELCOM_API_KEY` | From Celcom dashboard |
+| `CELCOM_PARTNER_ID` | Your partner ID |
+| `CELCOM_SENDER_ID` | Approved sender ID |
 
 ---
 
-## Total Variables: 16 (Essential Only)
+## Step 2: Redeploy
 
-**Database & Auth**: 4 variables
-**Security**: 3 variables  
-**Redis**: 1 variable
-**App Settings**: 4 variables
-**SMS (Celcom)**: 3 variables
+After saving variables: **Deployments** → latest → **Redeploy**.
 
----
+## Step 3: Verify
 
-## Why This Fixes the Login Error
+- `GET /api/health` returns JSON
+- Login works without `Unexpected token` errors
 
-The login API requires `SUPABASE_SERVICE_ROLE_KEY` to connect to the database. Without it, the API crashes and returns HTML instead of JSON, causing the "Unexpected token 'A'" error.
+See `.env.example` in the repo root for a full local template.

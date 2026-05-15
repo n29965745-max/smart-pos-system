@@ -119,4 +119,4 @@ git push
 - Phone: +254 722 386 000
 - Email: support@mobitechtechnologies.com
 - Account: MT6896
-- API Key: 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695
+- API Key: REDACTED_APP_SECRET

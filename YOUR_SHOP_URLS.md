@@ -65,7 +65,7 @@
 
 You already ran the database migration successfully. Now add sample data:
 
-1. Go to Supabase SQL Editor: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql
+1. Go to Supabase SQL Editor: https://supabase.REDACTED_APP_SECRET
 2. Run this SQL to add a flash deal for Nyla Wigs:
 
 ```sql
@@ -296,8 +296,8 @@ To manage your shop:
 - Test in browser DevTools
 
 ### Database Access
-- Supabase Dashboard: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
-- SQL Editor: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql
+- Supabase Dashboard: https://supabase.REDACTED_APP_SECRET
+- SQL Editor: https://supabase.REDACTED_APP_SECRET
 
 ### Deployment
 - Vercel Dashboard: https://vercel.com/dashboard

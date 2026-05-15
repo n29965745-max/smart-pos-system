@@ -58,7 +58,7 @@
 ## How to Run
 
 1. Go to Supabase SQL Editor:
-   https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/sql/new
+   https://supabase.REDACTED_APP_SECRET
 
 2. Copy ALL content from `restore-complete-data.sql`
 

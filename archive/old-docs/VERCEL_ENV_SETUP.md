@@ -16,21 +16,21 @@ https://xqnteamrznvoqgaazhpu.supabase.co
 
 ### 2. NEXT_PUBLIC_SUPABASE_ANON_KEY
 ```
-eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhxbnRlYW1yem52b3FnYWF6aHB1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcwNzk5NjUsImV4cCI6MjA5MjY1NTk2NX0.5kfYBMtKYGC5Efu9EOJx1zL3HkUZeYAlbgwusWRbF8o
+REDACTED_JWT_TOKEN
 ```
 
 ### 3. SUPABASE_SERVICE_ROLE_KEY
 **YOU NEED TO GET THIS FROM SUPABASE:**
-1. Go to: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/settings/api
+1. Go to: https://supabase.REDACTED_APP_SECRET
 2. Copy the "service_role" key (secret)
 3. Add it to Vercel
 
 ### 4. Other Variables (Optional but recommended)
 ```
-ENCRYPTION_KEY=b2a573b62dcdde600ca88c2d83c0f6ab6181d1b5999a6d3c05e14fd3fa836938
-JWT_SECRET=PisrrctrHtXwGjenW4iGf3alBLZvx682AyLgvXZT+Jo=
-JWT_REFRESH_SECRET=oBFcQCpfQA2qNyeDWTmCdAUIFBo60pVtQOkol6DgrrU=
-REDIS_URL=redis://default:gQAAAAAAAX5TAAIncDE2Y2ViMWM0YTRlOTg0NTc0OGY3NWJmNGRhZmFiYzk0YXAxOTc4NzU@free-pig-97875.upstash.io:6379
+ENCRYPTION_KEY=REDACTED
+JWT_SECRET=REDACTED
+JWT_REFRESH_SECRET=REDACTED
+REDIS_URL=redis://default:REDACTED_REDIS_PASSWORD@free-pig-97875.upstash.io:6379
 ```
 
 ## Steps:

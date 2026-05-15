@@ -34,7 +34,7 @@ Business: Nyla Wigs
 I have topped up KSH 50 to my account but I'm getting error 1006 
 "Invalid credentials" when trying to send SMS via your API.
 
-API Key: 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695
+API Key: REDACTED_APP_SECRET
 
 Please activate my account for API usage so I can start sending SMS 
 to my customers.
@@ -70,7 +70,7 @@ Mobitech needs to:
 - **Business**: Nyla Wigs
 - **Sender ID**: NYLAWIGS
 - **Balance**: KSH 50
-- **API Key**: 5d684e0aebbcf9e829e9bbac4f6b0e875c00a90bd0ac83a682f6ef0a406a9695
+- **API Key**: REDACTED_APP_SECRET
 
 ---
 

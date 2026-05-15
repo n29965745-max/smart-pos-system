@@ -39,7 +39,7 @@ ALTER TABLE sms_config DISABLE ROW LEVEL SECURITY;
 
 ```
 Name: AFRICASTALKING_API_KEY
-Value: atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78
+Value: REDACTED_AFRICASTALKING_KEY
 
 Name: AFRICASTALKING_USERNAME  
 Value: NYLAWIGS
@@ -48,7 +48,7 @@ Name: AFRICASTALKING_SENDER_ID
 Value: NYLAWIGS
 
 Name: CRON_SECRET
-Value: sms_automation_secret_2026
+Value: REDACTED_CRON_SECRET
 ```
 
 4. Select: **Production**, **Preview**, **Development** (all 3)

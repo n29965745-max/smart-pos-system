@@ -540,7 +540,7 @@ npm run build
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 SUPABASE_SERVICE_ROLE_KEY=your-service-key
-JWT_SECRET=your-jwt-secret
+JWT_SECRET=REDACTED
 ```
 
 ### Vercel Deployment

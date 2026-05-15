@@ -36,9 +36,9 @@ Since your environment variables are now in `.env.local`, you need to add them t
 
 2. Add these 3 variables:
    ```
-   AFRICASTALKING_API_KEY = atsk_98bf2d1a31d7a183d16b303c35d337e7c0266d6f8591cd7e501d4388021e6ff44af2cd78
+   AFRICASTALKING_API_KEY=REDACTED
    AFRICASTALKING_USERNAME = sandbox
-   CRON_SECRET = sms_automation_secret_2026
+   CRON_SECRET=REDACTED
    ```
 
 3. Push your code to GitHub (Vercel will auto-deploy)

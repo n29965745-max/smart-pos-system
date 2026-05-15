@@ -8,7 +8,7 @@
 
 ## STEP 1: Create Missing Tables in Supabase
 
-1. Go to Supabase Dashboard: https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu
+1. Go to Supabase Dashboard: https://supabase.REDACTED_APP_SECRET
 2. Click "SQL Editor" in left sidebar
 3. Copy and paste the entire content of `CREATE_MISSING_TABLES.sql`
 4. Click "Run" button

@@ -31,7 +31,7 @@ Run this SQL to set default password "admin123" for all users:
 -- Default password: admin123
 -- Hashed with bcrypt
 UPDATE users 
-SET password_hash = '$2a$10$rKZLvVZhVqJYQKJYQKJYQOeH8vZhVqJYQKJYQOeH8vZhVqJYQO'
+SET password_hash = '$2a$10$REDACTED_APP_SECRET'
 WHERE password_hash IS NULL;
 ```
 
@@ -53,7 +53,7 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash TEXT;
 
 -- Set default password for all users (admin123)
 UPDATE users 
-SET password_hash = '$2a$10$rKZLvVZhVqJYQKJYQOeH8vZhVqJYQKJYQOeH8vZhVqJYQO'
+SET password_hash = '$2a$10$REDACTED_APP_SECRET'
 WHERE password_hash IS NULL;
 
 -- Verify

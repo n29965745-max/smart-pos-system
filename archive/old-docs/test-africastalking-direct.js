@@ -5,7 +5,7 @@ const AfricasTalking = require('africastalking');
 
 // Your credentials
 const credentials = {
-  apiKey: 'atsk_fa3ea5db7a76234bff145826ab22a26fe58522171f0fb8cc18b8f690844b09e24d92e990',
+  apiKey: 'REDACTED_AFRICASTALKING_KEY',
   username: 'NYLAWIGS'
 };
 

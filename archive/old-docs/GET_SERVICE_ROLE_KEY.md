@@ -5,7 +5,7 @@ You also need to update the **SUPABASE_SERVICE_ROLE_KEY** in Vercel.
 ## How to Get It:
 
 1. Go to Supabase Project Settings:
-   👉 https://supabase.com/dashboard/project/xqnteamrznvoqgaazhpu/settings/api
+   👉 https://supabase.REDACTED_APP_SECRET
 
 2. Scroll down to "Project API keys"
 

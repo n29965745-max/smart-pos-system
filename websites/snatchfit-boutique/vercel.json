@@ -6,7 +6,7 @@
   "nodeVersion": "18.x",
   "env": {
     "MONGODB_URI": "@mongodb_uri",
-    "JWT_SECRET": "@jwt_secret",
+    JWT_SECRET=REDACTED,
     "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "@stripe_publishable_key",
     "STRIPE_SECRET_KEY": "@stripe_secret_key",
     "NEXTAUTH_SECRET": "@nextauth_secret",

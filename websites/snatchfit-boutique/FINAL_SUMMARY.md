@@ -99,10 +99,10 @@ git push -u origin main
 ## 🔑 Environment Variables
 
 ```env
-MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/snatchfit
-JWT_SECRET=your_random_secret_key_min_32_chars
+MONGODB_URI=mongodb+srv://user:REDACTED_PASSWORD@cluster.mongodb.net/snatchfit
+JWT_SECRET=REDACTED
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_xxxxx
-STRIPE_SECRET_KEY=sk_test_xxxxx
+STRIPE_SECRET_KEY=REDACTED_STRIPE_TEST
 NEXTAUTH_SECRET=your_nextauth_secret_key
 NEXTAUTH_URL=https://your-domain.vercel.app
 NEXT_PUBLIC_APP_URL=https://your-domain.vercel.app

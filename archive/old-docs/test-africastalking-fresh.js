@@ -6,7 +6,7 @@ async function testAfricasTalking() {
 
   // Check if we have credentials
   const username = process.env.AFRICASTALKING_USERNAME || 'NYLAWIGS';
-  const apiKey = process.env.AFRICASTALKING_API_KEY || 'atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867';
+  const apiKey = process.env.AFRICASTALKING_API_KEY || 'REDACTED_AFRICASTALKING_KEY';
   const testPhone = '+254743794815';
 
   console.log('✅ Credentials found:');

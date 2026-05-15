@@ -5,7 +5,7 @@ console.log('🧪 Testing Africa\'s Talking - Sandbox vs Production\n');
 
 // Test 1: Production with NYLAWIGS
 console.log('Test 1: Production Mode with NYLAWIGS username');
-const apiKey = 'atsk_cf4801923009ba91db552ef5e38d86f847732c6e2f7e0ac34a9638381823a46919d79867';
+const apiKey = 'REDACTED_AFRICASTALKING_KEY';
 
 async function testProduction() {
   try {
