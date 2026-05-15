@@ -41,20 +41,6 @@ export default function ProductFilters({
   const [priceMin, setPriceMin] = useState(activeFilters.minPrice || priceRange.min);
   const [priceMax, setPriceMax] = useState(activeFilters.maxPrice || priceRange.max);
 
-  // Common colors for product filtering
-  const availableColors = [
-    { value: 'black', label: 'Black', hex: '#000000' },
-    { value: 'white', label: 'White', hex: '#FFFFFF' },
-    { value: 'red', label: 'Red', hex: '#EF4444' },
-    { value: 'blue', label: 'Blue', hex: '#3B82F6' },
-    { value: 'green', label: 'Green', hex: '#10B981' },
-    { value: 'yellow', label: 'Yellow', hex: '#F59E0B' },
-    { value: 'pink', label: 'Pink', hex: '#EC4899' },
-    { value: 'purple', label: 'Purple', hex: '#8B5CF6' },
-    { value: 'brown', label: 'Brown', hex: '#92400E' },
-    { value: 'gray', label: 'Gray', hex: '#6B7280' },
-  ];
-
   // Common sizes
   const availableSizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '2XL', '3XL'];
 
@@ -110,10 +96,7 @@ export default function ProductFilters({
   const removeFilter = (filterType: keyof ActiveFilters, value?: string) => {
     const newFilters = { ...localFilters };
     
-    if (filterType === 'colors' && value) {
-      newFilters.colors = newFilters.colors?.filter(c => c !== value);
-      if (newFilters.colors?.length === 0) delete newFilters.colors;
-    } else if (filterType === 'sizes' && value) {
+    if (filterType === 'sizes' && value) {
       newFilters.sizes = newFilters.sizes?.filter(s => s !== value);
       if (newFilters.sizes?.length === 0) delete newFilters.sizes;
     } else if (filterType === 'minPrice' || filterType === 'maxPrice') {
@@ -127,16 +110,6 @@ export default function ProductFilters({
     setLocalFilters(newFilters);
     onFilterChange(newFilters);
     updateURL(newFilters);
-  };
-
-  // Toggle color selection
-  const toggleColor = (color: string) => {
-    const colors = localFilters.colors || [];
-    const newColors = colors.includes(color)
-      ? colors.filter(c => c !== color)
-      : [...colors, color];
-    
-    setLocalFilters({ ...localFilters, colors: newColors.length > 0 ? newColors : undefined });
   };
 
   // Toggle size selection
@@ -153,7 +126,6 @@ export default function ProductFilters({
   const activeFilterCount = 
     (localFilters.category && localFilters.category !== 'All' ? 1 : 0) +
     (localFilters.minPrice || localFilters.maxPrice ? 1 : 0) +
-    (localFilters.colors?.length || 0) +
     (localFilters.sizes?.length || 0) +
     (localFilters.inStock ? 1 : 0);
 
@@ -240,17 +212,6 @@ export default function ProductFilters({
                   </button>
                 </span>
               )}
-              {localFilters.colors?.map(color => (
-                <span key={color} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-full text-sm capitalize">
-                  {color}
-                  <button
-                    onClick={() => removeFilter('colors', color)}
-                    className="hover:text-red-600"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
               {localFilters.sizes?.map(size => (
                 <span key={size} className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 rounded-full text-sm">
                   {size}
@@ -273,30 +234,6 @@ export default function ProductFilters({
                   </button>
                 </span>
               )}
-            </div>
-          </div>
-        )}
-
-        {/* Category Filter */}
-        {categories.length > 0 && (
-          <div className="mb-6 pb-6 border-b border-gray-200">
-            <h4 className="font-semibold text-gray-900 mb-3">Category</h4>
-            <div className="space-y-2">
-              {categories.map(category => (
-                <label key={category} className="flex items-center gap-2 cursor-pointer group">
-                  <input
-                    type="radio"
-                    name="category"
-                    checked={localFilters.category === category || (!localFilters.category && category === 'All')}
-                    onChange={() => setLocalFilters({ ...localFilters, category })}
-                    className="w-4 h-4 cursor-pointer"
-                    style={{ accentColor: primaryColor }}
-                  />
-                  <span className="text-sm text-gray-700 group-hover:text-gray-900">
-                    {category}
-                  </span>
-                </label>
-              ))}
             </div>
           </div>
         )}
@@ -331,41 +268,6 @@ export default function ProductFilters({
               <span>KES {priceRange.min.toLocaleString()}</span>
               <span>KES {priceRange.max.toLocaleString()}</span>
             </div>
-          </div>
-        </div>
-
-        {/* Color Filter */}
-        <div className="mb-6 pb-6 border-b border-gray-200">
-          <h4 className="font-semibold text-gray-900 mb-3">Colors</h4>
-          <div className="grid grid-cols-5 gap-3">
-            {availableColors.map(color => (
-              <button
-                key={color.value}
-                onClick={() => toggleColor(color.value)}
-                className={`
-                  relative w-10 h-10 rounded-full border-2 transition-all
-                  ${localFilters.colors?.includes(color.value) 
-                    ? 'ring-2 ring-offset-2' 
-                    : 'hover:scale-110'
-                  }
-                `}
-                style={{ 
-                  backgroundColor: color.hex,
-                  borderColor: color.hex === '#FFFFFF' ? '#E5E7EB' : color.hex
-                }}
-                title={color.label}
-              >
-                {localFilters.colors?.includes(color.value) && (
-                  <svg 
-                    className="absolute inset-0 m-auto w-5 h-5" 
-                    fill={color.hex === '#FFFFFF' || color.hex === '#F59E0B' ? '#000' : '#FFF'} 
-                    viewBox="0 0 20 20"
-                  >
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                )}
-              </button>
-            ))}
           </div>
         </div>
 
