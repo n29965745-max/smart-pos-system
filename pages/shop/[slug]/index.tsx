@@ -4,7 +4,6 @@ import Link from 'next/link';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import { createClient } from '@supabase/supabase-js';
-import { useShopTheme } from '@/hooks/useShopTheme';
 import RecommendationEngine from '@/components/Shop/RecommendationEngine';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
 import LiveSupport from '@/components/Shop/LiveSupport';
@@ -205,7 +204,21 @@ function Countdown({ endsIn }: { endsIn: number }) {
 export default function ShopStorefront({ seo }: { seo: any }) {
   const router = useRouter();
   const { slug, q } = router.query;
-  const theme = useShopTheme(slug);
+  
+  // Use server-side theme data directly to prevent flash of default theme
+  const theme = {
+    name: seo?.shopName || String(slug),
+    slug: String(slug),
+    tagline: seo?.tagline || null,
+    logo_url: seo?.logoUrl || null,
+    primary: seo?.primaryColor || '#10b981',
+    phone: null,
+    tiktok_url: null,
+    instagram_url: null,
+    facebook_url: null,
+    loaded: true,
+  };
+  
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState((q as string) || '');
