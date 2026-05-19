@@ -7,7 +7,6 @@ import { createClient } from '@supabase/supabase-js';
 import { useShopTheme } from '@/hooks/useShopTheme';
 import RecommendationEngine from '@/components/Shop/RecommendationEngine';
 import { useRecentlyViewed } from '@/hooks/useRecentlyViewed';
-import ProductFilters, { ActiveFilters } from '@/components/Shop/ProductFilters';
 import LiveSupport from '@/components/Shop/LiveSupport';
 
 // Server-side: fetch shop info and initial products for SEO
@@ -214,8 +213,6 @@ export default function ShopStorefront({ seo }: { seo: any }) {
   const [cartCount, setCartCount] = useState(0);
   const [searchSuggestions, setSearchSuggestions] = useState<Product[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
-  const [hoveredProduct, setHoveredProduct] = useState<string | null>(null);
-  const [activeFilters, setActiveFilters] = useState<ActiveFilters>({});
   const { recentlyViewed } = useRecentlyViewed(String(slug));
 
   const updateCartCount = useCallback(() => {
@@ -239,29 +236,12 @@ export default function ShopStorefront({ seo }: { seo: any }) {
 
   const categories = ['All', ...Array.from(new Set(products.map(p => p.category).filter(Boolean)))];
   
-  // Calculate price range
-  const priceRange = products.length > 0 ? {
-    min: Math.floor(Math.min(...products.map(p => p.retail_price))),
-    max: Math.ceil(Math.max(...products.map(p => p.retail_price)))
-  } : { min: 0, max: 10000 };
-  
-  // Apply all filters
+  // Apply search and category filters
   const filtered = products.filter(p => {
-    const matchCat = !activeFilters.category || activeFilters.category === 'All' || p.category === activeFilters.category;
+    const matchCat = activeCategory === 'All' || p.category === activeCategory;
     const matchSearch = !search || p.name.toLowerCase().includes(search.toLowerCase());
-    const matchMinPrice = !activeFilters.minPrice || p.retail_price >= activeFilters.minPrice;
-    const matchMaxPrice = !activeFilters.maxPrice || p.retail_price <= activeFilters.maxPrice;
-    const matchInStock = !activeFilters.inStock || p.stock_quantity > 0;
-    // Note: colors and sizes would need to be in product data to filter properly
-    return matchCat && matchSearch && matchMinPrice && matchMaxPrice && matchInStock;
+    return matchCat && matchSearch;
   });
-
-  const handleFilterChange = (filters: ActiveFilters) => {
-    setActiveFilters(filters);
-    if (filters.category) {
-      setActiveCategory(filters.category);
-    }
-  };
 
   const bundleProducts = filtered.slice(0, 4);
   const superDealProducts = filtered.slice(4, 8);
@@ -328,7 +308,7 @@ export default function ShopStorefront({ seo }: { seo: any }) {
         />
       </Head>
 
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen" style={{ background: 'linear-gradient(to bottom, #ffffff 0%, #f9fafb 50%, #f3f4f6 100%)' }}>
         {/* HEADER */}
         <header className="bg-white border-b sticky top-0 z-50 shadow-sm">
           <div className="max-w-7xl mx-auto px-4">
@@ -425,12 +405,12 @@ export default function ShopStorefront({ seo }: { seo: any }) {
         </header>
 
         {/* HERO - Enhanced with brand storytelling and animations */}
-        <section className="relative overflow-hidden border-b">
+        <section className="relative overflow-hidden border-b" style={{ background: 'linear-gradient(135deg, #fef3c7 0%, #fde68a 25%, #fbbf24 50%, #f59e0b 75%, #d97706 100%)' }}>
           {/* Animated gradient background */}
           <div 
-            className="absolute inset-0 opacity-10"
+            className="absolute inset-0 opacity-20"
             style={{
-              background: `linear-gradient(135deg, ${p}20 0%, ${p}40 50%, ${p}20 100%)`,
+              background: `radial-gradient(circle at 20% 50%, rgba(255,255,255,0.8) 0%, transparent 50%), radial-gradient(circle at 80% 50%, rgba(255,255,255,0.6) 0%, transparent 50%)`,
               animation: 'gradient 15s ease infinite',
               backgroundSize: '200% 200%'
             }}
@@ -439,18 +419,18 @@ export default function ShopStorefront({ seo }: { seo: any }) {
           {/* Floating shapes animation */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
             <div 
-              className="absolute w-64 h-64 rounded-full opacity-5"
+              className="absolute w-64 h-64 rounded-full"
               style={{
-                background: p,
+                background: 'rgba(255, 255, 255, 0.3)',
                 top: '-10%',
                 right: '-5%',
                 animation: 'float 20s ease-in-out infinite'
               }}
             />
             <div 
-              className="absolute w-96 h-96 rounded-full opacity-5"
+              className="absolute w-96 h-96 rounded-full"
               style={{
-                background: p,
+                background: 'rgba(255, 255, 255, 0.2)',
                 bottom: '-15%',
                 left: '-10%',
                 animation: 'float 25s ease-in-out infinite reverse'
@@ -745,21 +725,6 @@ export default function ShopStorefront({ seo }: { seo: any }) {
 
         {/* PRODUCT GRID - Enhanced header */}
         <section id="products" className="max-w-7xl mx-auto px-4 pb-12">
-          {/* Product Filters */}
-          {!loading && products.length > 0 && (
-            <div className="mb-8">
-              <ProductFilters
-                tenantSlug={String(slug)}
-                categories={categories}
-                priceRange={priceRange}
-                onFilterChange={handleFilterChange}
-                activeFilters={activeFilters}
-                primaryColor={p}
-                totalProducts={filtered.length}
-              />
-            </div>
-          )}
-
           {!loading && filtered.length > 0 && (
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
@@ -807,7 +772,6 @@ export default function ShopStorefront({ seo }: { seo: any }) {
                   product={prod} 
                   slug={slug as string} 
                   primary={p}
-                  onHover={setHoveredProduct}
                 />
               ))}
             </div>
