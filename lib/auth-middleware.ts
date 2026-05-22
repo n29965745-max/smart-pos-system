@@ -10,6 +10,7 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { createClient } from '@supabase/supabase-js';
+import { verifyToken } from './secure-route';
 
 // Admin client for user lookup — isolated here, not exported to request handlers
 const adminSupabase = createClient(
@@ -36,7 +37,7 @@ type ApiHandler = (req: AuthenticatedRequest, res: NextApiResponse) => Promise<v
  *
  * Flow:
  * 1. Read Authorization header: "Bearer <token>"
- * 2. Token is the user's ID (from our custom auth system)
+ * 2. Verify the signed auth token and extract the user ID
  * 3. Look up user in users table to get tenant_id
  * 4. Attach auth context to request
  * 5. Reject if user not found or inactive
@@ -56,11 +57,10 @@ export function withAuth(handler: ApiHandler) {
         return res.status(401).json({ error: 'Unauthorized: empty token' });
       }
 
-      // Token format: "jwt-token-<timestamp>-<userId>"
-      // Extract userId from token
-      const userId = extractUserIdFromToken(token);
-
-      if (!userId) {
+      let userId: string;
+      try {
+        userId = verifyToken(token);
+      } catch {
         return res.status(401).json({ error: 'Unauthorized: invalid token' });
       }
 
@@ -97,26 +97,4 @@ export function withAuth(handler: ApiHandler) {
       return res.status(500).json({ error: 'Internal server error' });
     }
   };
-}
-
-/**
- * Extract user ID from our custom token format.
- * Token: "v1.<userId>.<timestamp>"
- */
-function extractUserIdFromToken(token: string): string | null {
-  // New format: "v1.<userId>.<timestamp>"
-  if (token.startsWith('v1.')) {
-    const parts = token.split('.');
-    if (parts.length >= 2) {
-      const userId = parts[1];
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-      if (uuidRegex.test(userId)) return userId;
-    }
-  }
-
-  // Legacy format fallback: treat as raw UUID
-  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-  if (uuidRegex.test(token)) return token;
-
-  return null;
 }
