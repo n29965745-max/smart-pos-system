@@ -393,7 +393,7 @@
 
         async function viewContact(id) {
             try {
-                const response = await fetch(`/api/contacts/${id}`);
+                const response = await fetch(`/contacts/${id}`);
                 const data = await response.json();
 
                 if (data.success) {
@@ -423,7 +423,7 @@
 
         async function markReplied(id) {
             try {
-                const response = await fetch(`/api/contacts/${id}`, {
+                const response = await fetch(`/contacts/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ status: 'replied' })
@@ -443,7 +443,7 @@
             if (!confirm('Are you sure you want to delete this contact?')) return;
 
             try {
-                const response = await fetch(`/api/contacts/${id}`, { method: 'DELETE' });
+                const response = await fetch(`/contacts/${id}`, { method: 'DELETE' });
                 const data = await response.json();
 
                 if (data.success) {
@@ -464,7 +464,7 @@
 
                 if (data.success && data.data) {
                     for (const contact of data.data) {
-                        await fetch(`/api/contacts/${contact.id}`, { method: 'DELETE' });
+                        await fetch(`/contacts/${contact.id}`, { method: 'DELETE' });
                     }
                     showMessage('All contacts deleted', 'success');
                     loadContacts();
