@@ -9,6 +9,7 @@
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "analyze": "ANALYZE=true next build",
+    "test": "echo \"Tests will be added in future iterations\" && exit 0",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "db:seed": "node prisma/seed.js",
