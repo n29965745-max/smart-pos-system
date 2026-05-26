@@ -1,0 +1,238 @@
+# ============================================================================
+# GitHub Actions CI/CD Pipeline
+# Automatic deployment to Coolify on push to main
+# ============================================================================
+
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # Manual trigger
+
+env:
+  NODE_VERSION: '20'
+  DOCKER_BUILDKIT: 1
+  COMPOSE_DOCKER_CLI_BUILD: 1
+
+jobs:
+  # ==========================================================================
+  # JOB 1: TEST
+  # ==========================================================================
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      
+      - name: Install dependencies (Backend)
+        working-directory: ./backend-new
+        run: npm ci
+      
+      - name: Run backend tests
+        working-directory: ./backend-new
+        env:
+          NODE_ENV: test
+          REGISTRY_DB_HOST: localhost
+          REGISTRY_DB_PORT: 5432
+          REGISTRY_DB_NAME: test_db
+          REGISTRY_DB_USER: postgres
+          REGISTRY_DB_PASSWORD: postgres
+          REDIS_HOST: localhost
+          REDIS_PORT: 6379
+          JWT_SECRET: test-secret-key
+          DB_ENCRYPTION_KEY: test-encryption-key-32-bytes-long
+        run: npm test
+      
+      - name: Install dependencies (Frontend)
+        run: npm ci
+      
+      - name: Run frontend tests
+        env:
+          NEXT_PUBLIC_API_URL: http://localhost:3001
+        run: npm test
+
+  # ==========================================================================
+  # JOB 2: BUILD
+  # ==========================================================================
+  build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend-new
+          file: ./backend-new/Dockerfile
+          push: false
+          tags: smart-pos-backend:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+      
+      - name: Build frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: false
+          tags: smart-pos-frontend:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+            NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ==========================================================================
+  # JOB 3: DEPLOY TO COOLIFY
+  # ==========================================================================
+  deploy:
+    name: Deploy to Coolify
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Deploy to Coolify
+        env:
+          COOLIFY_WEBHOOK_URL: ${{ secrets.COOLIFY_WEBHOOK_URL }}
+        run: |
+          curl -X POST "$COOLIFY_WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "branch": "main",
+              "commit": "${{ github.sha }}",
+              "message": "${{ github.event.head_commit.message }}"
+            }'
+      
+      - name: Wait for deployment
+        run: sleep 60
+      
+      - name: Health check
+        env:
+          API_URL: ${{ secrets.API_URL }}
+        run: |
+          response=$(curl -s -o /dev/null -w "%{http_code}" $API_URL/health)
+          if [ $response -eq 200 ]; then
+            echo "✅ Deployment successful - API is healthy"
+          else
+            echo "❌ Deployment failed - API returned $response"
+            exit 1
+          fi
+
+  # ==========================================================================
+  # JOB 4: NOTIFY
+  # ==========================================================================
+  notify:
+    name: Send Notification
+    runs-on: ubuntu-latest
+    needs: deploy
+    if: always()
+    
+    steps:
+      - name: Send Slack notification
+        if: secrets.SLACK_WEBHOOK_URL != ''
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          if [ "${{ needs.deploy.result }}" == "success" ]; then
+            STATUS="✅ Success"
+            COLOR="good"
+          else
+            STATUS="❌ Failed"
+            COLOR="danger"
+          fi
+          
+          curl -X POST $SLACK_WEBHOOK_URL \
+            -H 'Content-Type: application/json' \
+            -d '{
+              "attachments": [{
+                "color": "'$COLOR'",
+                "title": "Deployment '$STATUS'",
+                "text": "Branch: main\nCommit: ${{ github.sha }}\nAuthor: ${{ github.actor }}",
+                "footer": "Smart POS System"
+              }]
+            }'
+      
+      - name: Send email notification
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: ${{ secrets.SMTP_HOST }}
+          server_port: ${{ secrets.SMTP_PORT }}
+          username: ${{ secrets.SMTP_USER }}
+          password: ${{ secrets.SMTP_PASSWORD }}
+          subject: "❌ Deployment Failed - Smart POS System"
+          body: |
+            Deployment to production failed.
+            
+            Branch: main
+            Commit: ${{ github.sha }}
+            Author: ${{ github.actor }}
+            Message: ${{ github.event.head_commit.message }}
+            
+            Check GitHub Actions for details.
+          to: ${{ secrets.ALERT_EMAIL }}
+          from: noreply@yourpos.com
+
+# ============================================================================
+# REQUIRED SECRETS (Add in GitHub Settings → Secrets)
+# ============================================================================
+# COOLIFY_WEBHOOK_URL - Coolify deployment webhook
+# API_URL - Production API URL (https://api.yourpos.com)
+# NEXT_PUBLIC_API_URL - Public API URL
+# NEXT_PUBLIC_APP_URL - Public app URL
+# SLACK_WEBHOOK_URL - Slack webhook (optional)
+# SMTP_HOST - Email server (optional)
+# SMTP_PORT - Email port (optional)
+# SMTP_USER - Email username (optional)
+# SMTP_PASSWORD - Email password (optional)
+# ALERT_EMAIL - Email for alerts (optional)

@@ -1,0 +1,268 @@
+# ============================================================================
+# DOCKER COMPOSE - Smart POS System
+# Full stack deployment with database-per-tenant architecture
+# ============================================================================
+
+version: '3.8'
+
+# ============================================================================
+# NETWORKS
+# ============================================================================
+networks:
+  smart-pos-network:
+    driver: bridge
+
+# ============================================================================
+# VOLUMES
+# ============================================================================
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  uploads:
+    driver: local
+  backups:
+    driver: local
+
+# ============================================================================
+# SERVICES
+# ============================================================================
+services:
+  
+  # ==========================================================================
+  # POSTGRESQL DATABASE
+  # ==========================================================================
+  postgres:
+    image: postgres:16-alpine
+    container_name: smart-pos-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_ADMIN_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_ADMIN_PASSWORD}
+      POSTGRES_DB: registry_db
+      POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backups:/backups
+    networks:
+      - smart-pos-network
+    ports:
+      - "5432:5432"  # Expose for development only, remove in production
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_ADMIN_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    command:
+      - "postgres"
+      - "-c"
+      - "max_connections=200"
+      - "-c"
+      - "shared_buffers=256MB"
+      - "-c"
+      - "effective_cache_size=1GB"
+      - "-c"
+      - "maintenance_work_mem=64MB"
+      - "-c"
+      - "checkpoint_completion_target=0.9"
+      - "-c"
+      - "wal_buffers=16MB"
+      - "-c"
+      - "default_statistics_target=100"
+      - "-c"
+      - "random_page_cost=1.1"
+      - "-c"
+      - "effective_io_concurrency=200"
+      - "-c"
+      - "work_mem=2621kB"
+      - "-c"
+      - "min_wal_size=1GB"
+      - "-c"
+      - "max_wal_size=4GB"
+
+  # ==========================================================================
+  # REDIS CACHE & QUEUE
+  # ==========================================================================
+  redis:
+    image: redis:7-alpine
+    container_name: smart-pos-redis
+    restart: unless-stopped
+    command: >
+      redis-server
+      --appendonly yes
+      --appendfsync everysec
+      --maxmemory 2gb
+      --maxmemory-policy allkeys-lru
+      --requirepass ${REDIS_PASSWORD:-}
+    volumes:
+      - redis_data:/data
+    networks:
+      - smart-pos-network
+    ports:
+      - "6379:6379"  # Expose for development only, remove in production
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ==========================================================================
+  # BACKEND API
+  # ==========================================================================
+  backend:
+    build:
+      context: ./backend-new
+      dockerfile: Dockerfile
+      args:
+        NODE_ENV: production
+    container_name: smart-pos-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # Application
+      NODE_ENV: production
+      PORT: 3001
+      
+      # Database
+      REGISTRY_DB_HOST: postgres
+      REGISTRY_DB_PORT: 5432
+      REGISTRY_DB_NAME: registry_db
+      REGISTRY_DB_USER: ${DB_ADMIN_USER:-postgres}
+      REGISTRY_DB_PASSWORD: ${DB_ADMIN_PASSWORD}
+      
+      DB_ADMIN_USER: ${DB_ADMIN_USER:-postgres}
+      DB_ADMIN_PASSWORD: ${DB_ADMIN_PASSWORD}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      
+      # Security
+      JWT_SECRET: ${JWT_SECRET}
+      DB_ENCRYPTION_KEY: ${DB_ENCRYPTION_KEY}
+      
+      # Application URLs
+      ALLOWED_DOMAINS: ${ALLOWED_DOMAINS:-yourpos.com,localhost}
+      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://app.yourpos.com,http://localhost:3000}
+    volumes:
+      - uploads:/app/uploads
+      - ./backend-new/logs:/app/logs
+    networks:
+      - smart-pos-network
+    ports:
+      - "3001:3001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ==========================================================================
+  # FRONTEND (Next.js)
+  # ==========================================================================
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.yourpos.com}
+        NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://app.yourpos.com}
+    container_name: smart-pos-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-https://api.yourpos.com}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://app.yourpos.com}
+    networks:
+      - smart-pos-network
+    ports:
+      - "3000:3000"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ==========================================================================
+  # WORKER (Background Jobs)
+  # ==========================================================================
+  worker:
+    build:
+      context: ./backend-new
+      dockerfile: Dockerfile
+    container_name: smart-pos-worker
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      # Application
+      NODE_ENV: production
+      WORKER_MODE: "true"
+      
+      # Database
+      REGISTRY_DB_HOST: postgres
+      REGISTRY_DB_PORT: 5432
+      REGISTRY_DB_NAME: registry_db
+      REGISTRY_DB_USER: ${DB_ADMIN_USER:-postgres}
+      REGISTRY_DB_PASSWORD: ${DB_ADMIN_PASSWORD}
+      
+      # Redis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      
+      # Security
+      JWT_SECRET: ${JWT_SECRET}
+      DB_ENCRYPTION_KEY: ${DB_ENCRYPTION_KEY}
+    volumes:
+      - ./backend-new/logs:/app/logs
+    networks:
+      - smart-pos-network
+    command: ["node", "dist/worker.js"]
+
+  # ==========================================================================
+  # BACKUP SERVICE (Optional - runs daily)
+  # ==========================================================================
+  backup:
+    image: postgres:16-alpine
+    container_name: smart-pos-backup
+    restart: "no"
+    depends_on:
+      - postgres
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: ${DB_ADMIN_USER:-postgres}
+      PGPASSWORD: ${DB_ADMIN_PASSWORD}
+    volumes:
+      - backups:/backups
+      - ./scripts/backup.sh:/backup.sh:ro
+    networks:
+      - smart-pos-network
+    entrypoint: ["/bin/sh", "/backup.sh"]
+    profiles:
+      - backup  # Only run when explicitly called
+
+# ============================================================================
+# HEALTHCHECK NOTES
+# ============================================================================
+# All services have health checks configured
+# Use: docker-compose ps to see health status
+# Use: docker-compose logs <service> to debug issues
