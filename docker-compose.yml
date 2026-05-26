@@ -109,11 +109,11 @@ services:
       retries: 5
 
   # ==========================================================================
-  # BACKEND API
+  # BACKEND API (Express.js + Prisma)
   # ==========================================================================
   backend:
     build:
-      context: ./backend-new
+      context: ./backend
       dockerfile: Dockerfile
       args:
         NODE_ENV: production
@@ -127,41 +127,46 @@ services:
     environment:
       # Application
       NODE_ENV: production
-      PORT: 3001
+      PORT: 5000
       
-      # Database
-      REGISTRY_DB_HOST: postgres
-      REGISTRY_DB_PORT: 5432
-      REGISTRY_DB_NAME: registry_db
-      REGISTRY_DB_USER: ${DB_ADMIN_USER:-postgres}
-      REGISTRY_DB_PASSWORD: ${DB_ADMIN_PASSWORD}
+      # Database (Supabase or self-hosted PostgreSQL)
+      DATABASE_URL: ${DATABASE_URL}
       
-      DB_ADMIN_USER: ${DB_ADMIN_USER:-postgres}
-      DB_ADMIN_PASSWORD: ${DB_ADMIN_PASSWORD}
-      DB_HOST: postgres
-      DB_PORT: 5432
-      
-      # Redis
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
+      # Redis (optional)
+      REDIS_URL: ${REDIS_URL:-redis://redis:6379}
       
       # Security
       JWT_SECRET: ${JWT_SECRET}
-      DB_ENCRYPTION_KEY: ${DB_ENCRYPTION_KEY}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      
+      # Supabase
+      NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
       
       # Application URLs
-      ALLOWED_DOMAINS: ${ALLOWED_DOMAINS:-yourpos.com,localhost}
+      BACKEND_URL: ${BACKEND_URL:-http://localhost:5000}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-https://app.yourpos.com,http://localhost:3000}
+      
+      # SMS (optional)
+      SMS_TEST_MODE: ${SMS_TEST_MODE:-true}
+      SMS_PROVIDER: ${SMS_PROVIDER:-celcom}
+      CELCOM_API_KEY: ${CELCOM_API_KEY:-}
+      CELCOM_PARTNER_ID: ${CELCOM_PARTNER_ID:-}
+      CELCOM_SENDER_ID: ${CELCOM_SENDER_ID:-}
+      
+      # Monitoring
+      SENTRY_DSN: ${SENTRY_DSN:-}
     volumes:
       - uploads:/app/uploads
-      - ./backend-new/logs:/app/logs
+      - ./backend/logs:/app/logs
     networks:
       - smart-pos-network
     ports:
-      - "3001:3001"
+      - "5000:5000"
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -196,46 +201,6 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
-
-  # ==========================================================================
-  # WORKER (Background Jobs)
-  # ==========================================================================
-  worker:
-    build:
-      context: ./backend-new
-      dockerfile: Dockerfile
-    container_name: smart-pos-worker
-    restart: unless-stopped
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      # Application
-      NODE_ENV: production
-      WORKER_MODE: "true"
-      
-      # Database
-      REGISTRY_DB_HOST: postgres
-      REGISTRY_DB_PORT: 5432
-      REGISTRY_DB_NAME: registry_db
-      REGISTRY_DB_USER: ${DB_ADMIN_USER:-postgres}
-      REGISTRY_DB_PASSWORD: ${DB_ADMIN_PASSWORD}
-      
-      # Redis
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_PASSWORD: ${REDIS_PASSWORD:-}
-      
-      # Security
-      JWT_SECRET: ${JWT_SECRET}
-      DB_ENCRYPTION_KEY: ${DB_ENCRYPTION_KEY}
-    volumes:
-      - ./backend-new/logs:/app/logs
-    networks:
-      - smart-pos-network
-    command: ["node", "dist/worker.js"]
 
   # ==========================================================================
   # BACKUP SERVICE (Optional - runs daily)

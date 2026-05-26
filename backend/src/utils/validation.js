@@ -41,7 +41,8 @@ const schemas = {
     ).required(),
     paymentMethod: Joi.string().required(),
     discount: Joi.number().default(0),
-    notes: Joi.string()
+    notes: Joi.string(),
+    idempotencyKey: Joi.string() // Optional idempotency key for duplicate prevention
   })
 };
 
