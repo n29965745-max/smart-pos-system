@@ -623,51 +623,14 @@ export default function InventoryPage() {
                             <>
                               <div className="fixed inset-0 z-10" onClick={() => setOpenActionMenu(null)} />
                               <div className="absolute right-0 mt-2 w-48 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg shadow-xl z-20 py-1">
-                                <button
-                                  onClick={() => { setSelectedProduct(product); setShowRestockModal(true); setOpenActionMenu(null); }}
-                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] flex items-center gap-2"
-                                >
-                                  Restock
-                                </button>
-                                <button
-                                  onClick={() => { setSelectedProduct(product); setShowAdjustModal(true); setOpenActionMenu(null); }}
-                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] flex items-center gap-2"
-                                >
-                                  Adjust Stock
-                                </button>
-                                <button
-                                  onClick={async () => {
-                                    setSelectedProduct(product);
-                                    setShowHistoryModal(true);
-                                    setOpenActionMenu(null);
-                                    try {
-                                      const response = await fetch(`/api/inventory/${product.id}/history`, {
-                                        headers: { 'x-tenant-id': localStorage.getItem('tenantId') || '' }
-                                      });
-                                      const data = await response.json();
-                                      setHistoryData(data.movements || []);
-                                    } catch (error) {
-                                      console.error('Error fetching history:', error);
-                                      setToast({ message: 'Failed to load history', type: 'error' });
-                                    }
-                                  }}
-                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] flex items-center gap-2"
-                                >
-                                  View History
-                                </button>
-                                <button
-                                  onClick={() => { openEditModal(product); setOpenActionMenu(null); }}
-                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] flex items-center gap-2"
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  onClick={() => { handleDeleteProduct(product.id); setOpenActionMenu(null); }}
-                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] text-red-500 hover:text-red-600 flex items-center gap-2"
-                            >
-                              Archive
-                            </button>
-                          </div>
+                                <button onClick={() => { setSelectedProduct(product); setShowRestockModal(true); setOpenActionMenu(null); }} className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)]">Restock</button>
+                                <button onClick={() => { setSelectedProduct(product); setShowAdjustModal(true); setOpenActionMenu(null); }} className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)]">Adjust Stock</button>
+                                <button onClick={async () => { setSelectedProduct(product); setShowHistoryModal(true); setOpenActionMenu(null); try { const r = await fetch(`/api/inventory/${product.id}/history`, { headers: { 'x-tenant-id': localStorage.getItem('tenantId') || '' } }); const d = await r.json(); setHistoryData(d.movements || []); } catch (err) { setToast({ message: 'Failed to load history', type: 'error' }); } }} className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)]">View History</button>
+                                <button onClick={() => { openEditModal(product); setOpenActionMenu(null); }} className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)]">Edit</button>
+                                <button onClick={() => { handleDeleteProduct(product.id); setOpenActionMenu(null); }} className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] text-red-500">Archive</button>
+                              </div>
+                            </>
+                          )}
                         </div>
                       </td>
                     </tr>
