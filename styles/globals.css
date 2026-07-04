@@ -171,6 +171,17 @@ body {
 body {
   min-height: 100vh;
   min-height: -webkit-fill-available;
+  overscroll-behavior: none;
+}
+
+/* Safe area insets for notched devices */
+@supports (padding: env(safe-area-inset-top)) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
 }
 
 code {
@@ -497,6 +508,12 @@ body {
   /* Smooth scrolling on mobile */
   html {
     -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Bottom nav safe area for notched devices */
+  .fixed.bottom-0 {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   
   /* Prevent horizontal scroll */
@@ -621,4 +638,54 @@ textarea::placeholder {
 input::-webkit-input-placeholder,
 textarea::-webkit-input-placeholder {
   -webkit-user-drag: none;
+}
+
+/* ============================================
+   MOBILE UX IMPROVEMENTS
+   ============================================ */
+
+/* Prevent text selection on interactive elements for better touch UX */
+@media (max-width: 768px) {
+  /* Better tap highlight color */
+  a, button, [role="button"] {
+    -webkit-tap-highlight-color: rgba(16, 185, 129, 0.15);
+  }
+
+  /* Prevent pull-to-refresh on mobile */
+  body {
+    overscroll-behavior-y: contain;
+  }
+
+  /* Better scrolling momentum */
+  .overflow-auto, .overflow-y-auto {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Fix for iOS rubber-banding */
+  .min-h-screen {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* Ensure modal backdrop covers full viewport */
+  .fixed.inset-0 {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+
+  /* Better focus styles for accessibility */
+  input:focus, select:focus, textarea:focus, button:focus-visible {
+    outline: 2px solid #10b981;
+    outline-offset: 2px;
+  }
+
+  /* Hide scrollbar on modals for cleaner look */
+  .fixed .overflow-y-auto::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .fixed .overflow-y-auto::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+  }
 }

@@ -305,7 +305,7 @@ export default function CustomersPage() {
               placeholder="Search customers by name, email, or phone"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full min-h-[44px] bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -317,10 +317,10 @@ export default function CustomersPage() {
               <thead className="bg-[var(--bg-primary)] border-b border-[var(--border-color)]">
                 <tr>
                   <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Name</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Email</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)] hidden sm:table-cell">Email</th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Phone</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Total Purchases</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Last Purchase</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)] hidden md:table-cell">Total Purchases</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)] hidden lg:table-cell">Last Purchase</th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Actions</th>
                 </tr>
               </thead>
@@ -343,16 +343,16 @@ export default function CustomersPage() {
                       <td className="px-6 py-4 text-sm font-medium text-[var(--text-primary)]">
                         {customer.name}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)]">
+                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)] hidden sm:table-cell">
                         {customer.email || 'N/A'}
                       </td>
                       <td className="px-6 py-4 text-sm text-[var(--text-secondary)]">
                         {customer.phone || 'N/A'}
                       </td>
-                      <td className="px-6 py-4 text-sm font-semibold text-[var(--text-primary)]">
+                      <td className="px-6 py-4 text-sm font-semibold text-[var(--text-primary)] hidden md:table-cell">
                         {customer.total_purchases > 0 ? customer.total_purchases.toFixed(0) : '0'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)]">
+                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)] hidden lg:table-cell">
                         {formatDate(customer.last_purchase_date)}
                       </td>
                       <td className="px-6 py-4">
@@ -361,9 +361,11 @@ export default function CustomersPage() {
                             e.stopPropagation();
                             setOpenDropdownId(openDropdownId === customer.id ? null : customer.id);
                           }}
-                          className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-lg font-bold p-2 hover:bg-[var(--bg-primary)] rounded"
+                          className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] rounded-lg transition-colors"
                         >
-                          •••
+                          <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                          </svg>
                         </button>
                       </td>
                     </tr>
@@ -400,11 +402,12 @@ export default function CustomersPage() {
             />
             
             {/* Dropdown */}
-            <div 
+            <div
               className="fixed w-48 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg shadow-xl z-50 py-1"
               style={{
-                top: `${(customers.findIndex(c => c.id === openDropdownId) * 60) + 280}px`,
-                right: '80px'
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)'
               }}
             >
               <button

@@ -73,10 +73,18 @@ export default function InventoryPage() {
   const [adjustReason, setAdjustReason] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>('');
+  const [openActionMenu, setOpenActionMenu] = useState<string | null>(null);
 
   useEffect(() => {
     fetchProducts();
   }, [searchQuery, selectedCategory, filterTab, currentPage, itemsPerPage]);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = () => setOpenActionMenu(null);
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, []);
 
   // Auto-generate SKU when Add Product modal opens or product name changes
   useEffect(() => {
@@ -489,19 +497,17 @@ export default function InventoryPage() {
       )}
       
       <div className="p-4 sm:p-5 lg:p-6">
-        {/* Header — title left, actions right */}
-        <div className="flex items-start justify-between gap-3 mb-4">
+        {/* Header — stacks on mobile */}
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4">
           <div>
             <h1 className="text-2xl font-semibold text-[var(--text-primary)]">Inventory</h1>
             <p className="text-sm text-[var(--text-secondary)] mt-0.5">Manage your products and stock levels.</p>
           </div>
-          <div className="flex items-center gap-2 shrink-0">
-            <button onClick={() => setShowAddModal(true)}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-3 py-2 text-sm font-medium flex items-center gap-1.5">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-              Add Product
-            </button>
-          </div>
+          <button onClick={() => setShowAddModal(true)}
+            className="w-full sm:w-auto bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-4 py-3 sm:py-2 text-sm font-medium flex items-center justify-center gap-1.5 min-h-[44px]">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+            Add Product
+          </button>
         </div>
 
         {/* Filter tabs + export row */}
@@ -540,15 +546,15 @@ export default function InventoryPage() {
           <div className="overflow-x-auto">            <table className="min-w-full">
               <thead className="bg-[var(--bg-primary)] border-b border-[var(--border-color)]">
                 <tr>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)] hidden md:table-cell">
                     <input type="checkbox" className="rounded" />
                   </th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Product</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Variant</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)] hidden lg:table-cell">Variant</th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Stock</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Retail Price</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Wholesale Price</th>
-                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Date Added</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Retail</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)] hidden sm:table-cell">Wholesale</th>
+                  <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)] hidden md:table-cell">Date Added</th>
                   <th className="px-6 py-3 text-left text-sm font-medium text-[var(--text-secondary)]">Actions</th>
                 </tr>
               </thead>
@@ -568,21 +574,21 @@ export default function InventoryPage() {
                 ) : (
                   products.map((product) => (
                     <tr key={product.id} className="hover:bg-[var(--bg-primary)] transition-colors">
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-4 hidden md:table-cell">
                         <input type="checkbox" className="rounded" />
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 bg-[var(--bg-secondary)] rounded flex items-center justify-center text-xl">
+                          <div className="w-10 h-10 bg-[var(--bg-secondary)] rounded flex items-center justify-center text-xl shrink-0">
                             📦
                           </div>
-                          <div>
-                            <div className="text-sm font-medium text-[var(--text-primary)]">{product.name}</div>
+                          <div className="min-w-0">
+                            <div className="text-sm font-medium text-[var(--text-primary)] truncate">{product.name}</div>
                             <div className="text-xs text-[var(--text-secondary)]">{product.sku}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)]">
+                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)] hidden lg:table-cell">
                         {product.variant_of ? 'Variant' : 'Parent'}
                       </td>
                       <td className="px-6 py-4">
@@ -597,61 +603,67 @@ export default function InventoryPage() {
                       <td className="px-6 py-4 text-sm font-medium text-[var(--text-primary)]">
                         KES {product.retail_price?.toFixed(2) || '0.00'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)]">
+                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)] hidden sm:table-cell">
                         KES {product.wholesale_price?.toFixed(2) || '0.00'}
                       </td>
-                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)]">
+                      <td className="px-6 py-4 text-sm text-[var(--text-secondary)] hidden md:table-cell">
                         {formatDate(product.created_at)}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="relative group">
-                          <button className="text-[var(--text-secondary)] hover:text-[var(--text-primary)] text-lg font-bold">
-                            •••
+                        <div className="relative">
+                          <button
+                            onClick={(e) => { e.stopPropagation(); setOpenActionMenu(openActionMenu === product.id ? null : product.id); }}
+                            className="min-h-[44px] min-w-[44px] inline-flex items-center justify-center text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-secondary)] rounded-lg transition-colors"
+                          >
+                            <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/>
+                            </svg>
                           </button>
-                          <div className="absolute right-0 mt-2 w-48 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-                            <button
-                              onClick={() => { setSelectedProduct(product); setShowRestockModal(true); }}
-                              className="w-full text-left px-4 py-2 text-sm hover:bg-[var(--bg-primary)] first:rounded-t-lg"
-                            >
-                              Restock
-                            </button>
-                            <button
-                              onClick={() => { setSelectedProduct(product); setShowAdjustModal(true); }}
-                              className="w-full text-left px-4 py-2 text-sm hover:bg-[var(--bg-primary)]"
-                            >
-                              Adjust Stock
-                            </button>
-                            <button
-                              onClick={async () => {
-                                setSelectedProduct(product);
-                                setShowHistoryModal(true);
-                                // Fetch history
-                                try {
-                                  const response = await fetch(`/api/inventory/${product.id}/history`, {
-                                    headers: {
-                                      'x-tenant-id': localStorage.getItem('tenantId') || ''
+                          {openActionMenu === product.id && (
+                            <>
+                              <div className="fixed inset-0 z-10" onClick={() => setOpenActionMenu(null)} />
+                              <div className="absolute right-0 mt-2 w-48 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg shadow-xl z-20 py-1">
+                                <button
+                                  onClick={() => { setSelectedProduct(product); setShowRestockModal(true); setOpenActionMenu(null); }}
+                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] flex items-center gap-2"
+                                >
+                                  Restock
+                                </button>
+                                <button
+                                  onClick={() => { setSelectedProduct(product); setShowAdjustModal(true); setOpenActionMenu(null); }}
+                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] flex items-center gap-2"
+                                >
+                                  Adjust Stock
+                                </button>
+                                <button
+                                  onClick={async () => {
+                                    setSelectedProduct(product);
+                                    setShowHistoryModal(true);
+                                    setOpenActionMenu(null);
+                                    try {
+                                      const response = await fetch(`/api/inventory/${product.id}/history`, {
+                                        headers: { 'x-tenant-id': localStorage.getItem('tenantId') || '' }
+                                      });
+                                      const data = await response.json();
+                                      setHistoryData(data.movements || []);
+                                    } catch (error) {
+                                      console.error('Error fetching history:', error);
+                                      setToast({ message: 'Failed to load history', type: 'error' });
                                     }
-                                  });
-                                  const data = await response.json();
-                                  setHistoryData(data.movements || []);
-                                } catch (error) {
-                                  console.error('Error fetching history:', error);
-                                  setToast({ message: 'Failed to load history', type: 'error' });
-                                }
-                              }}
-                              className="w-full text-left px-4 py-2 text-sm hover:bg-[var(--bg-primary)]"
-                            >
-                              View History
-                            </button>
-                            <button
-                              onClick={() => openEditModal(product)}
-                              className="w-full text-left px-4 py-2 text-sm hover:bg-[var(--bg-primary)]"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDeleteProduct(product.id)}
-                              className="w-full text-left px-4 py-2 text-sm hover:bg-[var(--bg-primary)] text-red-500 hover:text-red-600 last:rounded-b-lg"
+                                  }}
+                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] flex items-center gap-2"
+                                >
+                                  View History
+                                </button>
+                                <button
+                                  onClick={() => { openEditModal(product); setOpenActionMenu(null); }}
+                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] flex items-center gap-2"
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  onClick={() => { handleDeleteProduct(product.id); setOpenActionMenu(null); }}
+                                  className="w-full text-left min-h-[44px] px-4 py-2.5 text-sm hover:bg-[var(--bg-primary)] text-red-500 hover:text-red-600 flex items-center gap-2"
                             >
                               Archive
                             </button>

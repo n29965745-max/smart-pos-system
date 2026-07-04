@@ -116,7 +116,7 @@ export default function TopBar({ onMenuClick }: TopBarProps) {
           {showThemeMenu && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setShowThemeMenu(false)} />
-              <div className="absolute right-0 mt-2 w-52 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg shadow-xl z-20 py-2">
+              <div className="absolute right-0 mt-2 w-52 bg-[var(--bg-primary)] border border-[var(--border-color)] rounded-lg shadow-xl z-20 py-2 max-h-[70vh] overflow-y-auto">
                 <div className="px-3 py-2 text-xs font-semibold text-[var(--text-secondary)] border-b border-[var(--border-color)]">
                   Choose Theme
                 </div>

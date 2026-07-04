@@ -141,17 +141,17 @@ export default function DebtManagement() {
       {toast && <Toast message={toast.message} type={toast.type} onClose={hideToast} />}
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex items-start justify-between flex-wrap gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-[var(--text-primary)]">Debt Management</h1>
-            <p className="text-[var(--text-secondary)] mt-1">Monitor customer credit, outstanding balances, and payment history.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">Debt Management</h1>
+            <p className="text-[var(--text-secondary)] mt-1 text-sm sm:text-base">Monitor customer credit, outstanding balances, and payment history.</p>
           </div>
 
           {/* Toolbar */}
           <div className="flex items-center gap-3 flex-wrap">
             <button
               onClick={handleRefreshData}
-              className="flex items-center gap-2 px-4 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-primary)] text-sm"
+              className="min-h-[44px] flex items-center gap-2 px-4 py-2 bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg hover:bg-[var(--bg-secondary)] transition-colors text-[var(--text-primary)] text-sm"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
@@ -170,7 +170,7 @@ export default function DebtManagement() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
           <div className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-4">
             <div className="flex items-start justify-between">
               <div>
@@ -252,8 +252,8 @@ export default function DebtManagement() {
         </div>
 
         {/* Tabs */}
-        <div className="border-b border-[var(--border-color)]">
-          <div className="flex gap-8">
+        <div className="border-b border-[var(--border-color)] overflow-x-auto">
+          <div className="flex gap-6 sm:gap-8 min-w-max">
             <button
               onClick={() => setActiveTab('overview')}
               className={`px-4 py-3 font-medium border-b-2 transition-colors ${
@@ -309,20 +309,22 @@ export default function DebtManagement() {
                   outstandingDebts.map((debt) => (
                     <div
                       key={debt.id}
-                      className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-4 flex items-center justify-between hover:bg-[var(--bg-secondary)] transition-colors"
+                      className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-4 hover:bg-[var(--bg-secondary)] transition-colors"
                     >
-                      <div className="flex-1">
-                        <div className="font-semibold text-[var(--text-primary)]">{debt.customer_name}</div>
-                        <div className="text-sm text-[var(--text-secondary)]">{debt.sale_id} • {formatDate(debt.created_at)}</div>
-                      </div>
-                      <div className="text-right">
-                        <div className="font-bold text-[var(--text-primary)]">{formatCurrency(debt.amount_remaining)}</div>
-                        <button
-                          onClick={() => setPaymentModal({ show: true, debt })}
-                          className="text-xs mt-1 px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded transition-colors"
-                        >
-                          Partial
-                        </button>
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-[var(--text-primary)]">{debt.customer_name}</div>
+                          <div className="text-sm text-[var(--text-secondary)]">{debt.sale_id} • {formatDate(debt.created_at)}</div>
+                        </div>
+                        <div className="text-right shrink-0">
+                          <div className="font-bold text-[var(--text-primary)]">{formatCurrency(debt.amount_remaining)}</div>
+                          <button
+                            onClick={() => setPaymentModal({ show: true, debt })}
+                            className="min-h-[36px] mt-1 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs rounded-lg transition-colors"
+                          >
+                            Partial
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))
@@ -345,11 +347,11 @@ export default function DebtManagement() {
                     <thead className="bg-[var(--bg-secondary)] border-b border-[var(--border-color)]">
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">Customer</th>
-                        <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)]">Sale ID</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-[var(--text-primary)]">Total</th>
-                        <th className="px-4 py-3 text-right text-sm font-semibold text-[var(--text-primary)]">Paid</th>
+                        <th className="px-4 py-3 text-left text-sm font-semibold text-[var(--text-primary)] hidden sm:table-cell">Sale ID</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-[var(--text-primary)] hidden md:table-cell">Total</th>
+                        <th className="px-4 py-3 text-right text-sm font-semibold text-[var(--text-primary)] hidden lg:table-cell">Paid</th>
                         <th className="px-4 py-3 text-right text-sm font-semibold text-[var(--text-primary)]">Remaining</th>
-                        <th className="px-4 py-3 text-center text-sm font-semibold text-[var(--text-primary)]">Status</th>
+                        <th className="px-4 py-3 text-center text-sm font-semibold text-[var(--text-primary)] hidden sm:table-cell">Status</th>
                         <th className="px-4 py-3 text-center text-sm font-semibold text-[var(--text-primary)]">Action</th>
                       </tr>
                     </thead>
@@ -357,22 +359,22 @@ export default function DebtManagement() {
                       {debts.map((debt) => (
                         <tr key={debt.id} className="hover:bg-[var(--bg-secondary)] transition-colors">
                           <td className="px-4 py-3 text-sm text-[var(--text-primary)]">{debt.customer_name}</td>
-                          <td className="px-4 py-3 text-sm text-[var(--text-secondary)]">{debt.sale_id}</td>
-                          <td className="px-4 py-3 text-sm text-right text-[var(--text-primary)]">
+                          <td className="px-4 py-3 text-sm text-[var(--text-secondary)] hidden sm:table-cell">{debt.sale_id}</td>
+                          <td className="px-4 py-3 text-sm text-right text-[var(--text-primary)] hidden md:table-cell">
                             {formatCurrency(debt.total_amount)}
                           </td>
-                          <td className="px-4 py-3 text-sm text-right text-green-400">
+                          <td className="px-4 py-3 text-sm text-right text-green-400 hidden lg:table-cell">
                             {formatCurrency(debt.amount_paid)}
                           </td>
-                          <td className="px-4 py-3 text-sm text-right text-yellow-400">
+                          <td className="px-4 py-3 text-sm text-right text-yellow-400 font-semibold">
                             {formatCurrency(debt.amount_remaining)}
                           </td>
-                          <td className="px-4 py-3 text-center">{getStatusBadge(debt.status)}</td>
+                          <td className="px-4 py-3 text-center hidden sm:table-cell">{getStatusBadge(debt.status)}</td>
                           <td className="px-4 py-3 text-center">
                             {debt.amount_remaining > 0 && (
                               <button
                                 onClick={() => setPaymentModal({ show: true, debt })}
-                                className="text-xs px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white rounded transition-colors"
+                                className="min-h-[36px] px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs rounded-lg transition-colors"
                               >
                                 Pay
                               </button>

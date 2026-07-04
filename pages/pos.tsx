@@ -764,7 +764,8 @@ export default function POSPage() {
       {/* Floating Cart Button - Mobile Optimized */}
       <button
         onClick={() => setShowCheckout(true)}
-        className="fixed bottom-6 right-4 sm:right-6 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white p-4 sm:p-5 rounded-full shadow-2xl transition-all z-40 flex items-center justify-center min-w-[56px] min-h-[56px] sm:min-w-[64px] sm:min-h-[64px]"
+        className="fixed bottom-6 sm:bottom-6 right-4 sm:right-6 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white p-4 sm:p-5 rounded-full shadow-2xl transition-all z-40 flex items-center justify-center min-w-[56px] min-h-[56px] sm:min-w-[64px] sm:min-h-[64px]"
+        style={{ bottom: 'max(1.5rem, env(safe-area-inset-bottom, 1.5rem))' }}
       >
         <svg className="w-6 h-6 sm:w-7 sm:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -778,8 +779,8 @@ export default function POSPage() {
 
       {/* Cart/Checkout Modal */}
       {showCheckout && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-          <div className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-end sm:items-center justify-center z-50">
+          <div className="bg-[var(--bg-tertiary)] border border-[var(--border-color)] sm:rounded-lg rounded-t-2xl p-4 sm:p-6 max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Cart & Checkout</h2>
               <button

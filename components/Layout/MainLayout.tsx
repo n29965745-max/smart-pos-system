@@ -1,4 +1,4 @@
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import TopBar from './TopBar';
 
@@ -9,8 +9,19 @@ interface MainLayoutProps {
 export default function MainLayout({ children }: MainLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  // Close sidebar on route change (for SPA navigation)
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   return (
-    <div className="flex h-screen bg-[var(--bg-secondary)]">
+    <div className="flex h-screen bg-[var(--bg-secondary)] overflow-hidden">
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div
@@ -31,7 +42,7 @@ export default function MainLayout({ children }: MainLayoutProps) {
       <div className="flex-1 flex flex-col overflow-hidden min-w-0">
         <TopBar onMenuClick={() => setSidebarOpen(true)} />
         <main className="flex-1 overflow-auto bg-[var(--bg-secondary)]">
-          <div className="p-4 md:p-6">
+          <div className="p-3 sm:p-4 md:p-6">
             {children}
           </div>
         </main>
